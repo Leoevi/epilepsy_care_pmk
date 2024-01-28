@@ -1,6 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <application
-        android:label="epilepsy_care_pmk"
+        android:label="Epilepsy Care"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

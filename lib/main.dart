@@ -1,10 +1,4 @@
-import 'dart:developer';
-import 'dart:ffi';
-
-import 'package:epilepsy_care_pmk/bar_graph/bar_graph.dart';
 import 'package:flutter/material.dart';
-import 'package:fl_chart/fl_chart.dart';
-import 'nextpage.dart';
 
 void main() {
   runApp(const MyApp());
@@ -13,14 +7,16 @@ void main() {
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
+  // This widget is the root of the application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Epilepsy Care',
+      // To change the app's name, you need to go into each platform's manifest file (https://stackoverflow.com/questions/49353199/how-can-i-change-the-app-display-name-build-with-flutter)
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.green),
-        useMaterial3: true,
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        useMaterial3:
+            true, // https://docs.flutter.dev/release/breaking-changes/material-3-default
       ),
       home: const MyHomePage(title: 'Flutter Demo Home Page'),
     );
@@ -46,6 +42,16 @@ class _MyHomePageState extends State<MyHomePage> {
     const Page4(),
   ];
 
+  // final addButtonOffset = const Offset(0, -1);
+  // Use ElevatedButton.styleFrom instead of ButtonStyle: https://stackoverflow.com/questions/66542199/what-is-materialstatepropertycolor
+  final bottomNavButtonStyle = ElevatedButton.styleFrom(  // Without this, the background of the button will not be transparent
+    surfaceTintColor: Colors.transparent,
+    backgroundColor: Colors.transparent,
+    shadowColor: Colors.transparent,
+    padding: const EdgeInsets.all(-20),
+    // elevation: 0
+  );
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -53,91 +59,89 @@ class _MyHomePageState extends State<MyHomePage> {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(widget.title),
       ),
-      body: pages[pageIndex],
       bottomNavigationBar: Container(
-        height: 200,
+        clipBehavior: Clip.antiAliasWithSaveLayer,
+        height: 70,
         decoration: BoxDecoration(
-          color: Theme.of(context).primaryColor,
-          borderRadius: const BorderRadius.only(
-            topLeft: Radius.circular(20),
-            topRight: Radius.circular(20),
-          ),
+          color: Theme.of(context).colorScheme.inversePrimary,
         ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            IconButton(
-              enableFeedback: false,
+            ElevatedButton(
               onPressed: () {
                 setState(() {
                   pageIndex = 0;
                 });
               },
-              icon: const Icon(
-                Icons.home_outlined,
-                color: Colors.white,
-                size: 35,
+              style: bottomNavButtonStyle,
+              child: const Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [Icon(Icons.home_outlined), Text("หน้าแรก")],
               ),
             ),
-            IconButton(
-              enableFeedback: false,
+            ElevatedButton(
               onPressed: () {
                 setState(() {
                   pageIndex = 1;
                 });
               },
-              icon: const Icon(
-                Icons.work_outline_outlined,
-                color: Colors.white,
-                size: 35,
+              style: bottomNavButtonStyle,
+              child: const Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [Icon(Icons.calendar_month_outlined), Text("ปฎิทิน")],
               ),
             ),
-            IconButton(
-              enableFeedback: false,
+            SizedBox(width: 43, height: 43),
+            // Stack(
+            //   // alignment: AlignmentDirectional.center,
+            //   // clipBehavior: Clip.none,
+            //   children: <Widget>[
+            //     Positioned(
+            //       // top: addButtonOffset.dy,
+            //       child: RawMaterialButton(
+            //         // https://stackoverflow.com/questions/49809351/how-to-create-a-circle-icon-button-in-flutter
+            //         onPressed: () {},
+            //         elevation: 2.0,
+            //         fillColor: Colors.white,
+            //         child: const Icon(
+            //           Icons.add,
+            //           size: 35.0,
+            //         ),
+            //         padding: const EdgeInsets.all(15.0),
+            //         shape: const CircleBorder(),
+            //       ),
+            //     )
+            //   ],
+            // ),
+            ElevatedButton(
               onPressed: () {
                 setState(() {
                   pageIndex = 2;
                 });
               },
-              icon: const Icon(
-                Icons.widgets_outlined,
-                color: Colors.white,
-                size: 35,
+              style: bottomNavButtonStyle,
+              child: const Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [Icon(Icons.book_outlined), Text("ข้อมูล")],
               ),
             ),
-            IconButton(
-              enableFeedback: false,
+            ElevatedButton(
               onPressed: () {
                 setState(() {
                   pageIndex = 3;
                 });
               },
-              icon: const Icon(
-                Icons.person_outline,
-                color: Colors.white,
-                size: 35,
+              style: bottomNavButtonStyle,
+              child: const Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [Icon(Icons.headset_outlined), Text("ติดต่อ")],
               ),
             ),
           ],
         ),
       ),
-      // body: Center(
-      //   child: Column(
-      //     mainAxisAlignment: MainAxisAlignment.center,
-      //     children: <Widget>[
-      //       const Text(
-      //         'Press this button to go to the next page:',
-      //       ),
-      //       TextButton(
-      //           onPressed: () {
-      //             log("message");
-      //             Navigator.of(context).push(MaterialPageRoute(
-      //                 builder: (context) => const NextPage()));
-      //           },
-      //           child: Text("Hello World")),
-      //     ],
-      //   ),
-      // ),
+      body: pages[pageIndex],
     );
   }
 }
@@ -159,17 +163,18 @@ class Page1 extends StatelessWidget {
             fontWeight: FontWeight.w500,
           ),
         ),
-            TextButton(
-                onPressed: () async {
-                  DateTime? pickedDate = await showDatePicker(
-                      context: context,
-                      initialDate: DateTime.now(), //get today's date
-                      firstDate: DateTime(2000), //DateTime.now() - not to allow to choose before today.
-                      lastDate: DateTime(2101)
-                  );
-                },
-                child: Text("Date Picker"),
-            )
+        TextButton(
+          onPressed: () async {
+            DateTime? pickedDate = await showDatePicker(
+                context: context,
+                initialDate: DateTime.now(),
+                //get today's date
+                firstDate: DateTime(2000),
+                //DateTime.now() - not to allow to choose before today.
+                lastDate: DateTime(2101));
+          },
+          child: Text("Date Picker"),
+        )
       ])),
     );
   }
@@ -180,11 +185,18 @@ class Page2 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<int> seizureCounts = [1,2,3,4,5];
-
     return Container(
       color: const Color(0xffC4DFCB),
-      child: MyBarGraph()
+      child: Center(
+        child: Text(
+          "Page Number 2",
+          style: TextStyle(
+            color: Colors.green[900],
+            fontSize: 45,
+            fontWeight: FontWeight.w500,
+          ),
+        ),
+      ),
     );
   }
 }

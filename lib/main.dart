@@ -1,3 +1,7 @@
+import 'package:epilepsy_care_pmk/screens/calendar/calendar.dart';
+import 'package:epilepsy_care_pmk/screens/contacts/contacts.dart';
+import 'package:epilepsy_care_pmk/screens/home/home.dart';
+import 'package:epilepsy_care_pmk/screens/wiki/wiki.dart';
 import 'package:flutter/material.dart';
 
 void main() {
@@ -36,10 +40,10 @@ class _MyHomePageState extends State<MyHomePage> {
   int pageIndex = 0;
 
   final pages = [
-    const Page1(),
-    const Page2(),
-    const Page3(),
-    const Page4(),
+    const Home(),
+    const Calendar(),
+    const Wiki(),
+    const Contacts(),
   ];
 
   // final addButtonOffset = const Offset(0, -1);
@@ -55,10 +59,6 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(widget.title),
-      ),
       bottomNavigationBar: Container(
         clipBehavior: Clip.antiAliasWithSaveLayer,
         height: 70,
@@ -92,28 +92,28 @@ class _MyHomePageState extends State<MyHomePage> {
                 children: [Icon(Icons.calendar_month_outlined), Text("ปฎิทิน")],
               ),
             ),
-            SizedBox(width: 43, height: 43),
-            // Stack(
-            //   // alignment: AlignmentDirectional.center,
-            //   // clipBehavior: Clip.none,
-            //   children: <Widget>[
-            //     Positioned(
-            //       // top: addButtonOffset.dy,
-            //       child: RawMaterialButton(
-            //         // https://stackoverflow.com/questions/49809351/how-to-create-a-circle-icon-button-in-flutter
-            //         onPressed: () {},
-            //         elevation: 2.0,
-            //         fillColor: Colors.white,
-            //         child: const Icon(
-            //           Icons.add,
-            //           size: 35.0,
-            //         ),
-            //         padding: const EdgeInsets.all(15.0),
-            //         shape: const CircleBorder(),
-            //       ),
-            //     )
-            //   ],
-            // ),
+            // SizedBox(width: 43, height: 43),
+            Stack(
+              // alignment: AlignmentDirectional.center,
+              // clipBehavior: Clip.none,
+              children: <Widget>[
+                Positioned(
+                  // top: addButtonOffset.dy,
+                  child: RawMaterialButton(
+                    // https://stackoverflow.com/questions/49809351/how-to-create-a-circle-icon-button-in-flutter
+                    onPressed: () {},
+                    elevation: 2.0,
+                    fillColor: Colors.white,
+                    child: const Icon(
+                      Icons.add,
+                      size: 35.0,
+                    ),
+                    padding: const EdgeInsets.all(15.0),
+                    shape: const CircleBorder(),
+                  ),
+                )
+              ],
+            ),
             ElevatedButton(
               onPressed: () {
                 setState(() {
@@ -142,103 +142,6 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ),
       body: pages[pageIndex],
-    );
-  }
-}
-
-class Page1 extends StatelessWidget {
-  const Page1({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      color: const Color(0xffC4DFCB),
-      child: Center(
-          child: Column(children: <Widget>[
-        Text(
-          "Page Number 1",
-          style: TextStyle(
-            color: Colors.green[900],
-            fontSize: 45,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-        TextButton(
-          onPressed: () async {
-            DateTime? pickedDate = await showDatePicker(
-                context: context,
-                initialDate: DateTime.now(),
-                //get today's date
-                firstDate: DateTime(2000),
-                //DateTime.now() - not to allow to choose before today.
-                lastDate: DateTime(2101));
-          },
-          child: Text("Date Picker"),
-        )
-      ])),
-    );
-  }
-}
-
-class Page2 extends StatelessWidget {
-  const Page2({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      color: const Color(0xffC4DFCB),
-      child: Center(
-        child: Text(
-          "Page Number 2",
-          style: TextStyle(
-            color: Colors.green[900],
-            fontSize: 45,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class Page3 extends StatelessWidget {
-  const Page3({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      color: const Color(0xffC4DFCB),
-      child: Center(
-        child: Text(
-          "Page Number 3",
-          style: TextStyle(
-            color: Colors.green[900],
-            fontSize: 45,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-      ),
-    );
-  }
-}
-
-class Page4 extends StatelessWidget {
-  const Page4({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      color: const Color(0xffC4DFCB),
-      child: Center(
-        child: Text(
-          "Page Number 4",
-          style: TextStyle(
-            color: Colors.green[900],
-            fontSize: 45,
-            fontWeight: FontWeight.w500,
-          ),
-        ),
-      ),
     );
   }
 }

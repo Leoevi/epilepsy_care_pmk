@@ -6,7 +6,6 @@ class Wiki extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: const Color(0xffC4DFCB),
       child: Center(
         child: Text(
           "This is Wiki",

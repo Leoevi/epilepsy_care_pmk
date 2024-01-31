@@ -52,7 +52,7 @@ class _MyHomePageState extends State<MyHomePage> {
     surfaceTintColor: Colors.transparent,
     backgroundColor: Colors.transparent,
     shadowColor: Colors.transparent,
-    padding: const EdgeInsets.all(-20),
+    padding: const EdgeInsets.all(0),  // To prevent overflow. Alternatives to look into is Expanded/Flex
     // elevation: 0
   );
 
@@ -141,7 +141,10 @@ class _MyHomePageState extends State<MyHomePage> {
           ],
         ),
       ),
-      body: pages[pageIndex],
+      backgroundColor: const Color(0xffC4DFCB),
+      body: SafeArea(
+        child: pages[pageIndex],
+      )
     );
   }
 }

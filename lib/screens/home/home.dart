@@ -6,7 +6,6 @@ class Home extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: const Color(0xffC4DFCB),
       child: Center(
           child: Column(children: <Widget>[
             Text(

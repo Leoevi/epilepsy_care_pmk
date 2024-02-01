@@ -58,93 +58,102 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      bottomNavigationBar: Container(
-        clipBehavior: Clip.antiAliasWithSaveLayer,
-        height: 70,
-        decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.inversePrimary,
-        ),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            ElevatedButton(
-              onPressed: () {
-                setState(() {
-                  pageIndex = 0;
-                });
-              },
-              style: bottomNavButtonStyle,
-              child: const Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [Icon(Icons.home_outlined), Text("หน้าแรก")],
-              ),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                setState(() {
-                  pageIndex = 1;
-                });
-              },
-              style: bottomNavButtonStyle,
-              child: const Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [Icon(Icons.calendar_month_outlined), Text("ปฎิทิน")],
-              ),
-            ),
-            // SizedBox(width: 43, height: 43),
-            Stack(
-              // alignment: AlignmentDirectional.center,
-              // clipBehavior: Clip.none,
-              children: <Widget>[
-                Positioned(
-                  // top: addButtonOffset.dy,
-                  child: RawMaterialButton(
-                    // https://stackoverflow.com/questions/49809351/how-to-create-a-circle-icon-button-in-flutter
-                    onPressed: () {},
-                    elevation: 2.0,
-                    fillColor: Colors.white,
-                    child: const Icon(
-                      Icons.add,
-                      size: 35.0,
-                    ),
-                    padding: const EdgeInsets.all(15.0),
-                    shape: const CircleBorder(),
-                  ),
-                )
-              ],
-            ),
-            ElevatedButton(
-              onPressed: () {
-                setState(() {
-                  pageIndex = 2;
-                });
-              },
-              style: bottomNavButtonStyle,
-              child: const Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [Icon(Icons.book_outlined), Text("ข้อมูล")],
-              ),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                setState(() {
-                  pageIndex = 3;
-                });
-              },
-              style: bottomNavButtonStyle,
-              child: const Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [Icon(Icons.headset_outlined), Text("ติดต่อ")],
-              ),
-            ),
-          ],
-        ),
+    return Container(  // To have a gradient background, need to wrap with container
+      decoration: const BoxDecoration(
+        gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [Color(0xFFCA80F7), Color(0x7FCA80F7)]  // TODO: use colors from theme instead of hardcoding
+        )
       ),
-      backgroundColor: const Color(0xffC4DFCB),
-      body: SafeArea(
-        child: pages[pageIndex],
-      )
+      child: Scaffold(
+        bottomNavigationBar: Container(
+          clipBehavior: Clip.antiAliasWithSaveLayer,
+          height: 70,
+          decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.inversePrimary,  // TODO: use colors from theme instead of hardcoding
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              ElevatedButton(
+                onPressed: () {
+                  setState(() {
+                    pageIndex = 0;
+                  });
+                },
+                style: bottomNavButtonStyle,
+                child: const Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [Icon(Icons.home_outlined), Text("หน้าแรก")],
+                ),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  setState(() {
+                    pageIndex = 1;
+                  });
+                },
+                style: bottomNavButtonStyle,
+                child: const Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [Icon(Icons.calendar_month_outlined), Text("ปฎิทิน")],
+                ),
+              ),
+              // SizedBox(width: 43, height: 43),
+              Stack(  // TODO: Make the button float a bit above the bottom nav bar
+                // alignment: AlignmentDirectional.center,
+                // clipBehavior: Clip.none,
+                children: <Widget>[
+                  Positioned(
+                    // top: addButtonOffset.dy,
+                    child: RawMaterialButton(
+                      // https://stackoverflow.com/questions/49809351/how-to-create-a-circle-icon-button-in-flutter
+                      onPressed: () {},
+                      elevation: 2.0,
+                      fillColor: Colors.white,
+                      child: const Icon(
+                        Icons.add,
+                        size: 35.0,
+                      ),
+                      padding: const EdgeInsets.all(15.0),
+                      shape: const CircleBorder(),
+                    ),
+                  )
+                ],
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  setState(() {
+                    pageIndex = 2;
+                  });
+                },
+                style: bottomNavButtonStyle,
+                child: const Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [Icon(Icons.book_outlined), Text("ข้อมูล")],
+                ),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  setState(() {
+                    pageIndex = 3;
+                  });
+                },
+                style: bottomNavButtonStyle,
+                child: const Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [Icon(Icons.headset_outlined), Text("ติดต่อ")],
+                ),
+              ),
+            ],
+          ),
+        ),
+        backgroundColor: Colors.transparent,
+        body: SafeArea(
+          child: pages[pageIndex],
+        )
+      ),
     );
   }
 }

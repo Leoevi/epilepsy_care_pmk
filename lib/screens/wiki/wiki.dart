@@ -5,46 +5,47 @@ class Wiki extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    const double screenEdgePadding =
+        16.0; // TODO: declare this as a global thing where other screens can use the same padding value
     return Padding(
-      padding: const EdgeInsets.all(16.0),  // TODO: declare this as a global thing where other screens can use the same value
+      padding: const EdgeInsets.all(screenEdgePadding),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisSize: MainAxisSize.max,
         children: [
-          Expanded(
-            child: Container(
-              width: 256,
-              height: 100,
-              decoration: ShapeDecoration(
-                color: Colors.white,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                shadows: const [
-                  BoxShadow(
-                    color: Color(0x1E000000),
-                    blurRadius: 40,
-                    offset: Offset(0, 8),
-                    spreadRadius: 0,
-                  )
-                ],
-              ),
-              child: Text("placeholder for logo (size unknown)")
+          const Expanded(
+            flex: 1,
+            child: Row(
+              children: [
+                Expanded(
+                    flex: 1,
+                    child: Image(
+                      alignment: Alignment.centerLeft,
+                      image: AssetImage("image/header_logo_eng.png"),
+                    )),
+                Spacer(flex: 1),  // Spacers are good for spacing with flex, but if you wanted to space with pixel, use sizedBox (like below)
+              ],
             ),
           ),
-          Expanded(  // Wrap LayoutBuilder with Expanded in order to assign flex value to it
-            child: LayoutBuilder(builder: (context, constraints) {  // From https://docs.flutter.dev/cookbook/lists/spaced-items
+          const SizedBox(height: screenEdgePadding),
+          Expanded(
+            // Wrap LayoutBuilder with Expanded in order to assign flex value to it
+            flex: 4,
+            child: LayoutBuilder(builder: (context, constraints) {
+              // From https://docs.flutter.dev/cookbook/lists/spaced-items
               return SingleChildScrollView(
                 child: ConstrainedBox(
-                  constraints: BoxConstraints(minHeight: constraints.maxHeight),  // LayoutBuilder must have a flex; otherwise, constraints.maxHeight will be Infinity
+                  constraints: BoxConstraints(minHeight: constraints.maxHeight),
+                  // LayoutBuilder must have a flex; otherwise, constraints.maxHeight will be Infinity
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       ItemWidget(text: 'Item 1'),
                       ItemWidget(text: 'Item 2'),
-                      // ItemWidget(text: 'Item 3'),
-                      // ItemWidget(text: 'Item 3'),
-                      // ItemWidget(text: 'Item 3'),
-                      // ItemWidget(text: 'Item 3'),
-                      // ItemWidget(text: 'Item 3'),
+                      ItemWidget(text: 'Item 3'),
+                      ItemWidget(text: 'Item 3'),
+                      ItemWidget(text: 'Item 3'),
+                      ItemWidget(text: 'Item 3'),
+                      ItemWidget(text: 'Item 3'),
                     ],
                   ),
                 ),

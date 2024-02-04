@@ -66,7 +66,7 @@ class _MyHomePageState extends State<MyHomePage> {
         )
       ),
       child: Scaffold(
-        bottomNavigationBar: Container(  // TODO: try flex layout with tight fit for bigger hit-boxes
+        bottomNavigationBar: Container(
           clipBehavior: Clip.antiAliasWithSaveLayer,
           height: 70,
           decoration: BoxDecoration(
@@ -75,28 +75,36 @@ class _MyHomePageState extends State<MyHomePage> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              ElevatedButton(
-                onPressed: () {
-                  setState(() {
-                    pageIndex = 0;
-                  });
-                },
-                style: bottomNavButtonStyle,
-                child: const Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [Icon(Icons.home_outlined), Text("หน้าแรก")],
+              Flexible(
+                flex: 1,
+                fit: FlexFit.tight,
+                child: ElevatedButton(
+                  onPressed: () {
+                    setState(() {
+                      pageIndex = 0;
+                    });
+                  },
+                  style: bottomNavButtonStyle,
+                  child: const Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [Icon(Icons.home_outlined), Text("หน้าแรก")],
+                  ),
                 ),
               ),
-              ElevatedButton(
-                onPressed: () {
-                  setState(() {
-                    pageIndex = 1;
-                  });
-                },
-                style: bottomNavButtonStyle,
-                child: const Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [Icon(Icons.calendar_month_outlined), Text("ปฎิทิน")],
+              Flexible(
+                flex: 1,
+                fit: FlexFit.tight,
+                child: ElevatedButton(
+                  onPressed: () {
+                    setState(() {
+                      pageIndex = 1;
+                    });
+                  },
+                  style: bottomNavButtonStyle,
+                  child: const Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [Icon(Icons.calendar_month_outlined), Text("ปฎิทิน")],
+                  ),
                 ),
               ),
               // SizedBox(width: 43, height: 43),
@@ -121,28 +129,36 @@ class _MyHomePageState extends State<MyHomePage> {
                   )
                 ],
               ),
-              ElevatedButton(
-                onPressed: () {
-                  setState(() {
-                    pageIndex = 2;
-                  });
-                },
-                style: bottomNavButtonStyle,
-                child: const Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [Icon(Icons.book_outlined), Text("ข้อมูล")],
+              Flexible(
+                flex: 1,
+                fit: FlexFit.tight,
+                child: ElevatedButton(
+                  onPressed: () {
+                    setState(() {
+                      pageIndex = 2;
+                    });
+                  },
+                  style: bottomNavButtonStyle,
+                  child: const Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [Icon(Icons.book_outlined), Text("ข้อมูล")],
+                  ),
                 ),
               ),
-              ElevatedButton(
-                onPressed: () {
-                  setState(() {
-                    pageIndex = 3;
-                  });
-                },
-                style: bottomNavButtonStyle,
-                child: const Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [Icon(Icons.headset_outlined), Text("ติดต่อ")],
+              Flexible(
+                flex: 1,
+                fit: FlexFit.tight,
+                child: ElevatedButton(
+                  onPressed: () {
+                    setState(() {
+                      pageIndex = 3;
+                    });
+                  },
+                  style: bottomNavButtonStyle,
+                  child: const Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [Icon(Icons.headset_outlined), Text("ติดต่อ")],
+                  ),
                 ),
               ),
             ],

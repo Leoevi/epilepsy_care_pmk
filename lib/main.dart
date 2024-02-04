@@ -53,7 +53,6 @@ class _MyHomePageState extends State<MyHomePage> {
     backgroundColor: Colors.transparent,
     shadowColor: Colors.transparent,
     padding: const EdgeInsets.all(0),  // To prevent overflow. Alternatives to look into is Expanded/Flex
-    // elevation: 0
   );
 
   @override
@@ -67,7 +66,7 @@ class _MyHomePageState extends State<MyHomePage> {
         )
       ),
       child: Scaffold(
-        bottomNavigationBar: Container(
+        bottomNavigationBar: Container(  // TODO: try flex layout with tight fit for bigger hit-boxes
           clipBehavior: Clip.antiAliasWithSaveLayer,
           height: 70,
           decoration: BoxDecoration(
@@ -152,7 +151,7 @@ class _MyHomePageState extends State<MyHomePage> {
         backgroundColor: Colors.transparent,
         body: SafeArea(
           child: pages[pageIndex],
-        )
+        ),
       ),
     );
   }

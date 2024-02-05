@@ -39,7 +39,7 @@ class Wiki extends StatelessWidget {
                   constraints: BoxConstraints(minHeight: constraints.maxHeight),
                   // LayoutBuilder must have a flex; otherwise, constraints.maxHeight will be Infinity
                   child: Column(  // Could change from col to Wrap if wanted to add spacing between children
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
                       IconLabelDetailButton(text: 'Item 1'),
                       IconLabelDetailButton(text: 'Item 2'),

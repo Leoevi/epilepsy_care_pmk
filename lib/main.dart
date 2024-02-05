@@ -22,7 +22,7 @@ class MyApp extends StatelessWidget {
         useMaterial3:
             true, // https://docs.flutter.dev/release/breaking-changes/material-3-default
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const MyHomePage(title: 'Epilepsy Care'),
     );
   }
 }
@@ -46,13 +46,11 @@ class _MyHomePageState extends State<MyHomePage> {
     const Contacts(),
   ];
 
-  // final addButtonOffset = const Offset(0, -1);
   // Use ElevatedButton.styleFrom instead of ButtonStyle: https://stackoverflow.com/questions/66542199/what-is-materialstatepropertycolor
   final bottomNavButtonStyle = ElevatedButton.styleFrom(  // Without this, the background of the button will not be transparent
     surfaceTintColor: Colors.transparent,
     backgroundColor: Colors.transparent,
     shadowColor: Colors.transparent,
-    padding: const EdgeInsets.all(0),  // To prevent overflow. Alternatives to look into is Expanded/Flex
   );
 
   @override
@@ -107,7 +105,6 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
                 ),
               ),
-              // SizedBox(width: 43, height: 43),
               Stack(  // TODO: Make the button float a bit above the bottom nav bar
                 // alignment: AlignmentDirectional.center,
                 // clipBehavior: Clip.none,

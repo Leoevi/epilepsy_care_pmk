@@ -1,3 +1,4 @@
+import 'package:epilepsy_care_pmk/screens/addPage/addPage.dart';
 import 'package:epilepsy_care_pmk/screens/calendar/calendar.dart';
 import 'package:epilepsy_care_pmk/screens/contacts/contacts.dart';
 import 'package:epilepsy_care_pmk/screens/home/home.dart';
@@ -47,28 +48,39 @@ class _MyHomePageState extends State<MyHomePage> {
   ];
 
   // Use ElevatedButton.styleFrom instead of ButtonStyle: https://stackoverflow.com/questions/66542199/what-is-materialstatepropertycolor
-  final bottomNavButtonStyle = ElevatedButton.styleFrom(  // Without this, the background of the button will not be transparent
+  final bottomNavButtonStyle = ElevatedButton.styleFrom(
+    // Without this, the background of the button will not be transparent
     surfaceTintColor: Colors.transparent,
     backgroundColor: Colors.transparent,
     shadowColor: Colors.transparent,
+<<<<<<< Updated upstream
+=======
+    padding: const EdgeInsets.all(
+        0), // To prevent overflow. Alternatives to look into is Expanded/Flex
+>>>>>>> Stashed changes
   );
 
   @override
   Widget build(BuildContext context) {
-    return Container(  // To have a gradient background, need to wrap with container
+    return Container(
+      // To have a gradient background, need to wrap with container
       decoration: const BoxDecoration(
-        gradient: LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [Color(0xFFCA80F7), Color(0x7FCA80F7)]  // TODO: use colors from theme instead of hardcoding
-        )
-      ),
+          gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+            Color(0xFFCA80F7),
+            Color(0x7FCA80F7)
+          ] // TODO: use colors from theme instead of hardcoding
+              )),
       child: Scaffold(
         bottomNavigationBar: Container(
           clipBehavior: Clip.antiAliasWithSaveLayer,
           height: 70,
           decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.inversePrimary,  // TODO: use colors from theme instead of hardcoding
+            color: Theme.of(context)
+                .colorScheme
+                .inversePrimary, // TODO: use colors from theme instead of hardcoding
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -101,11 +113,20 @@ class _MyHomePageState extends State<MyHomePage> {
                   style: bottomNavButtonStyle,
                   child: const Column(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children: [Icon(Icons.calendar_month_outlined), Text("ปฎิทิน")],
+                    children: [
+                      Icon(Icons.calendar_month_outlined),
+                      Text("ปฎิทิน")
+                    ],
                   ),
                 ),
               ),
+<<<<<<< Updated upstream
               Stack(  // TODO: Make the button float a bit above the bottom nav bar
+=======
+              // SizedBox(width: 43, height: 43),
+              Stack(
+                // TODO: Make the button float a bit above the bottom nav bar
+>>>>>>> Stashed changes
                 // alignment: AlignmentDirectional.center,
                 // clipBehavior: Clip.none,
                 children: <Widget>[
@@ -113,7 +134,9 @@ class _MyHomePageState extends State<MyHomePage> {
                     // top: addButtonOffset.dy,
                     child: RawMaterialButton(
                       // https://stackoverflow.com/questions/49809351/how-to-create-a-circle-icon-button-in-flutter
-                      onPressed: () {},
+                      onPressed: () {
+                        Navigator.of(context).push(MaterialPageRoute(builder: (context) => const addPage()));
+                      },
                       elevation: 2.0,
                       fillColor: Colors.white,
                       child: const Icon(

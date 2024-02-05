@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../custom_widgets/icon_label_detail_button.dart';
+
 class Wiki extends StatelessWidget {
   const Wiki({Key? key}) : super(key: key);
 
@@ -36,16 +38,16 @@ class Wiki extends StatelessWidget {
                 child: ConstrainedBox(
                   constraints: BoxConstraints(minHeight: constraints.maxHeight),
                   // LayoutBuilder must have a flex; otherwise, constraints.maxHeight will be Infinity
-                  child: Column(
+                  child: Column(  // Could change from col to Wrap if wanted to add spacing between children
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
-                      ItemWidget(text: 'Item 1'),
-                      ItemWidget(text: 'Item 2'),
-                      ItemWidget(text: 'Item 3'),
-                      ItemWidget(text: 'Item 3'),
-                      ItemWidget(text: 'Item 3'),
-                      ItemWidget(text: 'Item 3'),
-                      ItemWidget(text: 'Item 3'),
+                      IconLabelDetailButton(text: 'Item 1'),
+                      IconLabelDetailButton(text: 'Item 2'),
+                      IconLabelDetailButton(text: 'Item 3'),
+                      IconLabelDetailButton(text: 'Item 3'),
+                      IconLabelDetailButton(text: 'Item 3'),
+                      IconLabelDetailButton(text: 'Item 3'),
+                      IconLabelDetailButton(text: 'Item 3'),
                     ],
                   ),
                 ),
@@ -58,21 +60,4 @@ class Wiki extends StatelessWidget {
   }
 }
 
-class ItemWidget extends StatelessWidget {
-  const ItemWidget({
-    super.key,
-    required this.text,
-  });
 
-  final String text;
-
-  @override
-  Widget build(BuildContext context) {
-    return Card(
-      child: SizedBox(
-        height: 100,
-        child: Center(child: Text(text)),
-      ),
-    );
-  }
-}

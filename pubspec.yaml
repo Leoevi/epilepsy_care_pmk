@@ -37,6 +37,7 @@ dependencies:
   cupertino_icons: ^1.0.2
   fl_chart: ^0.66.0
   flutter_launcher_icons: ^0.13.1
+  table_calendar: ^3.0.9
 
 flutter_icons:
   android: true

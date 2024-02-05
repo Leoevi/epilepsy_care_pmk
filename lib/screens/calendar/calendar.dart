@@ -1,3 +1,4 @@
+import 'package:epilepsy_care_pmk/constants/padding_values.dart';
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 
@@ -37,8 +38,8 @@ class _CalendarState extends State<Calendar> {
             ),
             borderRadius: BorderRadius.circular(10.0)
           ),
-          padding: const EdgeInsets.all(16.0),
-          margin: const EdgeInsets.all(8.0),
+          padding: const EdgeInsets.all(kSmallPadding),
+          margin: const EdgeInsets.all(kLargePadding),
           child: TableCalendar(
             calendarStyle: CalendarStyle(
             

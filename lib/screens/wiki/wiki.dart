@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
 
 import '../../custom_widgets/icon_label_detail_button.dart';
+import '../../constants/padding_values.dart';
 
 class Wiki extends StatelessWidget {
   const Wiki({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    const double screenEdgePadding =
-        16.0; // TODO: declare this as a global thing where other screens can use the same padding value
     return Padding(
-      padding: const EdgeInsets.all(screenEdgePadding),
+      padding: const EdgeInsets.all(kLargePadding),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -28,7 +27,7 @@ class Wiki extends StatelessWidget {
               ],
             ),
           ),
-          const SizedBox(height: screenEdgePadding),
+          const SizedBox(height: kLargePadding),
           Expanded(
             // Wrap LayoutBuilder with Expanded in order to assign flex value to it
             flex: 4,

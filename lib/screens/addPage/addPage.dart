@@ -1,8 +1,9 @@
+import 'package:epilepsy_care_pmk/constants/padding_values.dart';
 import 'package:epilepsy_care_pmk/custom_widgets/icon_label_detail_button.dart';
 import 'package:flutter/material.dart';
 
-class addPage extends StatelessWidget {
-  const addPage({super.key});
+class AddPage extends StatelessWidget {
+  const AddPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +20,7 @@ class addPage extends StatelessWidget {
               )),
       child: Scaffold(
         appBar: AppBar(
-          title: Text("AddPage"),
+          title: Text("บันทึก"),
         ),
         backgroundColor: Colors.transparent,
         body: content(),
@@ -28,14 +29,12 @@ class addPage extends StatelessWidget {
   }
 
   Widget content() {
-    const double screenEdgePadding =
-        16.0; // TODO: declare this as a global thing where other screens can use the same padding value
     return Padding(
-      padding: const EdgeInsets.all(screenEdgePadding),
+      padding: const EdgeInsets.all(kLargePadding),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const SizedBox(height: screenEdgePadding),
+          const SizedBox(height: kLargePadding),
           Expanded(
             // Wrap LayoutBuilder with Expanded in order to assign flex value to it
             flex: 4,
@@ -49,9 +48,9 @@ class addPage extends StatelessWidget {
                     // Could change from col to Wrap if wanted to add spacing between children
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      IconLabelDetailButton(text: 'Item 1'),
-                      IconLabelDetailButton(text: 'Item 2'),
-                      IconLabelDetailButton(text: 'Item 3'),
+                      IconLabelDetailButton(label: 'Item 1'),
+                      IconLabelDetailButton(label: 'Item 2'),
+                      IconLabelDetailButton(label: 'Item 3'),
                     ],
                   ),
                 ),

@@ -30,7 +30,6 @@ class _CalendarState extends State<Calendar> {
       children: [
         Container(
           decoration: BoxDecoration(
-<<<<<<< Updated upstream
             color: Colors.white,
             border:Border.all(
               color: Colors.black,
@@ -40,16 +39,6 @@ class _CalendarState extends State<Calendar> {
           ),
           padding: const EdgeInsets.all(kSmallPadding),
           margin: const EdgeInsets.all(kLargePadding),
-=======
-              color: Colors.white,
-              border: Border.all(
-                color: Colors.black,
-                width: 2.0,
-              ),
-              borderRadius: BorderRadius.circular(10.0)),
-          padding: const EdgeInsets.all(16.0),
-          margin: const EdgeInsets.all(8.0),
->>>>>>> Stashed changes
           child: TableCalendar(
             calendarStyle: CalendarStyle(),
             calendarBuilders: CalendarBuilders(),

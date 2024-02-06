@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import '../../constants/padding_values.dart';
 import '../../custom_widgets/icon_label_detail_button.dart';
 
-class Contacts extends StatelessWidget {
-  const Contacts({Key? key}) : super(key: key);
+class PageWithHeaderLogo extends StatelessWidget {
+  const PageWithHeaderLogo({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -49,7 +49,10 @@ class Contacts extends StatelessWidget {
                       child: Column(  // Could change from col to Wrap if wanted to add spacing between children
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
-                          IconLabelDetailButton(label: 'Item 1'),
+                          IconLabelDetailButton(icon: Image(
+                            alignment: Alignment.centerLeft,
+                            image: AssetImage("image/header_logo_eng.png"),
+                          ), label: 'Item 1'),
                           IconLabelDetailButton(label: 'Item 2'),
                           IconLabelDetailButton(label: 'Item 3'),
                           IconLabelDetailButton(label: 'Item 3'),

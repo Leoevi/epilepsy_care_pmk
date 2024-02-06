@@ -40,13 +40,16 @@ class Wiki extends StatelessWidget {
                   child: Column(  // Could change from col to Wrap if wanted to add spacing between children
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      IconLabelDetailButton(text: 'Item 1'),
-                      IconLabelDetailButton(text: 'Item 2'),
-                      IconLabelDetailButton(text: 'Item 3'),
-                      IconLabelDetailButton(text: 'Item 3'),
-                      IconLabelDetailButton(text: 'Item 3'),
-                      IconLabelDetailButton(text: 'Item 3'),
-                      IconLabelDetailButton(text: 'Item 3'),
+                      IconLabelDetailButton(icon: Image(
+                        alignment: Alignment.centerLeft,
+                        image: AssetImage("image/header_logo_eng.png"),
+                      ), label: 'Item 1'),
+                      IconLabelDetailButton(label: 'Item 2'),
+                      IconLabelDetailButton(label: 'Item 3'),
+                      IconLabelDetailButton(label: 'Item 3'),
+                      IconLabelDetailButton(label: 'Item 3'),
+                      IconLabelDetailButton(label: 'Item 3'),
+                      IconLabelDetailButton(label: 'Item 3'),
                     ],
                   ),
                 ),

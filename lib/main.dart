@@ -53,11 +53,7 @@ class _MyHomePageState extends State<MyHomePage> {
     surfaceTintColor: Colors.transparent,
     backgroundColor: Colors.transparent,
     shadowColor: Colors.transparent,
-<<<<<<< Updated upstream
-=======
-    padding: const EdgeInsets.all(
-        0), // To prevent overflow. Alternatives to look into is Expanded/Flex
->>>>>>> Stashed changes
+    padding: const EdgeInsets.all(0),  // To prevent overflow. This is still needed despite with Expanded/Flex
   );
 
   @override
@@ -120,13 +116,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
                 ),
               ),
-<<<<<<< Updated upstream
               Stack(  // TODO: Make the button float a bit above the bottom nav bar
-=======
-              // SizedBox(width: 43, height: 43),
-              Stack(
-                // TODO: Make the button float a bit above the bottom nav bar
->>>>>>> Stashed changes
                 // alignment: AlignmentDirectional.center,
                 // clipBehavior: Clip.none,
                 children: <Widget>[
@@ -135,7 +125,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     child: RawMaterialButton(
                       // https://stackoverflow.com/questions/49809351/how-to-create-a-circle-icon-button-in-flutter
                       onPressed: () {
-                        Navigator.of(context).push(MaterialPageRoute(builder: (context) => const addPage()));
+                        Navigator.of(context).push(MaterialPageRoute(builder: (context) => const AddPage()));
                       },
                       elevation: 2.0,
                       fillColor: Colors.white,

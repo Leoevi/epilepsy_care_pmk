@@ -10,3 +10,6 @@
 const double kSmallPadding = 8.0;
 const double kMediumPadding = 12.0;
 const double kLargePadding = 16.0;
+
+const double kSmallRoundedCornerRadius = 8.0;
+const double kMediumRoundedCornerRadius = 12.0;

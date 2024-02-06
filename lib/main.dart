@@ -1,6 +1,6 @@
 import 'package:epilepsy_care_pmk/screens/add_event/add_select.dart';
 import 'package:epilepsy_care_pmk/screens/calendar/calendar.dart';
-import 'package:epilepsy_care_pmk/screens/contacts/contacts.dart';
+import 'package:epilepsy_care_pmk/screens/contacts/contact.dart';
 import 'package:epilepsy_care_pmk/screens/home/home.dart';
 import 'package:epilepsy_care_pmk/screens/wiki/wiki.dart';
 import 'package:flutter/material.dart';
@@ -44,7 +44,7 @@ class _MyHomePageState extends State<MyHomePage> {
     const Home(),
     const Calendar(),
     const Wiki(),
-    const Contacts(),
+    const Contact(),
   ];
 
   // Use ElevatedButton.styleFrom instead of ButtonStyle: https://stackoverflow.com/questions/66542199/what-is-materialstatepropertycolor

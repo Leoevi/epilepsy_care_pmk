@@ -2,8 +2,8 @@ import 'package:epilepsy_care_pmk/constants/padding_values.dart';
 import 'package:epilepsy_care_pmk/custom_widgets/icon_label_detail_button.dart';
 import 'package:flutter/material.dart';
 
-class AddPage extends StatelessWidget {
-  const AddPage({super.key});
+class AddSelect extends StatelessWidget {
+  const AddSelect({super.key});
 
   @override
   Widget build(BuildContext context) {

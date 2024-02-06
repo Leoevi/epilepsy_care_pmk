@@ -1,4 +1,4 @@
-import 'package:epilepsy_care_pmk/screens/addPage/addPage.dart';
+import 'package:epilepsy_care_pmk/screens/add_event/add_select.dart';
 import 'package:epilepsy_care_pmk/screens/calendar/calendar.dart';
 import 'package:epilepsy_care_pmk/screens/contacts/contacts.dart';
 import 'package:epilepsy_care_pmk/screens/home/home.dart';
@@ -125,7 +125,7 @@ class _MyHomePageState extends State<MyHomePage> {
                     child: RawMaterialButton(
                       // https://stackoverflow.com/questions/49809351/how-to-create-a-circle-icon-button-in-flutter
                       onPressed: () {
-                        Navigator.of(context).push(MaterialPageRoute(builder: (context) => const AddPage()));
+                        Navigator.of(context).push(MaterialPageRoute(builder: (context) => const AddSelect()));
                       },
                       elevation: 2.0,
                       fillColor: Colors.white,

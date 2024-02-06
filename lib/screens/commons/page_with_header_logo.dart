@@ -1,10 +1,17 @@
 import 'package:flutter/material.dart';
 
 import '../../constants/padding_values.dart';
-import '../../custom_widgets/icon_label_detail_button.dart';
 
+/// A page with the PMK logo on top.
+///
+/// The [child] is the actual content of the page.
 class PageWithHeaderLogo extends StatelessWidget {
-  const PageWithHeaderLogo({Key? key}) : super(key: key);
+  const PageWithHeaderLogo({
+    super.key,
+    required this.child,
+  });
+
+  final Widget child;
 
   @override
   Widget build(BuildContext context) {
@@ -30,42 +37,8 @@ class PageWithHeaderLogo extends StatelessWidget {
           ),
           const SizedBox(height: kLargePadding),
           Expanded(
-            // Wrap LayoutBuilder with Expanded in order to assign flex value to it
             flex: 4,
-            child: Container(
-              decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(kMediumRoundedCornerRadius)
-              ),
-              child: Expanded(
-                // Wrap LayoutBuilder with Expanded in order to assign flex value to it
-                flex: 4,
-                child: LayoutBuilder(builder: (context, constraints) {
-                  // From https://docs.flutter.dev/cookbook/lists/spaced-items
-                  return SingleChildScrollView(
-                    child: ConstrainedBox(
-                      constraints: BoxConstraints(minHeight: constraints.maxHeight),
-                      // LayoutBuilder must have a flex; otherwise, constraints.maxHeight will be Infinity
-                      child: Column(  // Could change from col to Wrap if wanted to add spacing between children
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          IconLabelDetailButton(icon: Image(
-                            alignment: Alignment.centerLeft,
-                            image: AssetImage("image/header_logo_eng.png"),
-                          ), label: 'Item 1'),
-                          IconLabelDetailButton(label: 'Item 2'),
-                          IconLabelDetailButton(label: 'Item 3'),
-                          IconLabelDetailButton(label: 'Item 3'),
-                          IconLabelDetailButton(label: 'Item 3'),
-                          IconLabelDetailButton(label: 'Item 3'),
-                          IconLabelDetailButton(label: 'Item 3'),
-                        ],
-                      ),
-                    ),
-                  );
-                }),
-              ),
-            ),
+            child: child,
           ),
         ],
       ),

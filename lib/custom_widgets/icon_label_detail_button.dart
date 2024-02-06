@@ -1,7 +1,14 @@
 import 'package:epilepsy_care_pmk/constants/padding_values.dart';
 import 'package:flutter/material.dart';
 
-// A card that is used as a button for
+/// A card that is used as a button. It has an icon, a main label
+/// and you can describe the details of the button.
+///
+/// [icon] is the image that will be used as the icon
+///
+/// [label] is the label for the button
+///
+/// [detail] is the detail of the button
 class IconLabelDetailButton extends StatelessWidget {
   const IconLabelDetailButton({
     super.key,

@@ -15,6 +15,7 @@ class _medAllergyState extends State<medAllergy> {
   Widget build(BuildContext context) {
     return const ScreenWithAppBar(
       title: "บันทึกอาการเเพ้ยา",
+      
     );
   }
 }

@@ -1,5 +1,6 @@
 import 'package:epilepsy_care_pmk/constants/padding_values.dart';
 import 'package:epilepsy_care_pmk/custom_widgets/icon_label_detail_button.dart';
+import 'package:epilepsy_care_pmk/screens/commons/screen_with_app_bar.dart';
 import 'package:flutter/material.dart';
 
 class AddSelect extends StatelessWidget {
@@ -7,24 +8,9 @@ class AddSelect extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      // To have a gradient background, need to wrap with container
-      decoration: const BoxDecoration(
-          gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [
-            Color(0xFFCA80F7),
-            Color(0x7FCA80F7)
-          ] // TODO: use colors from theme instead of hardcoding
-              )),
-      child: Scaffold(
-        appBar: AppBar(
-          title: Text("บันทึก"),
-        ),
-        backgroundColor: Colors.transparent,
+    return ScreenWithAppBar(
+        title: "บันทึก",
         body: content(),
-      ),
     );
   }
 
@@ -48,9 +34,9 @@ class AddSelect extends StatelessWidget {
                     // Could change from col to Wrap if wanted to add spacing between children
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      IconLabelDetailButton(label: 'Item 1'),
-                      IconLabelDetailButton(label: 'Item 2'),
-                      IconLabelDetailButton(label: 'Item 3'),
+                      IconLabelDetailButton(label: 'Item 1', onTap: () {},),
+                      IconLabelDetailButton(label: 'Item 2', onTap: () {},),
+                      IconLabelDetailButton(label: 'Item 3', onTap: () {},),
                     ],
                   ),
                 ),

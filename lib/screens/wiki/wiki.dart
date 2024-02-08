@@ -12,18 +12,8 @@ class Wiki extends StatelessWidget {
     return PageWithHeaderLogo(
       child: ColumnWithSpacings(
         children: [
-          IconLabelDetailButton(
-              icon: Image(
-                alignment: Alignment.centerLeft,
-                image: AssetImage("image/header_logo_eng.png"),
-              ),
-              label: 'Item 1'),
-          IconLabelDetailButton(label: 'Item 2'),
-          IconLabelDetailButton(label: 'Item 3'),
-          IconLabelDetailButton(label: 'Item 3'),
-          IconLabelDetailButton(label: 'Item 3'),
-          IconLabelDetailButton(label: 'Item 3'),
-          IconLabelDetailButton(label: 'Item 3'),
+          IconLabelDetailButton(label: 'ข้อมูลโรคอาการลมชัก', detail: "เรื่องต่าง ๆ ที่ควรทราบเกี่ยวกับโรคลมชัก",onTap: () {},),
+          IconLabelDetailButton(label: 'ข้อมูลชนิดของยา', detail: "ศึกษาข้อมูลของยาที่ใช้เกี่ยวกับโรคลมชักได้ที่นี่", onTap: () {},),
         ],
       )
     );

@@ -84,7 +84,7 @@ class Contact extends StatelessWidget {
                   label: "LINE ID",
                   address: "0985233838",
                   buttonLabel: "ไปที่ LINE",
-                  onPressed: () {},  // TODO: make the button launch the LINE app
+                  onPressed: null,  // TODO: make the button launch the LINE app
                 ),
               ],
             ),
@@ -105,7 +105,7 @@ class ContactEntry extends StatelessWidget {
   final String label;
   final String address;
   final String buttonLabel;
-  final Function() onPressed;
+  final Function()? onPressed;
 
   @override
   Widget build(BuildContext context) {

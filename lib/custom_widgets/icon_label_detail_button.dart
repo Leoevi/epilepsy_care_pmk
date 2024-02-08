@@ -15,21 +15,23 @@ class IconLabelDetailButton extends StatelessWidget {
     this.icon,
     required this.label,  // The button must have a header label
     this.detail,
+    required this.onTap,
   });
 
   // If we want a member to be nullable, we need to use the ? operator
   final Widget? icon;
   final String label;
   final String? detail;
+  final Function()? onTap;
 
   @override
   Widget build(BuildContext context) {
     return Card(
       clipBehavior: Clip.hardEdge,  // Prevent ripple effect from rounded corners at a bit of performance cost
       child: InkWell(  // Make clickable, (Inkwell for ripple effect, GestureDetector for no effect)
-        onTap: () {},
+        onTap: onTap,
         child: Padding(
-          padding: const EdgeInsets.all(kMediumPadding),
+          padding: const EdgeInsets.all(kLargePadding),
           child: SizedBox(
             child: Row(
               children: [

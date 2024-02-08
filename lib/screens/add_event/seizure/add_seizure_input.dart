@@ -1,3 +1,4 @@
+import 'package:date_picker_timeline/date_picker_widget.dart';
 import 'package:epilepsy_care_pmk/constants/styling.dart';
 import 'package:epilepsy_care_pmk/custom_widgets/column_with_spacings.dart';
 import 'package:epilepsy_care_pmk/custom_widgets/icon_label_detail_button.dart';
@@ -14,7 +15,8 @@ class addSeizure extends StatefulWidget {
 class _addSeizureState extends State<addSeizure> {
   var seizure_symtomp; // Input อาการ
   var seizure_place; // Input สถานที่
-  var dropDownValue;
+  var dropDownValue; // dropDown value
+  var _selectedValue; // Date from datepicker
   int id = 0; // เป็นตัว Counter ที่เอาไว้ใช้บอกว่ามาจาก Input ไหน
   TimeOfDay selectedTime = TimeOfDay.now(); // default time
 
@@ -50,6 +52,24 @@ class _addSeizureState extends State<addSeizure> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        //Start here
+
+                        DatePicker(
+                          //TODO: Make Selected show on center
+                          DateTime.now(),
+                          height: 90,
+                          initialSelectedDate: DateTime.now(),
+                          selectionColor: Color.fromARGB(255, 201, 128, 247),
+                          selectedTextColor: Colors.white,
+                          locale: "th_TH",
+                          onDateChange: (date) {
+                            // New date selected
+                            setState(() {
+                              _selectedValue = date;
+                            });
+                          },
+                        ),
+
                         Text("เพิ่มอาการชัก", style: TextStyle(fontSize: 18)),
 
                         SizedBox(height: 10),
@@ -74,7 +94,7 @@ class _addSeizureState extends State<addSeizure> {
                           ],
                         ),
 
-                        SizedBox(height: 30),
+                        SizedBox(height: 20),
                         //Time
                         Text("โปรดกรอกเวลา", style: TextStyle(fontSize: 18)),
 
@@ -109,6 +129,7 @@ class _addSeizureState extends State<addSeizure> {
                                   setState(() {
                                     selectedTime = timeOfDay;
                                     //time result : timeOfDay
+                                    print("date>>>>>> $selectedTime");
                                   });
                                 }
                               },

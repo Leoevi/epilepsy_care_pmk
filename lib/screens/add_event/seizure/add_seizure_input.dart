@@ -14,6 +14,7 @@ class addSeizure extends StatefulWidget {
 class _addSeizureState extends State<addSeizure> {
   var seizure_symtomp; // Input อาการ
   var seizure_place; // Input สถานที่
+  var dropDownValue;
   int id = 0; // เป็นตัว Counter ที่เอาไว้ใช้บอกว่ามาจาก Input ไหน
   TimeOfDay selectedTime = TimeOfDay.now(); // default time
 
@@ -49,6 +50,31 @@ class _addSeizureState extends State<addSeizure> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        Text("เพิ่มอาการชัก", style: TextStyle(fontSize: 18)),
+
+                        SizedBox(height: 10),
+
+                        DropdownButtonFormField(
+                          value: dropDownValue,
+                          icon: const Icon(Icons.keyboard_arrow_down),
+                          decoration:
+                              InputDecoration(border: OutlineInputBorder()),
+                          onChanged: (val) {
+                            setState(() {
+                              dropDownValue = val!;
+                            });
+                          },
+                          items: const [
+                            DropdownMenuItem<String>(
+                                child: Text("hello!"), value: "hello"),
+                            DropdownMenuItem<String>(
+                                child: Text("kuy!"), value: "kuy"),
+                            DropdownMenuItem<String>(
+                                child: Text("sus!"), value: "sus"),
+                          ],
+                        ),
+
+                        SizedBox(height: 30),
                         //Time
                         Text("โปรดกรอกเวลา", style: TextStyle(fontSize: 18)),
 

@@ -19,7 +19,7 @@ class MyApp extends StatelessWidget {
       title: 'Epilepsy Care',
       // To change the app's name, you need to go into each platform's manifest file (https://stackoverflow.com/questions/49353199/how-can-i-change-the-app-display-name-build-with-flutter)
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.purpleAccent),
         useMaterial3:
             true, // https://docs.flutter.dev/release/breaking-changes/material-3-default
       ),
@@ -65,8 +65,8 @@ class _MyHomePageState extends State<MyHomePage> {
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
               colors: [
-            Color(0xFFCA80F7),
-            Color(0x7FCA80F7)
+            Color(0xFFF6C0FF),
+            Color(0xFFF69AFF)
           ] // TODO: use colors from theme instead of hardcoding
               )),
       child: Scaffold(

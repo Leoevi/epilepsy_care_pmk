@@ -24,8 +24,8 @@ class ScreenWithAppBar extends StatelessWidget {
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
               colors: [
-            Color(0xFFCA80F7),
-            Color(0x7FCA80F7)
+                Color(0xFFF6C0FF),
+                Color(0xFFF69AFF)
           ] // TODO: use colors from theme instead of hardcoding
               )),
       child: Scaffold(

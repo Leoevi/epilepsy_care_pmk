@@ -144,7 +144,7 @@ class _addSeizureState extends State<addSeizure> {
                           ],
                         ),
 
-                        SizedBox(height: 30),
+                        SizedBox(height: 20),
 
                         //field ระบุอาการ
                         Text("โปรดระบุอาการ", style: TextStyle(fontSize: 18)),
@@ -163,7 +163,7 @@ class _addSeizureState extends State<addSeizure> {
                               border: OutlineInputBorder()),
                         ),
 
-                        SizedBox(height: 30), //spacing between input
+                        SizedBox(height: 20), //spacing between input
 
                         //field ระบุสถานที่
                         Text("โปรดระบุสถานที่", style: TextStyle(fontSize: 18)),
@@ -182,7 +182,7 @@ class _addSeizureState extends State<addSeizure> {
                         // Text(
                         //     "input 1 : $seizure_symtomp ---- input 2 : $seizure_place")   Input value check
 
-                        SizedBox(height: 30),
+                        SizedBox(height: 20),
 
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,

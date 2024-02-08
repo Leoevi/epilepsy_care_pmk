@@ -13,7 +13,7 @@ class Symptom extends StatelessWidget {
         title: "ข้อมูลโรคอาการลมชัก",
         iconLabelDetailButtonList: [
           IconLabelDetailButton(label: "สาเหตุของอาการลมชัก", onTap: () {
-            // Navigator.of(context).push(MaterialPageRoute(builder: (context) => const MedicationDetail()));
+            Navigator.of(context).push(MaterialPageRoute(builder: (context) => const SymptomDetail(title: "สาเหตุของอาการลมชัก")));
           }),
           IconLabelDetailButton(label: "ชนิดและประเภท", onTap: null),
           IconLabelDetailButton(label: "วิธีการรักษาเบื้องต้น", onTap: null),

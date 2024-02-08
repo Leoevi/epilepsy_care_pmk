@@ -1,5 +1,8 @@
 import 'package:epilepsy_care_pmk/constants/styling.dart';
 import 'package:epilepsy_care_pmk/custom_widgets/icon_label_detail_button.dart';
+import 'package:epilepsy_care_pmk/screens/add_event/med_allergy/add_med_allergy_input.dart';
+import 'package:epilepsy_care_pmk/screens/add_event/med_intake/add_med_intake_input.dart';
+import 'package:epilepsy_care_pmk/screens/add_event/seizure/add_seizure_input.dart';
 import 'package:epilepsy_care_pmk/screens/commons/screen_with_app_bar.dart';
 import 'package:flutter/material.dart';
 
@@ -35,16 +38,25 @@ class AddSelect extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
                       IconLabelDetailButton(
-                        label: 'Item 1',
-                        onTap: () {},
+                        label: 'บันทึกอาการลมชัก',
+                        onTap: () {
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => const addSeizure()));
+                        },
                       ),
                       IconLabelDetailButton(
-                        label: 'Item 2',
-                        onTap: () {},
+                        label: 'บันทึกอาการเเพ้ยา',
+                        onTap: () {
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => const medAllergy()));
+                        },
                       ),
                       IconLabelDetailButton(
-                        label: 'Item 3',
-                        onTap: () {},
+                        label: 'บันทึกชนิดเเละปริมาณยา',
+                        onTap: () {
+                          Navigator.of(context).push(MaterialPageRoute(
+                              builder: (context) => const addMedTake()));
+                        },
                       ),
                     ],
                   ),

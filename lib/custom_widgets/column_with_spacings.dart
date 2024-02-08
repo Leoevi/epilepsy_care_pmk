@@ -11,9 +11,13 @@ class ColumnWithSpacings extends StatelessWidget {
   const ColumnWithSpacings({
     super.key,
     required this.children,
+    this.mainAxisAlignment = MainAxisAlignment.spaceAround,
+    this.crossAxisAlignment = CrossAxisAlignment.center,
   });
 
   final List<Widget> children;
+  final MainAxisAlignment mainAxisAlignment;
+  final CrossAxisAlignment crossAxisAlignment;
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +28,8 @@ class ColumnWithSpacings extends StatelessWidget {
           // LayoutBuilder must have a flex; otherwise, constraints.maxHeight will be Infinity
           child: Column(
             // Could change from col to Wrap if wanted to add spacing between children
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            mainAxisAlignment: mainAxisAlignment,
+            crossAxisAlignment: crossAxisAlignment,
             children: children,
           ),
         ),

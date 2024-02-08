@@ -1,4 +1,4 @@
-import 'package:epilepsy_care_pmk/constants/padding_values.dart';
+import 'package:epilepsy_care_pmk/constants/styling.dart';
 import 'package:flutter/material.dart';
 
 /// A card that is used as a button. It has an icon, a main label

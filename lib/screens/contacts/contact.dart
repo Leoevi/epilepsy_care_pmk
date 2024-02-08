@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../../constants/padding_values.dart';
+import '../../constants/styling.dart';
 
 class Contact extends StatelessWidget {
   const Contact({super.key});

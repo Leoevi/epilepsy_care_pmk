@@ -1,7 +1,7 @@
 import 'package:epilepsy_care_pmk/custom_widgets/column_with_spacings.dart';
 import 'package:flutter/material.dart';
 
-import '../../constants/padding_values.dart';
+import '../../constants/styling.dart';
 
 /// A page with the PMK logo on top. This page is divided by flex
 /// So you can use [ColumnWithSpacings] as a child of this.

@@ -1,4 +1,4 @@
-import 'package:epilepsy_care_pmk/constants/padding_values.dart';
+import 'package:epilepsy_care_pmk/constants/styling.dart';
 import 'package:epilepsy_care_pmk/custom_widgets/icon_label_detail_button.dart';
 import 'package:epilepsy_care_pmk/screens/commons/screen_with_app_bar.dart';
 import 'package:flutter/material.dart';
@@ -9,8 +9,8 @@ class AddSelect extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ScreenWithAppBar(
-        title: "บันทึก",
-        body: content(),
+      title: "บันทึก",
+      body: content(),
     );
   }
 
@@ -34,9 +34,18 @@ class AddSelect extends StatelessWidget {
                     // Could change from col to Wrap if wanted to add spacing between children
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      IconLabelDetailButton(label: 'Item 1', onTap: () {},),
-                      IconLabelDetailButton(label: 'Item 2', onTap: () {},),
-                      IconLabelDetailButton(label: 'Item 3', onTap: () {},),
+                      IconLabelDetailButton(
+                        label: 'Item 1',
+                        onTap: () {},
+                      ),
+                      IconLabelDetailButton(
+                        label: 'Item 2',
+                        onTap: () {},
+                      ),
+                      IconLabelDetailButton(
+                        label: 'Item 3',
+                        onTap: () {},
+                      ),
                     ],
                   ),
                 ),

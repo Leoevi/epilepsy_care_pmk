@@ -13,8 +13,7 @@ class addMedTake extends StatefulWidget {
 }
 
 class _addMedTakeState extends State<addMedTake> {
-  String? seizureSymptom; // Input อาการ
-  String? seizurePlace; // Input สถานที่
+  String? seizureDose; // Input ปริมาณ
   Object? dropDownValue; // dropDown value
   DateTime selectedDate = DateTime.now(); // Date from datepicker
   TimeOfDay selectedTime = TimeOfDay.now(); // default time
@@ -120,7 +119,7 @@ class _addMedTakeState extends State<addMedTake> {
                     //Collect data by use update_text function
                     onChanged: (val) {
                       setState(() {
-                        seizureSymptom = val;
+                        seizureDose = val;
                         // print(seizureSymptom);
                       });
                     },

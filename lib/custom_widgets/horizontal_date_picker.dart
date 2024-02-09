@@ -11,6 +11,7 @@ class HorizontalDatePicker extends StatefulWidget {
 class _HorizontalDatePickerState extends State<HorizontalDatePicker> {
   @override
   Widget build(BuildContext context) {
+    DateTime _selectedValue;
     return DatePicker(
       //TODO: Make Selected show on center
       DateTime.now(),
@@ -22,7 +23,7 @@ class _HorizontalDatePickerState extends State<HorizontalDatePicker> {
       onDateChange: (date) {
         // New date selected
         setState(() {
-          // _selectedValue = date;  // TODO: try to retrieve the value back
+          _selectedValue = date;  // TODO: try to retrieve the value back
         });
       },
     );

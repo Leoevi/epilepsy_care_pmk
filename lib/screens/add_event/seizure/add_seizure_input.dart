@@ -3,35 +3,19 @@ import 'package:epilepsy_care_pmk/constants/styling.dart';
 import 'package:epilepsy_care_pmk/screens/commons/screen_with_app_bar.dart';
 import 'package:flutter/material.dart';
 
-class addSeizure extends StatefulWidget {
-  const addSeizure({super.key});
+class AddSeizureInput extends StatefulWidget {
+  const AddSeizureInput({super.key});
 
   @override
-  State<addSeizure> createState() => _addSeizureState();
+  State<AddSeizureInput> createState() => _AddSeizureInputState();
 }
 
-class _addSeizureState extends State<addSeizure> {
-  var seizure_symtomp; // Input อาการ
-  var seizure_place; // Input สถานที่
-  var dropDownValue; // dropDown value
-  var _selectedValue; // Date from datepicker
-  int id = 0; // เป็นตัว Counter ที่เอาไว้ใช้บอกว่ามาจาก Input ไหน
+class _AddSeizureInputState extends State<AddSeizureInput> {
+  String? seizureSymptom; // Input อาการ
+  String? seizurePlace; // Input สถานที่
+  Object? dropDownValue; // dropDown value
+  DateTime selectedDate = DateTime.now(); // Date from datepicker
   TimeOfDay selectedTime = TimeOfDay.now(); // default time
-
-  // method เก็บข้อมูลจาก Input
-  void collect_data_from_text(val) {
-    if (id == 1) {
-      // อาการ
-      setState(() {
-        seizure_symtomp = val;
-      });
-    } else if (id == 2) {
-      //สถานที่
-      setState(() {
-        seizure_place = val;
-      });
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -63,7 +47,8 @@ class _addSeizureState extends State<addSeizure> {
                           onDateChange: (date) {
                             // New date selected
                             setState(() {
-                              _selectedValue = date;
+                              selectedDate = date;
+                              // print(selectedDate);
                             });
                           },
                         ),
@@ -80,6 +65,7 @@ class _addSeizureState extends State<addSeizure> {
                           onChanged: (val) {
                             setState(() {
                               dropDownValue = val!;
+                              // print(dropDownValue);
                             });
                           },
                           items: const [
@@ -106,8 +92,8 @@ class _addSeizureState extends State<addSeizure> {
                                 //Collect data by use update_text function
                                 enabled: false,
                                 decoration: InputDecoration(
-                                    hintText:
-                                        "${selectedTime.hour} : ${selectedTime.minute} น.",
+                                    hintText: selectedTime.format(context),
+                                    // TODO: Change PM to 12-hour
                                     border: OutlineInputBorder()),
                               ),
                             ),
@@ -127,7 +113,7 @@ class _addSeizureState extends State<addSeizure> {
                                   setState(() {
                                     selectedTime = timeOfDay;
                                     //time result : timeOfDay
-                                    print("date>>>>>> $selectedTime");
+                                    // print("time>>>>>> $selectedTime");
                                   });
                                 }
                               },
@@ -147,31 +133,36 @@ class _addSeizureState extends State<addSeizure> {
                         //field ระบุอาการ
                         Text("โปรดระบุอาการ", style: TextStyle(fontSize: 18)),
 
-                        SizedBox(
-                            height: 10), //spacing between label and TextInput
+                        SizedBox(height: 10),
+                        //spacing between label and TextInput
 
                         TextFormField(
                           //Collect data by use update_text function
                           onChanged: (val) {
-                            id = 1;
-                            collect_data_from_text(val);
+                            setState(() {
+                              seizureSymptom = val;
+                              // print(seizureSymptom);
+                            });
                           },
                           decoration: InputDecoration(
                               hintText: "ระบุอาการ",
                               border: OutlineInputBorder()),
                         ),
 
-                        SizedBox(height: 20), //spacing between input
+                        SizedBox(height: 20),
+                        //spacing between input
 
                         //field ระบุสถานที่
                         Text("โปรดระบุสถานที่", style: TextStyle(fontSize: 18)),
-                        SizedBox(
-                            height: 10), //spacing between label and TextInput
+                        SizedBox(height: 10),
+                        //spacing between label and TextInput
                         TextFormField(
                           //Collect data by use update_text function
                           onChanged: (val) {
-                            id = 2;
-                            collect_data_from_text(val);
+                            setState(() {
+                              seizurePlace = val;
+                              print(seizurePlace);
+                            });
                           },
                           decoration: InputDecoration(
                               hintText: "ระบุสถานที่",

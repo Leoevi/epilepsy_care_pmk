@@ -41,7 +41,7 @@ class AddSelect extends StatelessWidget {
                         label: 'บันทึกอาการลมชัก',
                         onTap: () {
                           Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => const addSeizure()));
+                              builder: (context) => const AddSeizureInput()));
                         },
                       ),
                       IconLabelDetailButton(

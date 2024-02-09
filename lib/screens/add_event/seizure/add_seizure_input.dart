@@ -70,11 +70,11 @@ class _AddSeizureInputState extends State<AddSeizureInput> {
                           },
                           items: const [
                             DropdownMenuItem<String>(
-                                child: Text("hello!"), value: "hello"),
+                                child: Text("hello!"), value: "hello!"),
                             DropdownMenuItem<String>(
-                                child: Text("kuy!"), value: "kuy"),
+                                child: Text("hello2!"), value: "hello2!"),
                             DropdownMenuItem<String>(
-                                child: Text("sus!"), value: "sus"),
+                                child: Text("hello3!"), value: "hello3!"),
                           ],
                         ),
 

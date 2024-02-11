@@ -12,9 +12,7 @@ class Medication extends StatelessWidget {
     return ScreenWithAppBarAndList(
         title: "ข้อมูลชนิดของยา",
         iconLabelDetailButtonList: [
-          IconLabelDetailButton(label: "Carbamazepin", onTap: () {
-            Navigator.of(context).push(MaterialPageRoute(builder: (context) => const SymptomDetail(title: "Carbamazepin")));
-          }),
+          IconLabelDetailButton(label: "Carbamazepin", onTap: null),
           IconLabelDetailButton(label: "Clonazepam", onTap: null),
           IconLabelDetailButton(label: "Lamotrigine", onTap: null),
           IconLabelDetailButton(label: "Levetiracetam", onTap: null),

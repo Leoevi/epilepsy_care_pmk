@@ -22,3 +22,6 @@ ButtonStyle purpleButton = ElevatedButton.styleFrom(
     padding: EdgeInsets.all(20),
     fixedSize: Size.fromWidth(140),
     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)));
+
+const String indent = "\t\t\t\t";
+

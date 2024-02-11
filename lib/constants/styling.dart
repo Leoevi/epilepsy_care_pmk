@@ -7,9 +7,18 @@
 // Initially, I wanted to create a class of constants, but that seemed
 // like it was not a good practice (https://stackoverflow.com/a/64795039)
 // So we will just declare them at the top level like so
+import 'package:flutter/material.dart';
+
 const double kSmallPadding = 8.0;
 const double kMediumPadding = 12.0;
 const double kLargePadding = 16.0;
 
 const double kSmallRoundedCornerRadius = 8.0;
 const double kMediumRoundedCornerRadius = 12.0;
+
+//style: purpleButton
+ButtonStyle purpleButton = ElevatedButton.styleFrom(
+    backgroundColor: Color.fromARGB(255, 201, 128, 247), //Color(0x7FCA80F7)
+    padding: EdgeInsets.all(20),
+    fixedSize: Size.fromWidth(140),
+    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)));

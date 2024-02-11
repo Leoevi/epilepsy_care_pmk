@@ -4,6 +4,8 @@ import 'package:epilepsy_care_pmk/screens/add_event/add_select.dart';
 import 'package:epilepsy_care_pmk/screens/commons/screen_with_app_bar.dart';
 import 'package:flutter/material.dart';
 
+const List<String> list = <String>['One', 'Two', 'Three', 'Four'];
+
 class AddSeizureInput extends StatefulWidget {
   const AddSeizureInput({super.key});
 
@@ -16,7 +18,8 @@ class _AddSeizureInputState extends State<AddSeizureInput> {
 
   String? seizureSymptom; // Input อาการ
   String? seizurePlace; // Input สถานที่
-  Object? dropDownValue; // dropDown value
+  String dropDownValue = list.first; // dropDown init value
+
   DateTime selectedDate = DateTime.now(); // Date from datepicker
   TimeOfDay selectedTime = TimeOfDay.now(); // default time
 
@@ -67,20 +70,19 @@ class _AddSeizureInputState extends State<AddSeizureInput> {
                             icon: const Icon(Icons.keyboard_arrow_down),
                             decoration:
                                 InputDecoration(border: OutlineInputBorder()),
-                            onChanged: (val) {
+                            onChanged: (String? val) {
                               setState(() {
                                 dropDownValue = val!;
                                 // print(dropDownValue);
                               });
                             },
-                            items: const [
-                              DropdownMenuItem<String>(
-                                  child: Text("hello!"), value: "hello!"),
-                              DropdownMenuItem<String>(
-                                  child: Text("hello2!"), value: "hello2!"),
-                              DropdownMenuItem<String>(
-                                  child: Text("hello3!"), value: "hello3!"),
-                            ],
+                            items: list
+                                .map<DropdownMenuItem<String>>((String value) {
+                              return DropdownMenuItem<String>(
+                                value: value,
+                                child: Text(value),
+                              );
+                            }).toList(),
                           ),
 
                           SizedBox(height: 20),
@@ -194,8 +196,7 @@ class _AddSeizureInputState extends State<AddSeizureInput> {
                                 child: Text("ยกเลิก",
                                     style: TextStyle(fontSize: 16)),
                                 onPressed: () {
-                                  Navigator.of(context).push(MaterialPageRoute(
-                                      builder: (context) => const AddSelect()));
+                                  Navigator.of(context).pop();
                                 },
                                 style: ElevatedButton.styleFrom(
                                     backgroundColor: Colors.white,
@@ -226,10 +227,8 @@ class _AddSeizureInputState extends State<AddSeizureInput> {
                                             content:
                                                 Text('บันทึกข้อมูลสำเร็จ')));
 
-                                    Navigator.of(context).push(
-                                        MaterialPageRoute(
-                                            builder: (context) =>
-                                                const AddSelect()));
+                                    Navigator.of(context)
+                                        .popUntil((route) => route.isFirst);
                                   }
                                 },
                                 style: ElevatedButton.styleFrom(

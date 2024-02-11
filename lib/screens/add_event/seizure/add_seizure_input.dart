@@ -1,8 +1,8 @@
-import 'package:date_picker_timeline/date_picker_widget.dart';
 import 'package:epilepsy_care_pmk/constants/styling.dart';
-import 'package:epilepsy_care_pmk/screens/add_event/add_select.dart';
 import 'package:epilepsy_care_pmk/screens/commons/screen_with_app_bar.dart';
 import 'package:flutter/material.dart';
+
+import '../../../custom_widgets/horizontal_date_picker.dart';
 
 const List<String> list = <String>['ชักทั้งตัว', 'ชักเฉพาะ', 'เหม่อลอย', 'อื่นๆ'];
 
@@ -19,9 +19,16 @@ class _AddSeizureInputState extends State<AddSeizureInput> {
   String? seizureSymptom; // Input อาการ
   String? seizurePlace; // Input สถานที่
   String dropDownValue = list.first; // dropDown init value
-
   DateTime selectedDate = DateTime.now(); // Date from datepicker
   TimeOfDay selectedTime = TimeOfDay.now(); // default time
+
+  void printAll() {
+    debugPrint("seizureSymptom: $seizureSymptom");
+    debugPrint("seizurePlace: $seizurePlace");
+    debugPrint("dropDownValue: $dropDownValue");
+    debugPrint("selectedDate: $selectedDate");
+    debugPrint("selectedTime: $selectedTime");
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -44,19 +51,11 @@ class _AddSeizureInputState extends State<AddSeizureInput> {
                         children: [
                           //Start here
 
-                          DatePicker(
-                            //TODO: Make Selected show on center
-                            DateTime.now(),
-                            height: 90,
-                            initialSelectedDate: DateTime.now(),
-                            selectionColor: Color.fromARGB(255, 201, 128, 247),
-                            selectedTextColor: Colors.white,
-                            locale: "th_TH",
+                          HorizontalDatePicker(
+                            startDate: selectedDate,
                             onDateChange: (date) {
-                              // New date selected
                               setState(() {
                                 selectedDate = date;
-                                // print(selectedDate);
                               });
                             },
                           ),
@@ -73,7 +72,6 @@ class _AddSeizureInputState extends State<AddSeizureInput> {
                             onChanged: (String? val) {
                               setState(() {
                                 dropDownValue = val!;
-                                // print(dropDownValue);
                               });
                             },
                             items: list
@@ -119,19 +117,10 @@ class _AddSeizureInputState extends State<AddSeizureInput> {
                                   if (timeOfDay != null) {
                                     setState(() {
                                       selectedTime = timeOfDay;
-                                      //time result : timeOfDay
-                                      // print("time>>>>>> $selectedTime");
                                     });
                                   }
                                 },
-                                style: ElevatedButton.styleFrom(
-                                    backgroundColor: Color.fromARGB(
-                                        255, 201, 128, 247), //Color(0x7FCA80F7)
-                                    padding: EdgeInsets.all(20),
-                                    fixedSize: Size.fromWidth(140),
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(8))),
+                                style: primaryButtonStyle,
                               )
                             ],
                           ),
@@ -149,7 +138,6 @@ class _AddSeizureInputState extends State<AddSeizureInput> {
                             onChanged: (val) {
                               setState(() {
                                 seizureSymptom = val;
-                                // print(seizureSymptom);
                               });
                             },
                             decoration: InputDecoration(
@@ -177,7 +165,6 @@ class _AddSeizureInputState extends State<AddSeizureInput> {
                             onChanged: (val) {
                               setState(() {
                                 seizurePlace = val;
-                                print(seizurePlace);
                               });
                             },
                             decoration: InputDecoration(
@@ -226,19 +213,12 @@ class _AddSeizureInputState extends State<AddSeizureInput> {
                                                 onPressed: () {}),
                                             content:
                                                 Text('บันทึกข้อมูลสำเร็จ')));
-
+                                    printAll();  // TODO: remove this if not needed
                                     Navigator.of(context)
                                         .popUntil((route) => route.isFirst);
                                   }
                                 },
-                                style: ElevatedButton.styleFrom(
-                                    backgroundColor: Color.fromARGB(
-                                        255, 201, 128, 247), //Color(0x7FCA80F7)
-                                    padding: EdgeInsets.all(20),
-                                    fixedSize: Size.fromWidth(140),
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(8))),
+                                style: primaryButtonStyle,
                               )
                             ],
                           )

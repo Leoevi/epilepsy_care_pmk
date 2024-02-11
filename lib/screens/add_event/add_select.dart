@@ -48,14 +48,14 @@ class AddSelect extends StatelessWidget {
                         label: 'บันทึกอาการเเพ้ยา',
                         onTap: () {
                           Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => const medAllergy()));
+                              builder: (context) => const AddMedAllergyInput()));
                         },
                       ),
                       IconLabelDetailButton(
                         label: 'บันทึกชนิดเเละปริมาณยา',
                         onTap: () {
                           Navigator.of(context).push(MaterialPageRoute(
-                              builder: (context) => const addMedTake()));
+                              builder: (context) => const AddMedIntakeInput()));
                         },
                       ),
                     ],

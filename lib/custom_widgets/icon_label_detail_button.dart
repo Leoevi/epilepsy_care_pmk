@@ -15,11 +15,11 @@ class IconLabelDetailButton extends StatelessWidget {
     this.icon,
     required this.label,  // The button must have a header label
     this.detail,
-    required this.onTap,
+    this.onTap,
   });
 
   // If we want a member to be nullable, we need to use the ? operator
-  final Widget? icon;
+  final ImageProvider<Object>? icon;
   final String label;
   final String? detail;
   final Function()? onTap;
@@ -37,7 +37,7 @@ class IconLabelDetailButton extends StatelessWidget {
               children: [
                 CircleAvatar(
                   radius: 32,  // Image radius
-                  child: icon,
+                  backgroundImage: icon,
                 ),
                 const SizedBox(
                   width: kMediumPadding,

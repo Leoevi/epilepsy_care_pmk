@@ -1,7 +1,5 @@
 import 'package:epilepsy_care_pmk/constants/styling.dart';
 import 'package:epilepsy_care_pmk/custom_widgets/horizontal_date_picker.dart';
-import 'package:epilepsy_care_pmk/custom_widgets/icon_label_detail_button.dart';
-import 'package:epilepsy_care_pmk/screens/add_event/add_select.dart';
 import 'package:epilepsy_care_pmk/screens/commons/screen_with_app_bar.dart';
 import 'package:flutter/material.dart';
 
@@ -23,19 +21,26 @@ const List<String> list = <String>[
   'Gabapentin / Neurontin®  / Berlontin®' //Fix Overflow item by https://stackoverflow.com/a/55376107
 ];
 
-class medAllergy extends StatefulWidget {
-  const medAllergy({super.key});
+class AddMedAllergyInput extends StatefulWidget {
+  const AddMedAllergyInput({super.key});
 
   @override
-  State<medAllergy> createState() => _medAllergyState();
+  State<AddMedAllergyInput> createState() => _AddMedAllergyInputState();
 }
 
-class _medAllergyState extends State<medAllergy> {
+class _AddMedAllergyInputState extends State<AddMedAllergyInput> {
   final _formKey = GlobalKey<FormState>(); //Validate
   String? seizureSymptom; // Input อาการ
   String dropDownValue = list.first; // dropDown init value
   DateTime selectedDate = DateTime.now(); // Date from datepicker
   TimeOfDay selectedTime = TimeOfDay.now();
+
+  void printAll() {
+    debugPrint("seizureSymptom: $seizureSymptom");
+    debugPrint("dropDownValue: $dropDownValue");
+    debugPrint("selectedDate: $selectedDate");
+    debugPrint("selectedTime: $selectedTime");
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -55,7 +60,14 @@ class _medAllergyState extends State<medAllergy> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     //
-                    HorizontalDatePicker(),
+                    HorizontalDatePicker(
+                      startDate: selectedDate,
+                      onDateChange: (date) {
+                        setState(() {
+                          selectedDate = date;
+                        });
+                      },
+                    ),
 
                     Text("ชนิดของยาที่เกิดอาการเเพ้ยา",
                         style: TextStyle(fontSize: 18)),
@@ -119,13 +131,7 @@ class _medAllergyState extends State<medAllergy> {
                               });
                             }
                           },
-                          style: ElevatedButton.styleFrom(
-                              backgroundColor: Color.fromARGB(
-                                  255, 201, 128, 247), //Color(0x7FCA80F7)
-                              padding: EdgeInsets.all(20),
-                              fixedSize: Size.fromWidth(140),
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(8))),
+                          style: primaryButtonStyle,
                         )
                       ],
                     ),
@@ -195,13 +201,7 @@ class _medAllergyState extends State<medAllergy> {
                                   .popUntil((route) => route.isFirst);
                             }
                           },
-                          style: ElevatedButton.styleFrom(
-                              backgroundColor: Color.fromARGB(
-                                  255, 201, 128, 247), //Color(0x7FCA80F7)
-                              padding: EdgeInsets.all(20),
-                              fixedSize: Size.fromWidth(140),
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(8))),
+                          style: primaryButtonStyle,
                         )
                       ],
                     )

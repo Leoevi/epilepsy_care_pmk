@@ -1,20 +1,23 @@
 import 'package:epilepsy_care_pmk/screens/commons/screen_with_app_bar.dart';
 import 'package:flutter/material.dart';
 
-import '../../../constants/styling.dart';
+import '../../constants/styling.dart';
 
-class MedicationDetail extends StatelessWidget {
-  const MedicationDetail({
+class ScreenWithAppbarAndWhiteContainer extends StatelessWidget {
+  const ScreenWithAppbarAndWhiteContainer({
     super.key,
-    // required this.title,
+    required this.title,
+    this.child,
   });
 
-  // final String title;
+  final String title;
+
+  final Widget? child;
 
   @override
   Widget build(BuildContext context) {
     return ScreenWithAppBar(
-      title: "บันทึกปริมาณยา",
+      title: title,
       body: Padding(
         padding: const EdgeInsets.all(kMediumPadding),
         child: Container(
@@ -25,7 +28,7 @@ class MedicationDetail extends StatelessWidget {
             child: SingleChildScrollView(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: [Text("test")],
+                children: [],
               ),
             ),
           ),

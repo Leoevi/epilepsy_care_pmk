@@ -16,6 +16,7 @@ class Symptom extends StatelessWidget {
         iconLabelDetailButtonList: [
           for (var entry in symptomEntries)
             IconLabelDetailButton(
+                icon: entry.icon,
                 label: entry.title,
                 onTap: () {
                   Navigator.of(context).push(MaterialPageRoute(

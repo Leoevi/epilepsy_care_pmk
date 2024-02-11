@@ -17,7 +17,7 @@ const double kSmallRoundedCornerRadius = 8.0;
 const double kMediumRoundedCornerRadius = 12.0;
 
 //style: purpleButton
-ButtonStyle purpleButton = ElevatedButton.styleFrom(
+ButtonStyle primaryButtonStyle = ElevatedButton.styleFrom(
     backgroundColor: Color.fromARGB(255, 201, 128, 247), //Color(0x7FCA80F7)
     padding: EdgeInsets.all(20),
     fixedSize: Size.fromWidth(140),

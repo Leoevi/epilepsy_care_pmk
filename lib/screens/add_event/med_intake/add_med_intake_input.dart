@@ -1,8 +1,5 @@
 import 'package:epilepsy_care_pmk/constants/styling.dart';
 import 'package:epilepsy_care_pmk/custom_widgets/horizontal_date_picker.dart';
-import 'package:epilepsy_care_pmk/custom_widgets/icon_label_detail_button.dart';
-import 'package:epilepsy_care_pmk/custom_widgets/time_input.dart';
-import 'package:epilepsy_care_pmk/screens/add_event/add_select.dart';
 import 'package:epilepsy_care_pmk/screens/commons/screen_with_app_bar.dart';
 import 'package:flutter/material.dart';
 
@@ -23,19 +20,27 @@ const List<String> list = <String>[ //DropDown Item List (All Drug)
   'Gabapentin / Neurontin® / Berlontin®'
 ];
 
-class addMedTake extends StatefulWidget {
-  const addMedTake({super.key});
+class AddMedIntakeInput extends StatefulWidget {
+  const AddMedIntakeInput({super.key});
 
   @override
-  State<addMedTake> createState() => _addMedTakeState();
+  State<AddMedIntakeInput> createState() => _AddMedIntakeInputState();
 }
 
-class _addMedTakeState extends State<addMedTake> {
+class _AddMedIntakeInputState extends State<AddMedIntakeInput> {
   final _formKey = GlobalKey<FormState>(); //Validate
   String? seizureDose; // Input ปริมาณ
   String dropDownValue = list.first; // dropDown init value
   DateTime selectedDate = DateTime.now(); // Date from datepicker
   TimeOfDay selectedTime = TimeOfDay.now(); // default time
+
+  void printAll() {
+    debugPrint("seizureDose: $seizureDose");
+    debugPrint("dropDownValue: $dropDownValue");
+    debugPrint("selectedDate: $selectedDate");
+    debugPrint("selectedTime: $selectedTime");
+  }
+
   @override
   Widget build(BuildContext context) {
     return ScreenWithAppBar(
@@ -54,7 +59,14 @@ class _addMedTakeState extends State<addMedTake> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     //
-                    HorizontalDatePicker(),
+                    HorizontalDatePicker(
+                      startDate: selectedDate,
+                      onDateChange: (date) {
+                        setState(() {
+                          selectedDate = date;
+                        });
+                      },
+                    ),
 
                     Text("ชนิดของยาที่บันทึก", style: TextStyle(fontSize: 18)),
 
@@ -117,13 +129,7 @@ class _addMedTakeState extends State<addMedTake> {
                               });
                             }
                           },
-                          style: ElevatedButton.styleFrom(
-                              backgroundColor: Color.fromARGB(
-                                  255, 201, 128, 247), //Color(0x7FCA80F7)
-                              padding: EdgeInsets.all(20),
-                              fixedSize: Size.fromWidth(140),
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(8))),
+                          style: primaryButtonStyle
                         )
                       ],
                     ),
@@ -189,18 +195,12 @@ class _addMedTakeState extends State<addMedTake> {
                                           textColor: Colors.black,
                                           onPressed: () {}),
                                       content: Text('บันทึกข้อมูลสำเร็จ')));
-
+                              printAll();  // TODO: remove later
                               Navigator.of(context)
                                   .popUntil((route) => route.isFirst);
                             }
                           },
-                          style: ElevatedButton.styleFrom(
-                              backgroundColor: Color.fromARGB(
-                                  255, 201, 128, 247), //Color(0x7FCA80F7)
-                              padding: EdgeInsets.all(20),
-                              fixedSize: Size.fromWidth(140),
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(8))),
+                          style: primaryButtonStyle
                         )
                       ],
                     )

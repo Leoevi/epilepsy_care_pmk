@@ -1,30 +1,33 @@
 import 'package:epilepsy_care_pmk/constants/styling.dart';
-import 'package:epilepsy_care_pmk/helpers/trim_leading_whitespace.dart';
 import 'package:flutter/material.dart';
 
-import '../../commons/screen_with_app_bar.dart';
-
 class SymptomDetail extends StatelessWidget {
-  const SymptomDetail({
+  SymptomDetail({
     super.key,
     required this.title,
     required this.content,
+    this.picture,
   });
 
   final String title;
 
   final Text content;
 
+  var picture;
+
   @override
   Widget build(BuildContext context) {
     // Straight from https://api.flutter.dev/flutter/material/SliverAppBar-class.html
     return Scaffold(
       body: CustomScrollView(
+        // TODO: scroll the app bar away, even if the content is not long enough
+        // https://stackoverflow.com/questions/55346982/sliverappbar-doesnt-fully-collapse-with-short-list
+        physics: const BouncingScrollPhysics(),
         slivers: [
           SliverAppBar(
             // floating: true,
             pinned: true,
-            stretch: true,
+            // stretch: true,
             onStretchTrigger: () async {
               // Triggers when stretching
             },
@@ -36,61 +39,17 @@ class SymptomDetail extends StatelessWidget {
             stretchTriggerOffset: 300.0,
             expandedHeight: 200.0,
             flexibleSpace: FlexibleSpaceBar(
-              title: Text('SliverAppBar',
+              title: Text(title,
                 style: TextStyle(
-                  color: Theme.of(context).textTheme.displaySmall!.color,
+                  color: Theme.of(context).textTheme.displaySmall!.color,  // For some reason, the color doesn't follow the theme (https://stackoverflow.com/questions/66311991/cant-get-sliverappbar-title-color-to-follow-themedata)
                 ),),
-              background: FlutterLogo(),
+              background: picture ?? FlutterLogo(),  // TODO: remove the flutter logo
             ),
           ),
           SliverToBoxAdapter(
             child: Padding(
-              padding: EdgeInsets.all(kLargePadding),
-              child: Text.rich(
-                // https://stackoverflow.com/questions/41557139/how-do-i-bold-or-format-a-piece-of-text-within-a-paragraph
-                TextSpan(
-                  locale: Locale("th"),
-                  children: [
-                    TextSpan(text: "pls change" + "\n"), // TODO: make header style
-                    TextSpan(text: trimLeadingWhitespace("""
-                      
-                  $indentโรคลมชัก (epilepsy) คือ โรคที่ผู้ป่วยมีอาการชักซ้ำโดยที่ไม่มีปัจจัยกระตุ้น (provoking factor) ชัดเจน อาจจะพบพยาธิสภาพในสมองหรือไม่ก็ได้
-                  $indentในกรณีผู้ป่วยชักครั้งแรกร่วมกับมีคลื่นไฟฟ้าสมองผิดปกติแบบ epileptiform discharge หรือมีรอยโรคใน สมอง จะมีโอกาสชักซ้ำสูง
-                  $indentผู้ป่วยที่มีอาการชักจากความเจ็บป่วยปัจจุบัน เช่น ความผิดปกติทางเมตาโบลิก จากยา หรือ ไข้สูงในเด็ก โดยที่ไม่ได้มีพยาธิสภาพที่สมองชัดเจน จัดเป็นการชักที่มีปัจจัยชักนำ (provoked seizure) จึงไม่ถือว่าเป็นโรคลมชัก
-                  $indentการวินิจฉัยโรคลมชักใช้คำจำกัดความของโรคลมชักดังต่อไปนี้
-                  ${indent}1. อาการชักโดยที่ไม่มีปัจจัยกระตุ้นตั้งแต่ 2 ครั้งขึ้นไป โดยอาการชัก 2 ครั้งนั้นต้องมีระยะเวลาห่างกันตั้งแต่ 24 ชั่วโมง ขึ้นไป
-                  ${indent}2. อาการชักที่เกิดขึ้นเพียงครั้งเดียว โดยที่ไม่มีปัจจัยกระตุ้นในผู้ป่วยที่มีโอกาสเสี่ยงสูงที่จะมีอาการชักซ้ำโดยความเสี่ยงเท่ากับผู้ป่วยที่มีอาการชักโดยที่ไม่มีปัจจัยกระตุ้นตั้งแต่2ครั้งขึ้นไป
-                  ${indent}3. กลุ่มอาการโรคลมชัก (epileptic syndrome) ชนิดต่างๆเช่นภาวะชักชนิดเหม่อ (absence) เป็นต้น
-                  
-                  $indentโรคลมชัก (epilepsy) คือ โรคที่ผู้ป่วยมีอาการชักซ้ำโดยที่ไม่มีปัจจัยกระตุ้น (provoking factor) ชัดเจน อาจจะพบพยาธิสภาพในสมองหรือไม่ก็ได้
-                  $indentในกรณีผู้ป่วยชักครั้งแรกร่วมกับมีคลื่นไฟฟ้าสมองผิดปกติแบบ epileptiform discharge หรือมีรอยโรคใน สมอง จะมีโอกาสชักซ้ำสูง
-                  $indentผู้ป่วยที่มีอาการชักจากความเจ็บป่วยปัจจุบัน เช่น ความผิดปกติทางเมตาโบลิก จากยา หรือ ไข้สูงในเด็ก โดยที่ไม่ได้มีพยาธิสภาพที่สมองชัดเจน จัดเป็นการชักที่มีปัจจัยชักนำ (provoked seizure) จึงไม่ถือว่าเป็นโรคลมชัก
-                  $indentการวินิจฉัยโรคลมชักใช้คำจำกัดความของโรคลมชักดังต่อไปนี้
-                  ${indent}1. อาการชักโดยที่ไม่มีปัจจัยกระตุ้นตั้งแต่ 2 ครั้งขึ้นไป โดยอาการชัก 2 ครั้งนั้นต้องมีระยะเวลาห่างกันตั้งแต่ 24 ชั่วโมง ขึ้นไป
-                  ${indent}2. อาการชักที่เกิดขึ้นเพียงครั้งเดียว โดยที่ไม่มีปัจจัยกระตุ้นในผู้ป่วยที่มีโอกาสเสี่ยงสูงที่จะมีอาการชักซ้ำโดยความเสี่ยงเท่ากับผู้ป่วยที่มีอาการชักโดยที่ไม่มีปัจจัยกระตุ้นตั้งแต่2ครั้งขึ้นไป
-                  ${indent}3. กลุ่มอาการโรคลมชัก (epileptic syndrome) ชนิดต่างๆเช่นภาวะชักชนิดเหม่อ (absence) เป็นต้น
-                  
-                  $indentโรคลมชัก (epilepsy) คือ โรคที่ผู้ป่วยมีอาการชักซ้ำโดยที่ไม่มีปัจจัยกระตุ้น (provoking factor) ชัดเจน อาจจะพบพยาธิสภาพในสมองหรือไม่ก็ได้
-                  $indentในกรณีผู้ป่วยชักครั้งแรกร่วมกับมีคลื่นไฟฟ้าสมองผิดปกติแบบ epileptiform discharge หรือมีรอยโรคใน สมอง จะมีโอกาสชักซ้ำสูง
-                  $indentผู้ป่วยที่มีอาการชักจากความเจ็บป่วยปัจจุบัน เช่น ความผิดปกติทางเมตาโบลิก จากยา หรือ ไข้สูงในเด็ก โดยที่ไม่ได้มีพยาธิสภาพที่สมองชัดเจน จัดเป็นการชักที่มีปัจจัยชักนำ (provoked seizure) จึงไม่ถือว่าเป็นโรคลมชัก
-                  $indentการวินิจฉัยโรคลมชักใช้คำจำกัดความของโรคลมชักดังต่อไปนี้
-                  ${indent}1. อาการชักโดยที่ไม่มีปัจจัยกระตุ้นตั้งแต่ 2 ครั้งขึ้นไป โดยอาการชัก 2 ครั้งนั้นต้องมีระยะเวลาห่างกันตั้งแต่ 24 ชั่วโมง ขึ้นไป
-                  ${indent}2. อาการชักที่เกิดขึ้นเพียงครั้งเดียว โดยที่ไม่มีปัจจัยกระตุ้นในผู้ป่วยที่มีโอกาสเสี่ยงสูงที่จะมีอาการชักซ้ำโดยความเสี่ยงเท่ากับผู้ป่วยที่มีอาการชักโดยที่ไม่มีปัจจัยกระตุ้นตั้งแต่2ครั้งขึ้นไป
-                  ${indent}3. กลุ่มอาการโรคลมชัก (epileptic syndrome) ชนิดต่างๆเช่นภาวะชักชนิดเหม่อ (absence) เป็นต้น
-                
-                  $indentโรคลมชัก (epilepsy) คือ โรคที่ผู้ป่วยมีอาการชักซ้ำโดยที่ไม่มีปัจจัยกระตุ้น (provoking factor) ชัดเจน อาจจะพบพยาธิสภาพในสมองหรือไม่ก็ได้
-                  $indentในกรณีผู้ป่วยชักครั้งแรกร่วมกับมีคลื่นไฟฟ้าสมองผิดปกติแบบ epileptiform discharge หรือมีรอยโรคใน สมอง จะมีโอกาสชักซ้ำสูง
-                  $indentผู้ป่วยที่มีอาการชักจากความเจ็บป่วยปัจจุบัน เช่น ความผิดปกติทางเมตาโบลิก จากยา หรือ ไข้สูงในเด็ก โดยที่ไม่ได้มีพยาธิสภาพที่สมองชัดเจน จัดเป็นการชักที่มีปัจจัยชักนำ (provoked seizure) จึงไม่ถือว่าเป็นโรคลมชัก
-                  $indentการวินิจฉัยโรคลมชักใช้คำจำกัดความของโรคลมชักดังต่อไปนี้
-                  ${indent}1. อาการชักโดยที่ไม่มีปัจจัยกระตุ้นตั้งแต่ 2 ครั้งขึ้นไป โดยอาการชัก 2 ครั้งนั้นต้องมีระยะเวลาห่างกันตั้งแต่ 24 ชั่วโมง ขึ้นไป
-                  ${indent}2. อาการชักที่เกิดขึ้นเพียงครั้งเดียว โดยที่ไม่มีปัจจัยกระตุ้นในผู้ป่วยที่มีโอกาสเสี่ยงสูงที่จะมีอาการชักซ้ำโดยความเสี่ยงเท่ากับผู้ป่วยที่มีอาการชักโดยที่ไม่มีปัจจัยกระตุ้นตั้งแต่2ครั้งขึ้นไป
-                  ${indent}3. กลุ่มอาการโรคลมชัก (epileptic syndrome) ชนิดต่างๆเช่นภาวะชักชนิดเหม่อ (absence) เป็นต้น
-                  
-                  อ้างอิงจาก http://www.pedceppmk.com""")
-                    ),
-                  ],
-                ),
-              ),
+              padding: const EdgeInsets.all(kLargePadding),
+              child: content,
             ),
           ),
         ],

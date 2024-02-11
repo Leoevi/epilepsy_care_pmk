@@ -6,7 +6,22 @@ import 'package:epilepsy_care_pmk/screens/add_event/add_select.dart';
 import 'package:epilepsy_care_pmk/screens/commons/screen_with_app_bar.dart';
 import 'package:flutter/material.dart';
 
-const List<String> list = <String>['One', 'Two', 'Three', 'Four'];
+const List<String> list = <String>[ //DropDown Item List (All Drug)
+  'Carbamazepine / Tegretol®',
+  'Clonazepam / Rivotrill®',
+  'Lamotrigine / Lamictal®',
+  'Levetiracetam / Keppra®',
+  'Oxcarbazepine / Trileptal®',
+  'Phenobarbital',
+  'Phenytoin / Dilantin®',
+  'Sodium valproate / Depakin®',
+  'Topiramate / Topamax®',
+  'Vigabatrin / Sabril®',
+  'Perampanel / Fycompa®',
+  'Lacosamide / Vimpat®',
+  'Pregabalin / Lyrica®',
+  'Gabapentin / Neurontin® / Berlontin®'
+];
 
 class addMedTake extends StatefulWidget {
   const addMedTake({super.key});
@@ -46,6 +61,7 @@ class _addMedTakeState extends State<addMedTake> {
                     SizedBox(height: 10),
 
                     DropdownButtonFormField(
+                      isExpanded: true,
                       value: dropDownValue,
                       icon: const Icon(Icons.keyboard_arrow_down),
                       decoration: InputDecoration(border: OutlineInputBorder()),
@@ -55,13 +71,12 @@ class _addMedTakeState extends State<addMedTake> {
                           // print(dropDownValue);
                         });
                       },
-                      items: list
-                                .map<DropdownMenuItem<String>>((String value) {
-                              return DropdownMenuItem<String>(
-                                value: value,
-                                child: Text(value),
-                              );
-                            }).toList(),
+                      items: list.map<DropdownMenuItem<String>>((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(value),
+                        );
+                      }).toList(),
                     ),
 
                     SizedBox(height: 20),

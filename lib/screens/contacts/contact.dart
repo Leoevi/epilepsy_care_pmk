@@ -22,7 +22,7 @@ class Contact extends StatelessWidget {
               children: [
                 const Row(
                   children: [
-                    Icon(Icons.headset_mic_outlined),
+                    Icon(Icons.headset_mic_outlined, size: circleRadius*2,),
                     SizedBox(
                       width: kMediumPadding,
                     ),
@@ -30,7 +30,7 @@ class Contact extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text("ช่องทางการติดต่อ"),
+                          Text("ช่องทางการติดต่อ", style: mediumLargeBoldText,),
                           Text(
                               "หน่วยประสาทวิทยา กองกุมารเวขกรรมรพ. พระมงกุฎเกล้า"),
                         ],
@@ -113,7 +113,7 @@ class ContactEntry extends StatelessWidget {
       children: [
         Row(
           children: [
-            Text(label),
+            Text(label, style: mediumLargeBoldText,),
             IconButton(
               icon: const Icon(Icons.copy),
               visualDensity: VisualDensity.compact,

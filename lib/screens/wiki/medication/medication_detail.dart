@@ -21,8 +21,6 @@ class MedicationDetail extends StatelessWidget {
   final String dangerSideEffects;
   final String? allergySymptoms;
 
-  // final String title;
-
   @override
   Widget build(BuildContext context) {
     return ScreenWithAppBar(
@@ -45,16 +43,43 @@ class MedicationDetail extends StatelessWidget {
                       child: Image(
                         image: picture,
                       )),
-                  SizedBox(height: kMediumPadding,),
-                  Align(alignment: Alignment.center, child: Text(name)),
-                  SizedBox(height: 2*kMediumPadding,),
-                  Text("ข้อมูลเบื้องต้น"),
-                  SizedBox(height: 2*kMediumPadding,),
+                  SizedBox(
+                    height: kMediumPadding,
+                  ),
+                  Align(
+                      alignment: Alignment.center,
+                      child: Text(
+                        name,
+                        style: Theme.of(context).textTheme.headlineSmall,
+                      )),
+                  SizedBox(
+                    height: 2 * kMediumPadding,
+                  ),
+                  Text(
+                    "ข้อมูลเบื้องต้น",
+                    style: Theme.of(context).textTheme.titleLarge,
+                  ),
+                  SizedBox(
+                    height: 2 * kMediumPadding,
+                  ),
                   Text("ชื่อยา: ${name}"),
+                  SizedBox(
+                    height: kMediumPadding,
+                  ),
                   Text("ขนาด: ${dosage ?? "-"}"),
+                  SizedBox(
+                    height: kMediumPadding,
+                  ),
                   Text("ผลข้างเคียง: ${sideEffects ?? "-"}"),
+                  SizedBox(
+                    height: kMediumPadding,
+                  ),
                   Text("ผลข้างเคียงที่ต้องระวัง: ${dangerSideEffects ?? "-"}"),
-                  Text("การแพ้ยา: ${allergySymptoms ?? "-"}"),  // TODO: It seems like every med has this field empty, why is it here in the first place?
+                  SizedBox(
+                    height: kMediumPadding,
+                  ),
+                  Text("การแพ้ยา: ${allergySymptoms ?? "-"}"),
+                  // TODO: It seems like every med has this field empty, why is it here in the first place?
                 ],
               ),
             ),

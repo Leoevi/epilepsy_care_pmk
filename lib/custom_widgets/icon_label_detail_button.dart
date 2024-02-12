@@ -13,7 +13,7 @@ class IconLabelDetailButton extends StatelessWidget {
   const IconLabelDetailButton({
     super.key,
     this.icon,
-    required this.label,  // The button must have a header label
+    required this.label, // The button must have a header label
     this.detail,
     this.onTap,
   });
@@ -27,8 +27,10 @@ class IconLabelDetailButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      clipBehavior: Clip.hardEdge,  // Prevent ripple effect from rounded corners at a bit of performance cost
-      child: InkWell(  // Make clickable, (Inkwell for ripple effect, GestureDetector for no effect)
+      clipBehavior: Clip.hardEdge,
+      // Prevent ripple effect from rounded corners at a bit of performance cost
+      child: InkWell(
+        // Make clickable, (Inkwell for ripple effect, GestureDetector for no effect)
         onTap: onTap,
         child: Padding(
           padding: const EdgeInsets.all(kLargePadding),
@@ -36,17 +38,21 @@ class IconLabelDetailButton extends StatelessWidget {
             child: Row(
               children: [
                 CircleAvatar(
-                  radius: 32,  // Image radius
+                  radius: circleRadius, // Image radius
                   backgroundImage: icon,
                 ),
                 const SizedBox(
                   width: kMediumPadding,
                 ),
-                Expanded(  // Wrapping column/row with expanded will allow content to wrap cross-axis direction (https://stackoverflow.com/questions/54634093/flutter-wrap-text-instead-of-overflow/54650374#54650374)
+                Expanded(
+                  // Wrapping column/row with expanded will allow content to wrap cross-axis direction (https://stackoverflow.com/questions/54634093/flutter-wrap-text-instead-of-overflow/54650374#54650374)
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(label),
+                      Text(
+                        label,
+                        style: mediumLargeBoldText,
+                      ),
                       // https://stackoverflow.com/questions/54387599/how-to-fix-text-is-null-in-flutter
                       if (detail != null) Text(detail!),
                     ],

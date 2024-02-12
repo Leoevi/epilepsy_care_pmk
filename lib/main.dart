@@ -16,11 +16,18 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Epilepsy Care',
       // To change the app's name, you need to go into each platform's manifest file (https://stackoverflow.com/questions/49353199/how-can-i-change-the-app-display-name-build-with-flutter)
+      title: 'Epilepsy Care',
+      // https://docs.flutter.dev/cookbook/design/themes
       theme: ThemeData(
-        useMaterial3:
-            true, // https://docs.flutter.dev/release/breaking-changes/material-3-default
+        useMaterial3: true,
+        // https://docs.flutter.dev/release/breaking-changes/material-3-default
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.purple),
+        // Was going to use textTheme to handle the whole app's font,
+        // but it seemed like it will impact other widgets too much, so we'll defined extra ones instead
+        // textTheme: TextTheme(
+        //   labelSmall: TextStyle(fontWeight: FontWeight.bold,)
+        // )
       ),
       home: const MyHomePage(title: 'Epilepsy Care'),
     );
@@ -52,7 +59,8 @@ class _MyHomePageState extends State<MyHomePage> {
     surfaceTintColor: Colors.transparent,
     backgroundColor: Colors.transparent,
     shadowColor: Colors.transparent,
-    padding: const EdgeInsets.all(0),  // To prevent overflow. This is still needed despite with Expanded/Flex
+    padding: const EdgeInsets.all(
+        0), // To prevent overflow. This is still needed despite with Expanded/Flex
   );
 
   @override
@@ -115,7 +123,8 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
                 ),
               ),
-              Stack(  // TODO: Make the button float a bit above the bottom nav bar
+              Stack(
+                // TODO: Make the button float a bit above the bottom nav bar
                 // alignment: AlignmentDirectional.center,
                 // clipBehavior: Clip.none,
                 children: <Widget>[
@@ -124,7 +133,8 @@ class _MyHomePageState extends State<MyHomePage> {
                     child: RawMaterialButton(
                       // https://stackoverflow.com/questions/49809351/how-to-create-a-circle-icon-button-in-flutter
                       onPressed: () {
-                        Navigator.of(context).push(MaterialPageRoute(builder: (context) => const AddSelect()));
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => const AddSelect()));
                       },
                       elevation: 2.0,
                       fillColor: Colors.white,

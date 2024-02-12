@@ -1,5 +1,5 @@
-// Values for padding used in various widgets.
-// This is to keep the padding length uniform throughout the app
+// Values for used in various widgets.
+// This is to keep the the design uniform throughout the app
 // There doesn't seem to be many alternatives, and from what I have
 // looked at other apps, padding seems to also be just hardcoded in.
 // (https://stackoverflow.com/questions/61961988/how-do-i-store-my-default-padding-in-theme-of-in-flutter)
@@ -25,3 +25,7 @@ ButtonStyle primaryButtonStyle = ElevatedButton.styleFrom(
 
 const String indent = "\t\t\t\t";
 
+const TextStyle mediumLargeBoldText =
+    TextStyle(fontWeight: FontWeight.bold, fontSize: 16);
+
+const double circleRadius = 32;

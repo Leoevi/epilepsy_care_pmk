@@ -196,7 +196,7 @@ class _AddMedAllergyInputState extends State<AddMedAllergyInput> {
                                           textColor: Colors.black,
                                           onPressed: () {}),
                                       content: Text('บันทึกข้อมูลสำเร็จ')));
-
+                              printAll();  // TODO: remove later
                               Navigator.of(context)
                                   .popUntil((route) => route.isFirst);
                             }

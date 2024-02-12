@@ -14,7 +14,7 @@ class Symptom extends StatelessWidget {
         title: "ข้อมูลโรคอาการลมชัก",
         // Kinda like list comprehension in python (https://stackoverflow.com/questions/50441168/iterating-through-a-list-to-render-multiple-widgets-in-flutter)
         iconLabelDetailButtonList: [
-          for (var entry in symptomEntries)
+          for (SymptomEntry entry in symptomEntries)
             IconLabelDetailButton(
                 icon: entry.icon,
                 label: entry.title,

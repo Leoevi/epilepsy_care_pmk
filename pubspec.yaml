@@ -72,6 +72,7 @@ flutter:
   # TODO: implement res-aware image assets (https://docs.flutter.dev/ui/assets/assets-and-images#resolution-aware)
   assets:
     - image/
+    - image/medications/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware

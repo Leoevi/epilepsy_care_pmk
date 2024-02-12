@@ -19,7 +19,6 @@ class MyApp extends StatelessWidget {
       title: 'Epilepsy Care',
       // To change the app's name, you need to go into each platform's manifest file (https://stackoverflow.com/questions/49353199/how-can-i-change-the-app-display-name-build-with-flutter)
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.purpleAccent),
         useMaterial3:
             true, // https://docs.flutter.dev/release/breaking-changes/material-3-default
       ),

@@ -6,15 +6,27 @@ import '../../../constants/styling.dart';
 class MedicationDetail extends StatelessWidget {
   const MedicationDetail({
     super.key,
-    // required this.title,
+    required this.name,
+    required this.picture,
+    this.dosage,
+    required this.sideEffects,
+    required this.dangerSideEffects,
+    this.allergySymptoms,
   });
+
+  final String name;
+  final ImageProvider<Object> picture;
+  final String? dosage;
+  final String sideEffects;
+  final String dangerSideEffects;
+  final String? allergySymptoms;
 
   // final String title;
 
   @override
   Widget build(BuildContext context) {
     return ScreenWithAppBar(
-      title: "Carbamazepin",
+      title: name,
       body: Padding(
         padding: const EdgeInsets.all(kLargePadding),
         child: Container(
@@ -31,18 +43,18 @@ class MedicationDetail extends StatelessWidget {
                       borderRadius:
                           BorderRadius.circular(kMediumRoundedCornerRadius),
                       child: Image(
-                        image: AssetImage("image/medications/carbamazepin.jpg"),
+                        image: picture,
                       )),
                   SizedBox(height: kMediumPadding,),
-                  Align(alignment: Alignment.center, child: Text("Carbamazepin")),
+                  Align(alignment: Alignment.center, child: Text(name)),
                   SizedBox(height: 2*kMediumPadding,),
                   Text("ข้อมูลเบื้องต้น"),
                   SizedBox(height: 2*kMediumPadding,),
-                  Text("ชื่อยา: "),
-                  Text("ขนาด: "),
-                  Text("ผลข้างเคียง: "),
-                  Text("ผลข้างเคียงที่ต้องระวัง: "),
-                  Text("การแพ้ยา: "),  // TODO: It seems like every med has this field empty, why is it here in the first place?
+                  Text("ชื่อยา: ${name}"),
+                  Text("ขนาด: ${dosage ?? "-"}"),
+                  Text("ผลข้างเคียง: ${sideEffects ?? "-"}"),
+                  Text("ผลข้างเคียงที่ต้องระวัง: ${dangerSideEffects ?? "-"}"),
+                  Text("การแพ้ยา: ${allergySymptoms ?? "-"}"),  // TODO: It seems like every med has this field empty, why is it here in the first place?
                 ],
               ),
             ),

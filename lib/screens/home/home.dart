@@ -1,5 +1,6 @@
 import 'package:epilepsy_care_pmk/constants/styling.dart';
 import 'package:epilepsy_care_pmk/custom_widgets/column_with_spacings.dart';
+import 'package:epilepsy_care_pmk/custom_widgets/event_card.dart';
 import 'package:epilepsy_care_pmk/custom_widgets/icon_label_detail_button.dart';
 import 'package:epilepsy_care_pmk/screens/commons/page_with_header_logo.dart';
 import 'package:flutter/material.dart';
@@ -52,12 +53,12 @@ class Home extends StatelessWidget {
                             width: 10,
                           ),
                           //Name
-                          Expanded(child: Text("ปิยะทัศน์ ฉิมพล")),
+                          Expanded(child: Text("Name")),
                           //Button
 
                           IconButton(
-                              onPressed: () =>
-                                  Scaffold.of(context).openDrawer(), //TODO: Make Button to open Drawer
+                              onPressed: () => Scaffold.of(context)
+                                  .openDrawer(), //TODO: Make Button to open Drawer
                               icon: Icon(Icons.menu))
                         ],
                       ),
@@ -70,16 +71,48 @@ class Home extends StatelessWidget {
           const SizedBox(height: kLargePadding),
           Expanded(
               flex: 4, //standard layout
-              child: Column(
-                children: [
-                  // A event_list here
-                  IconLabelDetailButton(
-                    icon: const AssetImage("image/symptom_icon.png"),
-                    label: 'ข้อมูลโรคอาการลมชัก',
-                    detail: "เรื่องต่าง ๆ ที่ควรทราบเกี่ยวกับโรคลมชัก",
-                    onTap: () {},
-                  ),
-                ],
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    // A event_list here
+                    EventCard(
+                      time: '9:00 น',
+                      title: 'Title',
+                      detail:
+                          'DetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetail',
+                      type: 'seizure',
+                      place: 'home',
+                      colorWarningIcon: Colors.red,
+                    ),
+                    EventCard(
+                      time: '9:00 น',
+                      title: 'Title',
+                      detail:
+                          'DetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetail',
+                      type: 'seizure',
+                      place: 'home',
+                      colorWarningIcon: Colors.red,
+                    ),
+                    EventCard(
+                      time: '9:00 น',
+                      title: 'Title',
+                      detail:
+                          'DetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetail',
+                      type: 'seizure',
+                      place: 'home',
+                      colorWarningIcon: Colors.red,
+                    ),
+                    EventCard(
+                      time: '9:00 น',
+                      title: 'Title',
+                      detail:
+                          'DetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetail',
+                      type: 'seizure',
+                      place: 'home',
+                      colorWarningIcon: Colors.red,
+                    )
+                  ],
+                ),
               ))
         ],
       ),

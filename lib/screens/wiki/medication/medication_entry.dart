@@ -16,7 +16,10 @@ class MedicationEntry {
   final String sideEffects;
   final String dangerSideEffects;
   final String? allergySymptoms;
+  // unit String
 }
+
+// class
 
 final List<MedicationEntry> medicationEntries = [
   const MedicationEntry(

@@ -1,3 +1,4 @@
+import 'package:epilepsy_care_pmk/custom_widgets/home_drawer.dart';
 import 'package:epilepsy_care_pmk/screens/add_event/add_select.dart';
 import 'package:epilepsy_care_pmk/screens/calendar/calendar.dart';
 import 'package:epilepsy_care_pmk/screens/contacts/contact.dart';
@@ -77,6 +78,8 @@ class _MyHomePageState extends State<MyHomePage> {
           ] // TODO: use colors from theme instead of hardcoding
               )),
       child: Scaffold(
+        endDrawer: SafeArea(child: HomeDrawer()),
+        endDrawerEnableOpenDragGesture: false,
         bottomNavigationBar: Container(
           clipBehavior: Clip.antiAliasWithSaveLayer,
           height: 70,

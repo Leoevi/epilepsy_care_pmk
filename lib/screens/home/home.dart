@@ -58,7 +58,7 @@ class Home extends StatelessWidget {
 
                           IconButton(
                               onPressed: () => Scaffold.of(context)
-                                  .openDrawer(), //TODO: Make Button to open Drawer
+                                  .openEndDrawer(),
                               icon: Icon(Icons.menu))
                         ],
                       ),

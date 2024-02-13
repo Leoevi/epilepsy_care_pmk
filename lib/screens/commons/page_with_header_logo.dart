@@ -27,12 +27,12 @@ class PageWithHeaderLogo extends StatelessWidget {
             child: Row(
               children: [
                 Expanded(
-                    flex: 1,
+                    flex: 2,
                     child: Image(
                       alignment: Alignment.centerLeft,
                       image: AssetImage("image/header_logo_eng.png"),
                     )),
-                Spacer(flex: 1),
+                Spacer(flex: 3),
                 // Spacers are good for spacing with flex, but if you wanted to space with pixel, use sizedBox (like below)
               ],
             ),

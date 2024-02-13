@@ -1,6 +1,7 @@
 import 'dart:convert';
 
-/// Used to remove indentation whitespaces from multiline String literals
+/// Used to remove indentation whitespaces from multiline String literals.
+/// intend for long paragraphs of text
 ///
 /// (from: https://github.com/dart-lang/language/issues/559)
 String trimLeadingWhitespace(String text) {

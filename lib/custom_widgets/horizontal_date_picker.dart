@@ -12,30 +12,31 @@ class HorizontalDatePicker extends StatefulWidget {
 
   final void Function(DateTime)? onDateChange;
 
-
   @override
   State<HorizontalDatePicker> createState() => _HorizontalDatePickerState();
 }
 
 class _HorizontalDatePickerState extends State<HorizontalDatePicker> {
-  final DatePickerController _controller = DatePickerController();  // To use "jumpToSelection" method
+  final DatePickerController _controller =
+      DatePickerController(); // To use "jumpToSelection" method
 
   // Need to wait for the DatePicker to be built first so that jumpToSelection can be called
   // otherwise 'DatePickerController is not attached to any DatePicker View.'
   // https://stackoverflow.com/questions/49466556/flutter-run-method-on-widget-build-complete
-  // TODO: However, the makes the push navigation lag a bit, so another way would be appreciated
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance
-        .addPostFrameCallback((_) => _controller.jumpToSelection());
+    WidgetsBinding.instance.addPostFrameCallback((_) =>
+        _controller.animateToDate(widget.startDate.subtract(Duration(
+            days:
+                2)))); // Since 5 days can be displayed at once, we want the selected one to be the center
   }
 
   @override
   Widget build(BuildContext context) {
     return DatePicker(
-      //TODO: Make Selected show on center
-      DateTime.now().subtract(Duration(days: 250)),
+      DateTime.now().subtract(Duration(days: 45)),
+      daysCount: 90,
       height: 90,
       controller: _controller,
       initialSelectedDate: widget.startDate,

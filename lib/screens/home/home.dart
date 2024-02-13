@@ -1,12 +1,10 @@
 import 'package:epilepsy_care_pmk/constants/styling.dart';
-import 'package:epilepsy_care_pmk/custom_widgets/column_with_spacings.dart';
 import 'package:epilepsy_care_pmk/custom_widgets/event_card.dart';
-import 'package:epilepsy_care_pmk/custom_widgets/icon_label_detail_button.dart';
-import 'package:epilepsy_care_pmk/screens/commons/page_with_header_logo.dart';
+import 'package:epilepsy_care_pmk/helpers/force_break_only_at_whitespaces.dart';
 import 'package:flutter/material.dart';
 
 class Home extends StatelessWidget {
-  const Home({Key? key}) : super(key: key);
+  const Home({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -53,7 +51,7 @@ class Home extends StatelessWidget {
                             width: 10,
                           ),
                           //Name
-                          Expanded(child: Text("Name")),
+                          Expanded(child: Text(forceBreakOnlyAtWhiteSpace("ชื่อแบบ โคตรยาว ณ กรุงเทพฯ"))),
                           //Button
 
                           IconButton(

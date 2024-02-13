@@ -1,3 +1,7 @@
+import 'package:epilepsy_care_pmk/constants/styling.dart';
+import 'package:epilepsy_care_pmk/custom_widgets/column_with_spacings.dart';
+import 'package:epilepsy_care_pmk/custom_widgets/icon_label_detail_button.dart';
+import 'package:epilepsy_care_pmk/screens/commons/page_with_header_logo.dart';
 import 'package:flutter/material.dart';
 
 class Home extends StatelessWidget {
@@ -5,30 +9,108 @@ class Home extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Center(
-          child: Column(children: <Widget>[
-            Text(
-              "This is Home",
-              style: TextStyle(
-                color: Colors.green[900],
-                fontSize: 45,
-                fontWeight: FontWeight.w500,
-              ),
+    return Padding(
+      padding: EdgeInsets.all(kLargePadding),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+            // flex: 1,
+            child: Row(
+              children: [
+                Expanded(
+                    flex: 2,
+                    child: Image(
+                      alignment: Alignment.centerLeft,
+                      image: AssetImage("image/header_logo_eng.png"),
+                    )),
+                // Spacer(flex: 1),
+
+                // SizedBox(
+                //   width: 20,
+                // ),
+
+                Expanded(
+                  flex: 3,
+                  child: Card(
+                    shape: RoundedRectangleBorder(
+                      side: BorderSide(
+                          color: Color.fromARGB(255, 142, 15, 184), width: 3),
+                      borderRadius: BorderRadius.all(Radius.circular(50)),
+                    ),
+                    child: Padding(
+                      padding: EdgeInsets.all(kSmallPadding),
+                      child: Row(
+                        children: [
+                          //Image
+                          CircleAvatar(
+                            radius: 28,
+                            // Image radius
+                            // backgroundImage: icon,
+                          ),
+                          SizedBox(
+                            width: 10,
+                          ),
+                          //Name
+                          Expanded(child: Text("ปิยะทัศน์ ฉิมพล")),
+                          //Button
+
+                          IconButton(
+                              onPressed: () =>
+                                  Scaffold.of(context).openDrawer(), //TODO: Make Button to open Drawer
+                              icon: Icon(Icons.menu))
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
-            TextButton(
-              onPressed: () async {
-                DateTime? pickedDate = await showDatePicker(
-                    context: context,
-                    initialDate: DateTime.now(),
-                    //get today's date
-                    firstDate: DateTime(2000),
-                    //DateTime.now() - not to allow to choose before today.
-                    lastDate: DateTime(2101));
-              },
-              child: Text("Date Picker"),
-            )
-          ])),
+          ),
+          const SizedBox(height: kLargePadding),
+          Expanded(
+              flex: 4, //standard layout
+              child: Column(
+                children: [
+                  // A event_list here
+                  IconLabelDetailButton(
+                    icon: const AssetImage("image/symptom_icon.png"),
+                    label: 'ข้อมูลโรคอาการลมชัก',
+                    detail: "เรื่องต่าง ๆ ที่ควรทราบเกี่ยวกับโรคลมชัก",
+                    onTap: () {},
+                  ),
+                ],
+              ))
+        ],
+      ),
     );
   }
 }
+
+
+
+
+
+// child: Center(
+//             child: Column(children: <Widget>[
+//           Text(
+//             "This is Home",
+//             style: TextStyle(
+//               color: Colors.green[900],
+//               fontSize: 45,
+//               fontWeight: FontWeight.w500,
+//             ),
+//           ),
+//           TextButton(
+//             onPressed: () async {
+//               DateTime? pickedDate = await showDatePicker(
+//                   context: context,
+//                   initialDate: DateTime.now(),
+//                   //get today's date
+//                   firstDate: DateTime(2000),
+//                   //DateTime.now() - not to allow to choose before today.
+//                   lastDate: DateTime(2101));
+//             },
+//             child: Text("Date Picker"),
+//           )
+//         ])),

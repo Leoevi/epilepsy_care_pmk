@@ -27,7 +27,13 @@ class EventCard extends StatelessWidget {
           // Wrap with IntrinsicHeight so that we can see the
           child: Row(children: [
             //Time
-            Expanded(flex: 1, child: Center(child: Text(time))),
+            Expanded(
+                flex: 1,
+                child: Center(
+                    child: Text(
+                  time,
+                  style: mediumLargeBoldText,
+                ))),
             //Vertical Line
             Opacity(
               opacity: 0.5,
@@ -47,7 +53,9 @@ class EventCard extends StatelessWidget {
                       //Title
                       Expanded(
                         child: Text(
-                          title, //TODO: Make title not overflow
+                          title,
+                          style:
+                              mediumLargeBoldText, //TODO: Make title not overflow
                         ),
                       ),
                       IconButton(

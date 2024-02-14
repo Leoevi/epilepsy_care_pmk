@@ -51,12 +51,16 @@ class Home extends StatelessWidget {
                             width: 10,
                           ),
                           //Name
-                          Expanded(child: Text("ชื่อแบบ โคตรยาว ณ กรุงเทพฯ", textAlign: TextAlign.justify,)),
+                          Expanded(
+                              child: Text(
+                            "ปิยะทัศน์",
+                            textAlign: TextAlign.justify,
+                          )),
                           //Button
 
                           IconButton(
-                              onPressed: () => Scaffold.of(context)
-                                  .openEndDrawer(),
+                              onPressed: () =>
+                                  Scaffold.of(context).openEndDrawer(),
                               icon: Icon(Icons.menu))
                         ],
                       ),
@@ -75,7 +79,8 @@ class Home extends StatelessWidget {
                     // A event_list here
                     EventCard(
                       time: '9:00 น',
-                      title: 'Title This is a test for handling long text and line breaking',
+                      title:
+                          'Title This is a test for handling long text and line breaking',
                       detail:
                           'DetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetail',
                       type: 'seizure',

@@ -1,3 +1,6 @@
+import 'package:epilepsy_care_pmk/screens/home/alarm_med_take/alarm_med_take.dart';
+import 'package:epilepsy_care_pmk/screens/home/graph_history/graph_history.dart';
+import 'package:epilepsy_care_pmk/screens/home/profile/profile.dart';
 import 'package:flutter/material.dart';
 
 class HomeDrawer extends StatelessWidget {
@@ -21,8 +24,8 @@ class HomeDrawer extends StatelessWidget {
             title: const Text('ข้อมูลส่วนตัว'),
             // visualDensity: VisualDensity(vertical: -3),  // Making the tile more compact
             onTap: () {
-              // Navigator.of(context).push(MaterialPageRoute(
-              //                             builder: (context) => const ???()));
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => const profile()));
             },
           ),
           Divider(),
@@ -30,8 +33,8 @@ class HomeDrawer extends StatelessWidget {
             leading: Icon(Icons.data_thresholding_outlined),
             title: const Text('ประวัติการชักเเละการรับประทานยา'),
             onTap: () {
-              // Navigator.of(context).push(MaterialPageRoute(
-              //                             builder: (context) => const ???()));
+              Navigator.of(context).push(MaterialPageRoute(
+                                          builder: (context) => const graphHistory()));
             },
           ),
           Divider(),
@@ -39,8 +42,8 @@ class HomeDrawer extends StatelessWidget {
             leading: Icon(Icons.alarm),
             title: const Text('ตั้งเวลากินยา'),
             onTap: () {
-              // Navigator.of(context).push(MaterialPageRoute(
-              //                             builder: (context) => const ???()));
+              Navigator.of(context).push(MaterialPageRoute(
+                                          builder: (context) => const alarmMedTake()));
             },
           ),
         ],

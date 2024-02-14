@@ -22,66 +22,66 @@ class EventCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Card(
       child: Padding(
-        padding: EdgeInsets.all(kLargePadding),
-        child: Row(children: [
-          //Time
-          Padding(padding: EdgeInsets.all(kMediumPadding), child: Text(time)),
-          //Vertical Line
-          Opacity(
-            opacity: 0.5,
-            child: SizedBox(
-              width: 40,
-              height: 125,
+        padding: EdgeInsets.all(kMediumPadding),
+        child: IntrinsicHeight(
+          // Wrap with IntrinsicHeight so that we can see the
+          child: Row(children: [
+            //Time
+            Expanded(flex: 1, child: Center(child: Text(time))),
+            //Vertical Line
+            Opacity(
+              opacity: 0.5,
               child: VerticalDivider(
                 thickness: 1,
               ),
             ),
-          ),
-          //Column for label and detail
-          Expanded(
-            //Protect Overflow Context
-            flex: 1,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    //Title
-                    Text(
-                      title, //TODO: Make title not overflow
-                    ),
-                    SizedBox(
-                      width: 60,
-                    ),
-                    IconButton(
-                        onPressed: () {},
-                        icon: Icon(Icons
-                            .edit_outlined)), //TODO: Make edit and delete works
-                    IconButton(
-                        onPressed: () {}, icon: Icon(Icons.delete_outline))
-                  ],
-                ),
-                //Detail
-                Text(detail),
-                SizedBox(
-                  height: 10,
-                ),
-                //Icon Zone
-                Row(
-                  children: [
-                    Icon(Icons.map_outlined),
-                    Text(place),
-                    Icon(
-                      Icons.warning_rounded,
-                      color: colorWarningIcon,
-                    ),
-                    Text(type)
-                  ],
-                )
-              ],
-            ),
-          )
-        ]),
+            //Column for label and detail
+            Expanded(
+              //Protect Overflow Context
+              flex: 4,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      //Title
+                      Expanded(
+                        child: Text(
+                          title, //TODO: Make title not overflow
+                        ),
+                      ),
+                      IconButton(
+                          onPressed: () {}, icon: Icon(Icons.edit_outlined)),
+                      //TODO: Make edit and delete works
+                      IconButton(
+                          onPressed: () {}, icon: Icon(Icons.delete_outline))
+                    ],
+                  ),
+                  SizedBox(
+                    height: kSmallPadding,
+                  ),
+                  //Detail
+                  Text(detail),
+                  SizedBox(
+                    height: kSmallPadding,
+                  ),
+                  //Icon Zone
+                  Row(
+                    children: [
+                      Icon(Icons.map_outlined),
+                      Text(place),
+                      Icon(
+                        Icons.warning_rounded,
+                        color: colorWarningIcon,
+                      ),
+                      Text(type)
+                    ],
+                  )
+                ],
+              ),
+            )
+          ]),
+        ),
       ),
     );
   }

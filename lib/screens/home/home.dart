@@ -75,7 +75,7 @@ class Home extends StatelessWidget {
                     // A event_list here
                     EventCard(
                       time: '9:00 น',
-                      title: 'Title',
+                      title: 'Title This is a test for handling long text and line breaking',
                       detail:
                           'DetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetail',
                       type: 'seizure',

@@ -8,4 +8,5 @@
 /// (from: https://stackoverflow.com/questions/63300348/flutter-text-only-break-lines-at-whitespaces)
 String forceBreakOnlyAtWhiteSpace(String text) {
   return text.split('').join('\ufeff').replaceAll('\ufeff \ufeff', ' ');
+  // TODO: Now for some reason, in iOS, the tone marks don't render properly. We'll need to fix this later
 }

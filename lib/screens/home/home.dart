@@ -51,7 +51,7 @@ class Home extends StatelessWidget {
                             width: 10,
                           ),
                           //Name
-                          Expanded(child: Text(forceBreakOnlyAtWhiteSpace("ชื่อแบบ โคตรยาว ณ กรุงเทพฯ"))),
+                          Expanded(child: Text("ชื่อแบบ โคตรยาว ณ กรุงเทพฯ", textAlign: TextAlign.justify,)),
                           //Button
 
                           IconButton(

@@ -84,7 +84,15 @@ class Contact extends StatelessWidget {
                   label: "LINE ID",
                   address: "0985233838",
                   buttonLabel: "ไปที่ LINE",
-                  onPressed: null,  // TODO: make the button launch the LINE app
+                  onPressed: () async {
+                    final callUri = Uri(
+                      scheme: "https",
+                      path: "line.me/ti/p/IIIhyX3yUF",
+                    );
+                    if (await canLaunchUrl(callUri)) {
+                      launchUrl(callUri);
+                    }
+                  },  // TODO: make the button launch the LINE app
                 ),
               ],
             ),

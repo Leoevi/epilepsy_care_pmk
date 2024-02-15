@@ -54,7 +54,7 @@ class Home extends StatelessWidget {
                           //Name
                           Expanded(
                               child: Text(
-                            "ปิยะทัศน์",
+                            "FirstName",
                             textAlign: TextAlign.justify,
                           )),
                           //Button
@@ -78,7 +78,6 @@ class Home extends StatelessWidget {
                 child: Column(
                   children: [
                     // A event_list here
-                    EventCardWithToggleSwitch(timeAlarm: '9:00 น' , titleAlarm: 'Title This is a test for handling long text and line breaking', detailAlarm: 'DetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetail'),
                     EventCard(
                       time: '9:00 น',
                       title:

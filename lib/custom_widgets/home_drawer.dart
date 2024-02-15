@@ -24,9 +24,7 @@ class HomeDrawer extends StatelessWidget {
         padding: EdgeInsets.zero,
         children: [
           DrawerHeader(
-            decoration: BoxDecoration(
-              color: Colors.blue,
-            ),
+            decoration: baseBackgroundDecoration,
             child: Row(
               children: [
                 CircleAvatar(

@@ -21,7 +21,7 @@ class EventCardWithToggleSwitch extends StatefulWidget {
 }
 
 class _EventCardWithToggleSwitchState extends State<EventCardWithToggleSwitch> {
-  bool isSwitched = false; //ควรประกาศตัวแปรไว้นอก widget
+  bool isSwitched = true; //ควรประกาศตัวแปรไว้นอก widget
 
   @override
   Widget build(BuildContext context) {

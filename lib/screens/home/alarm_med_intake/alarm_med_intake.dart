@@ -1,14 +1,14 @@
 import 'package:epilepsy_care_pmk/screens/commons/screen_with_app_bar.dart';
 import 'package:flutter/material.dart';
 
-class alarmMedTake extends StatefulWidget {
-  const alarmMedTake({super.key});
+class AlarmMedIntake extends StatefulWidget {
+  const AlarmMedIntake({super.key});
 
   @override
-  State<alarmMedTake> createState() => _alarmMedTakeState();
+  State<AlarmMedIntake> createState() => _AlarmMedIntakeState();
 }
 
-class _alarmMedTakeState extends State<alarmMedTake> {
+class _AlarmMedIntakeState extends State<AlarmMedIntake> {
   @override
   Widget build(BuildContext context) {
     return const ScreenWithAppBar(

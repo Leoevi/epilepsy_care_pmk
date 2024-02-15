@@ -38,7 +38,7 @@ class IconLabelDetailButton extends StatelessWidget {
             child: Row(
               children: [
                 CircleAvatar(
-                  radius: circleRadius, // Image radius
+                  radius: kCircleRadius, // Image radius
                   backgroundImage: icon,
                 ),
                 const SizedBox(

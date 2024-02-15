@@ -24,7 +24,7 @@ class EventCard extends StatelessWidget {
       child: Padding(
         padding: EdgeInsets.all(kMediumPadding),
         child: IntrinsicHeight(
-          // Wrap with IntrinsicHeight so that we can see the
+          // Wrap with IntrinsicHeight so that we can see the VerticalDivider (https://stackoverflow.com/questions/49388281/flutter-vertical-divider-and-horizontal-divider)
           child: Row(children: [
             //Time
             Expanded(

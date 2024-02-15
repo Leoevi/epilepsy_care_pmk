@@ -1,13 +1,13 @@
 import 'package:epilepsy_care_pmk/screens/commons/screen_with_app_bar.dart';
 import 'package:flutter/material.dart';
-class graphHistory extends StatefulWidget {
-  const graphHistory({super.key});
+class GraphHistory extends StatefulWidget {
+  const GraphHistory({super.key});
 
   @override
-  State<graphHistory> createState() => _graphHistoryState();
+  State<GraphHistory> createState() => _GraphHistoryState();
 }
 
-class _graphHistoryState extends State<graphHistory> {
+class _GraphHistoryState extends State<GraphHistory> {
   @override
   Widget build(BuildContext context) {
     return const ScreenWithAppBar(title: 'graph',);

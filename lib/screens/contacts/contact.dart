@@ -22,7 +22,7 @@ class Contact extends StatelessWidget {
               children: [
                 const Row(
                   children: [
-                    Icon(Icons.headset_mic_outlined, size: circleRadius*2,),
+                    Icon(Icons.headset_mic_outlined, size: kCircleRadius*2,),
                     SizedBox(
                       width: kMediumPadding,
                     ),

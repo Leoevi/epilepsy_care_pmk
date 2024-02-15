@@ -28,4 +28,4 @@ const String indent = "\t\t\t\t";
 const TextStyle mediumLargeBoldText =
     TextStyle(fontWeight: FontWeight.bold, fontSize: 16);
 
-const double circleRadius = 32;
+const double kCircleRadius = 32;

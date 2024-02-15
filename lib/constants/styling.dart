@@ -16,10 +16,16 @@ const double kLargePadding = 16.0;
 const double kSmallRoundedCornerRadius = 8.0;
 const double kMediumRoundedCornerRadius = 12.0;
 
-//style: purpleButton
 ButtonStyle primaryButtonStyle = ElevatedButton.styleFrom(
     backgroundColor: Color.fromARGB(255, 201, 128, 247), //Color(0x7FCA80F7)
-    padding: EdgeInsets.all(20),
+    // padding: EdgeInsets.all(0),
+    fixedSize: Size.fromWidth(140),
+    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)));
+
+ButtonStyle secondaryButtonStyle = ElevatedButton.styleFrom(
+    backgroundColor: Colors.white,
+    side: BorderSide(color: Color.fromARGB(255, 201, 128, 247)),
+    // padding: EdgeInsets.all(20),
     fixedSize: Size.fromWidth(140),
     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)));
 
@@ -49,6 +55,8 @@ const splashBackgroundDecoration = BoxDecoration(
         begin: Alignment.topCenter,
         end: Alignment.bottomCenter,
         colors: [
-          Color(0xFFFFCEFE), Color(0xFFFDEBED), Color(0xFFFFCEFE)
-        ] // TODO: use colors from theme instead of hardcoding
-    ));
+      Color(0xFFFFCEFE),
+      Color(0xFFFDEBED),
+      Color(0xFFFFCEFE)
+    ] // TODO: use colors from theme instead of hardcoding
+        ));

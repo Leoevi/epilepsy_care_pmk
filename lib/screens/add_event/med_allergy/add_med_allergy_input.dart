@@ -172,14 +172,7 @@ class _AddMedAllergyInputState extends State<AddMedAllergyInput> {
                           onPressed: () {
                             Navigator.of(context).pop();
                           },
-                          style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.white,
-                              side: BorderSide(
-                                  color: Color.fromARGB(255, 201, 128, 247)),
-                              padding: EdgeInsets.all(20),
-                              fixedSize: Size.fromWidth(140),
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(8))),
+                          style: secondaryButtonStyle,
                         ),
                         ElevatedButton(
                           child: Text("ตกลง",

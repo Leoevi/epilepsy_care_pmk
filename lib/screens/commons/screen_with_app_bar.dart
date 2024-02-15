@@ -1,3 +1,4 @@
+import 'package:epilepsy_care_pmk/constants/styling.dart';
 import 'package:flutter/material.dart';
 
 /// A full screen page with the app bar at the top
@@ -19,15 +20,7 @@ class ScreenWithAppBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       // To have a gradient background, need to wrap with container
-      decoration: const BoxDecoration(
-          gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [
-                Color(0xFFF6C0FF),
-                Color(0xFFF69AFF)
-          ] // TODO: use colors from theme instead of hardcoding
-              )),
+      decoration: baseBackgroundDecoration,
       child: Scaffold(
         appBar: AppBar(
           title: Text(title),

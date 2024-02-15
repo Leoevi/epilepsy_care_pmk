@@ -1,5 +1,6 @@
 import 'package:epilepsy_care_pmk/constants/styling.dart';
 import 'package:epilepsy_care_pmk/custom_widgets/event_card.dart';
+import 'package:epilepsy_care_pmk/custom_widgets/event_card_with_toggle.dart';
 import 'package:epilepsy_care_pmk/helpers/force_break_only_at_whitespaces.dart';
 import 'package:flutter/material.dart';
 
@@ -77,6 +78,7 @@ class Home extends StatelessWidget {
                 child: Column(
                   children: [
                     // A event_list here
+                    EventCardWithToggleSwitch(timeAlarm: '9:00 น' , titleAlarm: 'Title This is a test for handling long text and line breaking', detailAlarm: 'DetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetail'),
                     EventCard(
                       time: '9:00 น',
                       title:

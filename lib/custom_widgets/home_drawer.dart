@@ -1,6 +1,7 @@
 import 'package:epilepsy_care_pmk/constants/styling.dart';
 import 'package:epilepsy_care_pmk/screens/home/graph_history/graph_history.dart';
 import 'package:epilepsy_care_pmk/screens/home/profile/profile.dart';
+import 'package:epilepsy_care_pmk/screens/register.dart';
 import 'package:flutter/material.dart';
 
 import '../screens/home/alarm_med_intake/alarm_med_intake.dart';
@@ -64,6 +65,15 @@ class HomeDrawer extends StatelessWidget {
             onTap: () {
               Navigator.of(context).push(MaterialPageRoute(
                   builder: (context) => const AlarmMedIntake()));
+            },
+          ),
+          Divider(),
+          ListTile(
+            leading: Icon(Icons.alarm),
+            title: const Text('test register page'),
+            onTap: () {
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => const Register()));
             },
           ),
         ],

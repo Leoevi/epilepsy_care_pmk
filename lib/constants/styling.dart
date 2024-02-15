@@ -29,3 +29,26 @@ const TextStyle mediumLargeBoldText =
     TextStyle(fontWeight: FontWeight.bold, fontSize: 16);
 
 const double kCircleRadius = 32;
+
+/// A decoration intend to be used by containers wrapping scaffolds
+/// of many screens in the app, this is to give a gradient background
+const baseBackgroundDecoration = BoxDecoration(
+    gradient: LinearGradient(
+        begin: Alignment.topCenter,
+        end: Alignment.bottomCenter,
+        colors: [
+      Color(0xFFF6C0FF),
+      Color(0xFFF69AFF)
+    ] // TODO: use colors from theme instead of hardcoding
+        ));
+
+/// A decoration intend to be used by containers wrapping scaffold
+/// of the register screen, this is to give a gradient background
+const splashBackgroundDecoration = BoxDecoration(
+    gradient: LinearGradient(
+        begin: Alignment.topCenter,
+        end: Alignment.bottomCenter,
+        colors: [
+          Color(0xFFFFCEFE), Color(0xFFFDEBED), Color(0xFFFFCEFE)
+        ] // TODO: use colors from theme instead of hardcoding
+    ));

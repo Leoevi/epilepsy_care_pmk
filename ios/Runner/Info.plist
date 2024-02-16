@@ -15,7 +15,7 @@
     <array>
         <string>http</string>
         <string>https</string>
-        <string>mailto<string>
+        <string>mailto</string>
         <string>tel</string>
     </array>
     <!-- This is the end of our custom keys -->

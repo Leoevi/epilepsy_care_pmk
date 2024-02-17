@@ -19,14 +19,13 @@ class _RegisterState extends State<Register> {
   String? firstName;
   String? lastName;
   DateTime? birthDate;
-  int? age;
   var gender;  // TODO: define type for gender
 
   void printAll() {
     print("hn: $hn");
     print("firstName: $firstName");
     print("lastName: $lastName");
-    print("age: $age");
+    print("birthDate: $birthDate");
     print("gender: $gender");
   }
 
@@ -94,9 +93,9 @@ class _RegisterState extends State<Register> {
 
                         Row(
                           children: [
-                            Expanded(child: LabelTextFormField(label: "HN")),
+                            Expanded(child: LabelTextFormField(label: "ชื่อจริง")),
                             SizedBox(width: kMediumPadding,),
-                            Expanded(child: LabelTextFormField(label: "HN")),
+                            Expanded(child: LabelTextFormField(label: "นามสกุล")),
                           ],
                         ),
 
@@ -129,7 +128,7 @@ class _RegisterState extends State<Register> {
                           },
                         ),
 
-                        LabelTextFormField(label: "HN"),
+                        LabelTextFormField(label: "เพศ"),
 
                         SizedBox(height: kMediumPadding),
                         Align(

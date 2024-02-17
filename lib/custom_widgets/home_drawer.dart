@@ -29,7 +29,7 @@ class HomeDrawer extends StatelessWidget {
               children: [
                 CircleAvatar(
                   radius: kCircleRadius,
-                  backgroundImage: icon,
+                  backgroundImage: icon ?? profilePlaceholder,
                 ),
                 const SizedBox(
                   width: kSmallPadding,

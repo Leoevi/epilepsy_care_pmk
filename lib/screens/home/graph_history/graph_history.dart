@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'package:collection/collection.dart';
+import 'package:epilepsy_care_pmk/constants/styling.dart';
 
 import 'package:epilepsy_care_pmk/screens/commons/screen_with_app_bar.dart';
 import 'package:fl_chart/fl_chart.dart';
@@ -28,21 +29,29 @@ class _GraphHistoryState extends State<GraphHistory> {
 }
 
 class LineChartSample9 extends StatefulWidget {
-  LineChartSample9({super.key});
+  LineChartSample9({
+    super.key,
+    // required this.medIntake,
+  });
+
+  // final List<MedIntakePerDay> medIntake;
 
   @override
   State<LineChartSample9> createState() => _LineChartSample9State();
 }
 
 class _LineChartSample9State extends State<LineChartSample9> {
+  // The main obstacle here is the fact that fl_chart accepts only (double, double) x,y coords,
+  // what we to plot here is (date, double), so we'll need to convert the dates into doubles.
   late List<MedIntakePerDay> medIntakes;
   late List<FlSpot> medIntakeSpots;
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     // TODO: we would load medIntake from DB
+    // Some assumptions about the list
+    // - the list should be ordered by date from oldest to newest
     medIntakes = [
       MedIntakePerDay(25, DateTime(2023,1,1)),
       MedIntakePerDay(30, DateTime(2023,1,2)),
@@ -52,19 +61,7 @@ class _LineChartSample9State extends State<LineChartSample9> {
     medIntakeSpots = medIntakes.mapIndexed((index, element) => FlSpot(index.toDouble(), element.totalDose)).toList();
   }
 
-  // Instance member can't be accessed in an initializer, so we need to do this in one go
-  // final medIntakesSpots = [
-  //   MedIntakePerDay(25, DateTime(2023,1,1)),
-  //   MedIntakePerDay(30, DateTime(2023,1,2)),
-  //   MedIntakePerDay(15, DateTime(2023,1,3)),
-  //   MedIntakePerDay(25, DateTime(2023,1,4)),
-  // ].mapIndexed((index, element) => FlSpot(index.toDouble(), element.totalDose)).toList();
-  // FlSpot(index, totalDose)
-
   Widget bottomTitleWidgets(double value, TitleMeta meta, double chartWidth) {
-    // For this case, we will use value as the index of medIntakeSpots
-    // print("value: $value, meta: $meta");
-
     final style = TextStyle(
       color: Colors.blue,
       fontWeight: FontWeight.bold,
@@ -72,9 +69,10 @@ class _LineChartSample9State extends State<LineChartSample9> {
     );
 
     return SideTitleWidget(
+      fitInside: SideTitleFitInsideData.fromTitleMeta(meta, distanceFromEdge: 0),  // make the SideTitle not overflow over the edges
       axisSide: meta.axisSide,
       space: 16,
-      child: Text(medIntakes[value.round()].date.toString(), style: style),
+      child: Text(dateFormat.format(medIntakes[value.round()].date), style: style),
     );
 
     // Instead of doing logic here, we will use interval instead
@@ -112,7 +110,7 @@ class _LineChartSample9State extends State<LineChartSample9> {
         top: 20,
       ),
       child: AspectRatio(
-        aspectRatio: 1,
+        aspectRatio: 2,
         child: LayoutBuilder(
           builder: (context, constraints) {
             return LineChart(
@@ -130,7 +128,7 @@ class _LineChartSample9State extends State<LineChartSample9> {
                           fontSize: 14,
                         );
                         return LineTooltipItem(
-                          '${touchedSpot.x}, ${touchedSpot.y.toStringAsFixed(2)}',
+                          '${dateFormat.format(medIntakes[touchedSpot.x.round()].date)}, ${touchedSpot.y.toStringAsFixed(2)}',
                           textStyle,
                         );
                       }).toList();

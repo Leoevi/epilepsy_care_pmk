@@ -77,7 +77,7 @@ class _RegisterState extends State<Register> {
                             // https://github.com/flutter/flutter/issues/42901
                             child: CircleAvatar(
                                 radius: 2*kCircleRadius,
-                                backgroundImage: selectedImage == null ? null : Image.file(File(selectedImage!.path)).image,  // For some reason, Image can't be assigned to ImageProvider, so we append ".image" to the Image widget (https://stackoverflow.com/questions/66561177/the-argument-type-object-cant-be-assigned-to-the-parameter-type-imageprovide)
+                                backgroundImage: selectedImage == null ? profilePlaceholder : Image.file(File(selectedImage!.path)).image,  // For some reason, Image can't be assigned to ImageProvider, so we append ".image" to the Image widget (https://stackoverflow.com/questions/66561177/the-argument-type-object-cant-be-assigned-to-the-parameter-type-imageprovide)
                                 child: Material(
                                   shape: const CircleBorder(),
                                   clipBehavior: Clip.hardEdge,
@@ -118,7 +118,7 @@ class _RegisterState extends State<Register> {
                                 lastDate: DateTime(2101, 12, 31));
 
                             if (birthDate != null) {
-                              birthDateFieldController.text = DateFormat("yyyy-MM-dd").format(birthDate!);
+                              birthDateFieldController.text = dateFormat.format(birthDate!);
                               // TODO: instead of formatting manually like so, we can detect localization; however, this requires setting localization for the whole app
                               // birthDateFieldController.text =
                               //     DateFormat.yMd(Localizations

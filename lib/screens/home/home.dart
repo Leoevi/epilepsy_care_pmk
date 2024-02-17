@@ -45,8 +45,7 @@ class Home extends StatelessWidget {
                           //Image
                           CircleAvatar(
                             radius: 28,
-                            // Image radius
-                            // backgroundImage: icon,
+                            backgroundImage: profilePlaceholder,
                           ),
                           SizedBox(
                             width: 10,

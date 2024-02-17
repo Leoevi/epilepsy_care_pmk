@@ -1,19 +1,14 @@
 import 'package:epilepsy_care_pmk/constants/styling.dart';
+import 'package:epilepsy_care_pmk/screens/wiki/symptoms/symptom_entry.dart';
 import 'package:flutter/material.dart';
 
 class SymptomDetail extends StatelessWidget {
   SymptomDetail({
     super.key,
-    required this.title,
-    required this.content,
-    this.picture,
+    required this.symptomEntry,
   });
 
-  final String title;
-
-  final Text content;
-
-  var picture;
+  final SymptomEntry symptomEntry;
 
   @override
   Widget build(BuildContext context) {
@@ -39,17 +34,17 @@ class SymptomDetail extends StatelessWidget {
             stretchTriggerOffset: 300.0,
             expandedHeight: 200.0,
             flexibleSpace: FlexibleSpaceBar(
-              title: Text(title,
+              title: Text(symptomEntry.title,
                 style: TextStyle(
                   color: Theme.of(context).textTheme.displaySmall!.color,  // For some reason, the color doesn't follow the theme (https://stackoverflow.com/questions/66311991/cant-get-sliverappbar-title-color-to-follow-themedata)
                 ),),
-              background: picture ?? FlutterLogo(),  // TODO: remove the flutter logo
+              background: symptomEntry.picture ?? FlutterLogo(),  // TODO: remove the flutter logo
             ),
           ),
           SliverToBoxAdapter(
             child: Padding(
               padding: const EdgeInsets.all(kLargePadding),
-              child: content,
+              child: symptomEntry.content,
             ),
           ),
         ],

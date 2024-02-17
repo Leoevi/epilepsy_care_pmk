@@ -1,4 +1,5 @@
 import 'package:epilepsy_care_pmk/screens/commons/screen_with_app_bar.dart';
+import 'package:epilepsy_care_pmk/screens/wiki/medication/medication_entry.dart';
 import 'package:flutter/material.dart';
 
 import '../../../constants/styling.dart';
@@ -6,25 +7,15 @@ import '../../../constants/styling.dart';
 class MedicationDetail extends StatelessWidget {
   const MedicationDetail({
     super.key,
-    required this.name,
-    required this.picture,
-    this.dosage,
-    required this.sideEffects,
-    required this.dangerSideEffects,
-    this.allergySymptoms,
+    required this.medicationEntry,
   });
 
-  final String name;
-  final ImageProvider<Object> picture;
-  final String? dosage;
-  final String sideEffects;
-  final String dangerSideEffects;
-  final String? allergySymptoms;
+  final MedicationEntry medicationEntry;
 
   @override
   Widget build(BuildContext context) {
     return ScreenWithAppBar(
-      title: name,
+      title: medicationEntry.name,
       body: Padding(
         padding: const EdgeInsets.all(kLargePadding),
         child: Container(
@@ -41,7 +32,7 @@ class MedicationDetail extends StatelessWidget {
                       borderRadius:
                           BorderRadius.circular(kMediumRoundedCornerRadius),
                       child: Image(
-                        image: picture,
+                        image: medicationEntry.picture,
                       )),
                   SizedBox(
                     height: kMediumPadding,
@@ -49,7 +40,7 @@ class MedicationDetail extends StatelessWidget {
                   Align(
                       alignment: Alignment.center,
                       child: Text(
-                        name,
+                        medicationEntry.name,
                         style: Theme.of(context).textTheme.headlineSmall,
                       )),
                   SizedBox(
@@ -62,23 +53,23 @@ class MedicationDetail extends StatelessWidget {
                   SizedBox(
                     height: 2 * kMediumPadding,
                   ),
-                  Text("ชื่อยา: ${name}"),
+                  Text("ชื่อยา: ${medicationEntry.name}"),
                   SizedBox(
                     height: kMediumPadding,
                   ),
-                  Text("ขนาด: ${dosage ?? "-"}"),
+                  Text("ขนาด: ${medicationEntry.medicationIntakeMethod ?? "-"}"),
                   SizedBox(
                     height: kMediumPadding,
                   ),
-                  Text("ผลข้างเคียง: ${sideEffects ?? "-"}"),
+                  Text("ผลข้างเคียง: ${medicationEntry.sideEffects ?? "-"}"),
                   SizedBox(
                     height: kMediumPadding,
                   ),
-                  Text("ผลข้างเคียงที่ต้องระวัง: ${dangerSideEffects ?? "-"}"),
+                  Text("ผลข้างเคียงที่ต้องระวัง: ${medicationEntry.dangerSideEffects ?? "-"}"),
                   SizedBox(
                     height: kMediumPadding,
                   ),
-                  Text("การแพ้ยา: ${allergySymptoms ?? "-"}"),
+                  Text("การแพ้ยา: ${medicationEntry.allergySymptoms ?? "-"}"),
                   // TODO: It seems like every med has this field empty, why is it here in the first place?
                 ],
               ),

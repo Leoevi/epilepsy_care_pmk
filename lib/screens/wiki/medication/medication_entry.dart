@@ -36,6 +36,12 @@ class PillMedication extends MedicationIntakeMethod {
   double getMg(double unit) {
     return mgPerUnit*unit;
   }
+
+  @override
+  String toString() {
+    // TODO: implement toString
+    return "${mgPerUnit} มก. ต่อเม็ด";
+  }
 }
 /// A class that describes medication that is in liquid form, which must be
 /// taken in terms of millilitres, this introduces many ways to measure how much
@@ -52,6 +58,12 @@ class LiquidMedication extends MedicationIntakeMethod {
   @override
   double getMg(double unit) {
     return mgPerMl*unit;
+  }
+
+  @override
+  String toString() {
+    // TODO: implement toString
+    return "${mgPerMl} มก./มล.";
   }
 }
 

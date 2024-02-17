@@ -20,9 +20,8 @@ class Symptom extends StatelessWidget {
                 label: entry.title,
                 onTap: () {
                   Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => SymptomDetail(
-                          title: entry.title, content: entry.content)));
-                })
+                      builder: (context) => SymptomDetail(symptomEntry: entry,)));
+                }),
         ]);
   }
 }

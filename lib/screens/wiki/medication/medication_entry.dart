@@ -16,37 +16,64 @@ class MedicationEntry {
   final String sideEffects;
   final String dangerSideEffects;
   final String? allergySymptoms;
+
+  @override
+  String toString() {
+    return name;
+  }
 }
 
+/// A class that tries to describe each measurement unit of a medication
+class MeasureUnit {
+  MeasureUnit(this.measureName, this.measureRatio);
+
+  /// Name of the measurement unit, e.g. pills, teaspoon, etc.
+  final String measureName;
+
+  /// The ratio of that measurement compared to the base measurement
+  /// e.g. teaspoon would have the ratio of 5, because 1 teaspoon == 5 ml, etc.
+  final double measureRatio;
+}
+
+// Declaring properties in interfaces and their subclasses:
+// https://stackoverflow.com/questions/65959810/dart-how-to-define-a-property-that-must-be-implemented-in-any-classes-inheriti
 /// An abstract class that tries to describe how each medication
 /// is taken. By itself, this is just to dictate that each method
 /// must have a way to return the amount of medication taken in mg
 /// but bears no implementation detail.
 abstract class MedicationIntakeMethod {
   const MedicationIntakeMethod();  // IDK, but adding this line allows the subclasses to have a const constructor, so here it is
-  double getMg(double unit);
+
+  /// List of all possible measurements for that method of intake
+  abstract final List<MeasureUnit> measureList;
+
+  /// Get the amount of meds taken in milligram
+  double getMg(MeasureUnit unit);
 }
 /// A class that describes medication that is pill-like, as in a discrete unit
 /// of medication that can be eaten whole.
-class PillMedication extends MedicationIntakeMethod {
-  const PillMedication(this.mgPerUnit);
-  final int mgPerUnit;
+class PillMedication implements MedicationIntakeMethod {
+  const PillMedication(this.mgPerPill);
+  final int mgPerPill;
+
+  // Base unit of pills are, well, pills..., and ratio of base unit is always 1
+  @override
+  List<MeasureUnit> get measureList => [MeasureUnit("เม็ด", 1)];
 
   @override
-  double getMg(double unit) {
-    return mgPerUnit*unit;
+  double getMg(MeasureUnit unit) {
+    return mgPerPill*unit.measureRatio;
   }
 
   @override
   String toString() {
-    // TODO: implement toString
-    return "${mgPerUnit} มก. ต่อเม็ด";
+    return "${mgPerPill} มก. ต่อเม็ด";
   }
 }
 /// A class that describes medication that is in liquid form, which must be
 /// taken in terms of millilitres, this introduces many ways to measure how much
 /// the medications is taken, like a teaspoon, or a tablespoon.
-class LiquidMedication extends MedicationIntakeMethod {
+class LiquidMedication implements MedicationIntakeMethod {
   const LiquidMedication(this.mgPerMl);
   final int mgPerMl;
   // This is according to metric standards
@@ -55,14 +82,20 @@ class LiquidMedication extends MedicationIntakeMethod {
   static const mlPerTeaspoon = 5;
   static const mlPerTablespoon = 3*mlPerTeaspoon;
 
+  // Base unit of liquid is ml, so its' ratio will be 1
+  // As for tsp and tbsp, this is according to metric standards
+  // (US teaspoon is 4.92892159375, metric teaspoon is 5 ml)
+  // https://en.wikipedia.org/wiki/Teaspoon#Unit_of_measure
   @override
-  double getMg(double unit) {
-    return mgPerMl*unit;
+  List<MeasureUnit> get measureList => [MeasureUnit("ช้อนชา", 5), MeasureUnit("ช้อนโต๊ะ", 15), MeasureUnit("มล.", 1)];
+
+  @override
+  double getMg(MeasureUnit unit) {
+    return mgPerMl*unit.measureRatio;
   }
 
   @override
   String toString() {
-    // TODO: implement toString
     return "${mgPerMl} มก./มล.";
   }
 }

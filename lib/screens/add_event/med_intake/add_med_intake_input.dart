@@ -1,24 +1,25 @@
 import 'package:epilepsy_care_pmk/constants/styling.dart';
 import 'package:epilepsy_care_pmk/custom_widgets/horizontal_date_picker.dart';
 import 'package:epilepsy_care_pmk/screens/commons/screen_with_app_bar.dart';
+import 'package:epilepsy_care_pmk/screens/wiki/medication/medication_entry.dart';
 import 'package:flutter/material.dart';
 
-const List<String> list = <String>[ //DropDown Item List (All Drug)
-  'Carbamazepine / Tegretol®',
-  'Clonazepam / Rivotrill®',
-  'Lamotrigine / Lamictal®',
-  'Levetiracetam / Keppra®',
-  'Oxcarbazepine / Trileptal®',
-  'Phenobarbital',
-  'Phenytoin / Dilantin®',
-  'Sodium valproate / Depakin®',
-  'Topiramate / Topamax®',
-  'Vigabatrin / Sabril®',
-  'Perampanel / Fycompa®',
-  'Lacosamide / Vimpat®',
-  'Pregabalin / Lyrica®',
-  'Gabapentin / Neurontin® / Berlontin®'
-];
+// const List<String> list = <String>[ //DropDown Item List (All Drug)
+//   'Carbamazepine / Tegretol®',
+//   'Clonazepam / Rivotrill®',
+//   'Lamotrigine / Lamictal®',
+//   'Levetiracetam / Keppra®',
+//   'Oxcarbazepine / Trileptal®',
+//   'Phenobarbital',
+//   'Phenytoin / Dilantin®',
+//   'Sodium valproate / Depakin®',
+//   'Topiramate / Topamax®',
+//   'Vigabatrin / Sabril®',
+//   'Perampanel / Fycompa®',
+//   'Lacosamide / Vimpat®',
+//   'Pregabalin / Lyrica®',
+//   'Gabapentin / Neurontin® / Berlontin®'
+// ];
 
 class AddMedIntakeInput extends StatefulWidget {
   const AddMedIntakeInput({super.key});
@@ -28,17 +29,32 @@ class AddMedIntakeInput extends StatefulWidget {
 }
 
 class _AddMedIntakeInputState extends State<AddMedIntakeInput> {
-  final _formKey = GlobalKey<FormState>(); //Validate
-  String? seizureDose; // Input ปริมาณ
-  String dropDownValue = list.first; // dropDown init value
   DateTime selectedDate = DateTime.now(); // Date from datepicker
+  MedicationEntry? selectedMedication; // dropDown init value
   TimeOfDay selectedTime = TimeOfDay.now(); // default time
+  String? medicationQuantity; // Input ปริมาณ
+  MeasureUnit? selectedMeasureUnit;
+
+  late final List<DropdownMenuItem<MedicationEntry>> medDropdownList;  // DropdownMenuItem is a generic, so we will assign it type that we need straight away.
+  List<DropdownMenuItem<MeasureUnit>>? unitDropdownList;
+  final _formKey = GlobalKey<FormState>(); //Validate
 
   void printAll() {
-    debugPrint("seizureDose: $seizureDose");
-    debugPrint("dropDownValue: $dropDownValue");
+    debugPrint("seizureDose: $medicationQuantity");
+    debugPrint("dropDownValue: $selectedMedication");
     debugPrint("selectedDate: $selectedDate");
     debugPrint("selectedTime: $selectedTime");
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    medDropdownList = medicationEntries.map<DropdownMenuItem<MedicationEntry>>((entry) {
+      return DropdownMenuItem<MedicationEntry>(
+        value: entry,
+        child: Text(entry.name),
+      );
+    }).toList();
   }
 
   @override
@@ -74,21 +90,28 @@ class _AddMedIntakeInputState extends State<AddMedIntakeInput> {
 
                     DropdownButtonFormField(
                       isExpanded: true,
-                      value: dropDownValue,
+                      value: selectedMedication,
                       icon: const Icon(Icons.keyboard_arrow_down),
                       decoration: InputDecoration(border: OutlineInputBorder()),
-                      onChanged: (String? val) {
+                      onChanged: (MedicationEntry? val) {
+                        // 2 things that this onChange does
+                        // 1) set the selectedMedication
                         setState(() {
-                          dropDownValue = val!;
+                          selectedMedication = val!;
+                          selectedMeasureUnit = null;  // For some reason, not setting this to null will cause an assertion error saying that there are 0 or 2 duplicate entries in the unit's drop down menu.
                           // print(dropDownValue);
                         });
+
+                        // 2) Update the measure drop down menu
+                        // use the ".?" operator to make the whole expr null if selectedMedication is null
+                        unitDropdownList = selectedMedication?.medicationIntakeMethod.measureList.map<DropdownMenuItem<MeasureUnit>>((measure) {
+                          return DropdownMenuItem<MeasureUnit>(
+                            value: measure,
+                            child: Text(measure.measureName),
+                          );
+                        }).toList();
                       },
-                      items: list.map<DropdownMenuItem<String>>((String value) {
-                        return DropdownMenuItem<String>(
-                          value: value,
-                          child: Text(value),
-                        );
-                      }).toList(),
+                      items: medDropdownList,
                     ),
 
                     SizedBox(height: 20),
@@ -141,24 +164,44 @@ class _AddMedIntakeInputState extends State<AddMedIntakeInput> {
                     SizedBox(height: 10),
                     //spacing between label and TextInput
 
-                    TextFormField(
-                      validator: (val) {
-                        //validate
-                        if (val == null || val.isEmpty) {
-                          return 'กรุณาระบุปริมาณยา';
-                        }
-                        return null;
-                      },
-                      //Collect data by use update_text function
-                      onChanged: (val) {
-                        setState(() {
-                          seizureDose = val;
-                          // print(seizureSymptom);
-                        });
-                      },
-                      decoration: InputDecoration(
-                          hintText: "ระบุปริมาณยา",
-                          border: OutlineInputBorder()),
+                    Row(
+                      children: [
+                        Expanded(
+                          flex: 3,
+                          child: TextFormField(
+                            validator: (val) {
+                              if (val == null || val.isEmpty) {
+                                return 'กรุณาระบุปริมาณยา';
+                              }
+                              return null;
+                            },
+                            //Collect data by use update_text function
+                            onChanged: (val) {
+                              setState(() {
+                                medicationQuantity = val;
+                                // print(seizureSymptom);
+                              });
+                            },
+                            decoration: InputDecoration(
+                                hintText: "ระบุปริมาณยา",
+                                border: OutlineInputBorder()),
+                          ),
+                        ),
+                        SizedBox(width: kSmallPadding,),
+                        Expanded(child: DropdownButtonFormField(
+                          isExpanded: true,
+                          value: selectedMeasureUnit,
+                          icon: const Icon(Icons.keyboard_arrow_down),
+                          decoration: InputDecoration(border: OutlineInputBorder()),
+                          onChanged: (MeasureUnit? val) {
+                            setState(() {
+                              selectedMeasureUnit = val!;
+                              // print(dropDownValue);
+                            });
+                          },
+                          items: unitDropdownList,
+                        ),)
+                      ],
                     ),
 
                     SizedBox(height: 80),

@@ -1,7 +1,5 @@
 import 'package:epilepsy_care_pmk/constants/styling.dart';
 import 'package:epilepsy_care_pmk/custom_widgets/event_card.dart';
-import 'package:epilepsy_care_pmk/custom_widgets/event_card_with_toggle.dart';
-import 'package:epilepsy_care_pmk/helpers/force_break_only_at_whitespaces.dart';
 import 'package:flutter/material.dart';
 
 class Home extends StatelessWidget {
@@ -48,7 +46,7 @@ class Home extends StatelessWidget {
                             backgroundImage: profilePlaceholder,
                           ),
                           SizedBox(
-                            width: 10,
+                            width: kSmallPadding,
                           ),
                           //Name
                           Expanded(

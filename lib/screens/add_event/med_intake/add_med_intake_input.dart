@@ -3,6 +3,7 @@ import 'package:epilepsy_care_pmk/custom_widgets/horizontal_date_picker.dart';
 import 'package:epilepsy_care_pmk/screens/commons/screen_with_app_bar.dart';
 import 'package:epilepsy_care_pmk/screens/wiki/medication/medication_entry.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 // const List<String> list = <String>[ //DropDown Item List (All Drug)
 //   'Carbamazepine / Tegretol®',
@@ -32,7 +33,7 @@ class _AddMedIntakeInputState extends State<AddMedIntakeInput> {
   DateTime selectedDate = DateTime.now(); // Date from datepicker
   MedicationEntry? selectedMedication; // dropDown init value
   TimeOfDay selectedTime = TimeOfDay.now(); // default time
-  String? medicationQuantity; // Input ปริมาณ
+  String? medicationQuantity; // Input ปริมาณ, will be parsed into double when OK is pressed
   MeasureUnit? selectedMeasureUnit;
 
   late final List<DropdownMenuItem<MedicationEntry>> medDropdownList;  // DropdownMenuItem is a generic, so we will assign it type that we need straight away.
@@ -74,7 +75,6 @@ class _AddMedIntakeInputState extends State<AddMedIntakeInput> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    //
                     HorizontalDatePicker(
                       startDate: selectedDate,
                       onDateChange: (date) {
@@ -99,7 +99,6 @@ class _AddMedIntakeInputState extends State<AddMedIntakeInput> {
                         setState(() {
                           selectedMedication = val!;
                           selectedMeasureUnit = null;  // For some reason, not setting this to null will cause an assertion error saying that there are 0 or 2 duplicate entries in the unit's drop down menu.
-                          // print(dropDownValue);
                         });
 
                         // 2) Update the measure drop down menu
@@ -112,6 +111,11 @@ class _AddMedIntakeInputState extends State<AddMedIntakeInput> {
                         }).toList();
                       },
                       items: medDropdownList,
+                      validator: (val) {
+                        if (val == null) {
+                          return "กรุณาเลือกยาที่จะบันทึก";
+                        }
+                      },
                     ),
 
                     SizedBox(height: 20),
@@ -147,8 +151,6 @@ class _AddMedIntakeInputState extends State<AddMedIntakeInput> {
                             if (timeOfDay != null) {
                               setState(() {
                                 selectedTime = timeOfDay;
-                                //time result : timeOfDay
-                                // print("time>>>>>> $selectedTime");
                               });
                             }
                           },
@@ -165,13 +167,22 @@ class _AddMedIntakeInputState extends State<AddMedIntakeInput> {
                     //spacing between label and TextInput
 
                     Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,  // This is so that error msg from validator doesn't misalign the whole widget
                       children: [
                         Expanded(
-                          flex: 3,
+                          flex: 2,
                           child: TextFormField(
+                            // https://stackoverflow.com/questions/49577781/how-to-create-number-input-field-in-flutter & https://stackoverflow.com/a/61215563
+                            keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                            inputFormatters: [
+                              FilteringTextInputFormatter.allow(RegExp(r'(^\d*\.?\d*)'))
+                            ],
                             validator: (val) {
                               if (val == null || val.isEmpty) {
                                 return 'กรุณาระบุปริมาณยา';
+                              }
+                              else if (double.tryParse(val) == null) {
+                                return 'กรุณาระบุตัวเลขที่ถูกต้อง';
                               }
                               return null;
                             },
@@ -179,7 +190,6 @@ class _AddMedIntakeInputState extends State<AddMedIntakeInput> {
                             onChanged: (val) {
                               setState(() {
                                 medicationQuantity = val;
-                                // print(seizureSymptom);
                               });
                             },
                             decoration: InputDecoration(
@@ -192,14 +202,23 @@ class _AddMedIntakeInputState extends State<AddMedIntakeInput> {
                           isExpanded: true,
                           value: selectedMeasureUnit,
                           icon: const Icon(Icons.keyboard_arrow_down),
-                          decoration: InputDecoration(border: OutlineInputBorder()),
+                          decoration: const InputDecoration(
+                              border: OutlineInputBorder(),
+                              hintText: "หน่วย",  // For some reason, on first render, the word "หน่วย" isn't vertically center, instead it drops below a bit, I tried to fix it with hintStyle according to https://github.com/flutter/flutter/issues/40248, but it wasn't enough
+                              hintStyle: TextStyle(textBaseline: TextBaseline.alphabetic),
+                              errorMaxLines: 3,
+                          ),
                           onChanged: (MeasureUnit? val) {
                             setState(() {
                               selectedMeasureUnit = val!;
-                              // print(dropDownValue);
                             });
                           },
                           items: unitDropdownList,
+                          validator: (val) {
+                            if (val == null) {
+                              return "กรุณาเลือกหน่วยของปริมาณยา";
+                            }
+                          },
                         ),)
                       ],
                     ),

@@ -1,7 +1,7 @@
 import 'package:epilepsy_care_pmk/constants/styling.dart';
 import 'package:epilepsy_care_pmk/custom_widgets/horizontal_date_picker.dart';
 import 'package:epilepsy_care_pmk/screens/commons/screen_with_app_bar.dart';
-import 'package:epilepsy_care_pmk/screens/wiki/medication/medication_entry.dart';
+import 'package:epilepsy_care_pmk/screens/wiki/medication/medication.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -31,27 +31,28 @@ class AddMedIntakeInput extends StatefulWidget {
 
 class _AddMedIntakeInputState extends State<AddMedIntakeInput> {
   DateTime selectedDate = DateTime.now(); // Date from datepicker
-  MedicationEntry? selectedMedication; // dropDown init value
+  Medication? selectedMedication; // dropDown init value
   TimeOfDay selectedTime = TimeOfDay.now(); // default time
   String? medicationQuantity; // Input ปริมาณ, will be parsed into double when OK is pressed
   MeasureUnit? selectedMeasureUnit;
 
-  late final List<DropdownMenuItem<MedicationEntry>> medDropdownList;  // DropdownMenuItem is a generic, so we will assign it type that we need straight away.
+  late final List<DropdownMenuItem<Medication>> medDropdownList;  // DropdownMenuItem is a generic, so we will assign it type that we need straight away.
   List<DropdownMenuItem<MeasureUnit>>? unitDropdownList;
   final _formKey = GlobalKey<FormState>(); //Validate
 
   void printAll() {
-    debugPrint("seizureDose: $medicationQuantity");
-    debugPrint("dropDownValue: $selectedMedication");
     debugPrint("selectedDate: $selectedDate");
+    debugPrint("selectedMedication: $selectedMedication");
     debugPrint("selectedTime: $selectedTime");
+    debugPrint("medicationQuantity: $medicationQuantity");
+    debugPrint("selectedMeasureUnit: $selectedMeasureUnit");
   }
 
   @override
   void initState() {
     super.initState();
-    medDropdownList = medicationEntries.map<DropdownMenuItem<MedicationEntry>>((entry) {
-      return DropdownMenuItem<MedicationEntry>(
+    medDropdownList = medicationEntries.map<DropdownMenuItem<Medication>>((entry) {
+      return DropdownMenuItem<Medication>(
         value: entry,
         child: Text(entry.name),
       );
@@ -93,7 +94,7 @@ class _AddMedIntakeInputState extends State<AddMedIntakeInput> {
                       value: selectedMedication,
                       icon: const Icon(Icons.keyboard_arrow_down),
                       decoration: InputDecoration(border: OutlineInputBorder()),
-                      onChanged: (MedicationEntry? val) {
+                      onChanged: (Medication? val) {
                         // 2 things that this onChange does
                         // 1) set the selectedMedication
                         setState(() {

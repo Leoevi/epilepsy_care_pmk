@@ -1,6 +1,6 @@
 import 'package:epilepsy_care_pmk/custom_widgets/column_with_spacings.dart';
 import 'package:epilepsy_care_pmk/screens/commons/page_with_header_logo.dart';
-import 'package:epilepsy_care_pmk/screens/wiki/medication/medication.dart';
+import 'package:epilepsy_care_pmk/screens/wiki/medication/medication_list.dart';
 import 'package:epilepsy_care_pmk/screens/wiki/symptoms/symptom.dart';
 import 'package:flutter/material.dart';
 
@@ -18,7 +18,7 @@ class Wiki extends StatelessWidget {
             Navigator.of(context).push(MaterialPageRoute(builder: (context) => const Symptom()));
           },),
           IconLabelDetailButton(icon: const AssetImage("image/medication_icon.png"), label: 'ข้อมูลชนิดของยา', detail: "ศึกษาข้อมูลของยาที่ใช้เกี่ยวกับโรคลมชักได้ที่นี่", onTap: () {
-            Navigator.of(context).push(MaterialPageRoute(builder: (context) => const Medication()));
+            Navigator.of(context).push(MaterialPageRoute(builder: (context) => const MedicationList()));
           },),
         ],
       )

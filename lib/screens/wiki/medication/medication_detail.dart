@@ -1,5 +1,5 @@
 import 'package:epilepsy_care_pmk/screens/commons/screen_with_app_bar.dart';
-import 'package:epilepsy_care_pmk/screens/wiki/medication/medication_entry.dart';
+import 'package:epilepsy_care_pmk/screens/wiki/medication/medication.dart';
 import 'package:flutter/material.dart';
 
 import '../../../constants/styling.dart';
@@ -10,7 +10,7 @@ class MedicationDetail extends StatelessWidget {
     required this.medicationEntry,
   });
 
-  final MedicationEntry medicationEntry;
+  final Medication medicationEntry;
 
   @override
   Widget build(BuildContext context) {

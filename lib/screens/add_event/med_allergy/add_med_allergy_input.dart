@@ -1,25 +1,26 @@
 import 'package:epilepsy_care_pmk/constants/styling.dart';
 import 'package:epilepsy_care_pmk/custom_widgets/horizontal_date_picker.dart';
 import 'package:epilepsy_care_pmk/screens/commons/screen_with_app_bar.dart';
+import 'package:epilepsy_care_pmk/screens/wiki/medication/medication.dart';
 import 'package:flutter/material.dart';
 
-const List<String> list = <String>[
-  //DropDown Item List (All Drug)
-  'Carbamazepine / Tegretol®',
-  'Clonazepam / Rivotrill®',
-  'Lamotrigine / Lamictal®',
-  'Levetiracetam / Keppra®',
-  'Oxcarbazepine / Trileptal®',
-  'Phenobarbital',
-  'Phenytoin / Dilantin®',
-  'Sodium valproate / Depakin®',
-  'Topiramate / Topamax®',
-  'Vigabatrin / Sabril®',
-  'Perampanel / Fycompa®',
-  'Lacosamide / Vimpat®',
-  'Pregabalin / Lyrica®',
-  'Gabapentin / Neurontin®  / Berlontin®' //Fix Overflow item by https://stackoverflow.com/a/55376107
-];
+// const List<String> list = <String>[
+//   //DropDown Item List (All Drug)
+//   'Carbamazepine / Tegretol®',
+//   'Clonazepam / Rivotrill®',
+//   'Lamotrigine / Lamictal®',
+//   'Levetiracetam / Keppra®',
+//   'Oxcarbazepine / Trileptal®',
+//   'Phenobarbital',
+//   'Phenytoin / Dilantin®',
+//   'Sodium valproate / Depakin®',
+//   'Topiramate / Topamax®',
+//   'Vigabatrin / Sabril®',
+//   'Perampanel / Fycompa®',
+//   'Lacosamide / Vimpat®',
+//   'Pregabalin / Lyrica®',
+//   'Gabapentin / Neurontin®  / Berlontin®' //Fix Overflow item by https://stackoverflow.com/a/55376107
+// ];
 
 class AddMedAllergyInput extends StatefulWidget {
   const AddMedAllergyInput({super.key});
@@ -29,17 +30,30 @@ class AddMedAllergyInput extends StatefulWidget {
 }
 
 class _AddMedAllergyInputState extends State<AddMedAllergyInput> {
-  final _formKey = GlobalKey<FormState>(); //Validate
-  String? seizureSymptom; // Input อาการ
-  String dropDownValue = list.first; // dropDown init value
   DateTime selectedDate = DateTime.now(); // Date from datepicker
+  Medication? selectedMedication; // dropDown init value
   TimeOfDay selectedTime = TimeOfDay.now();
+  String? seizureSymptom; // Input อาการ
+
+  late final List<DropdownMenuItem<Medication>> medDropdownList;
+  final _formKey = GlobalKey<FormState>(); //Validate
 
   void printAll() {
-    debugPrint("seizureSymptom: $seizureSymptom");
-    debugPrint("dropDownValue: $dropDownValue");
     debugPrint("selectedDate: $selectedDate");
+    debugPrint("selectedMedication: $selectedMedication");
     debugPrint("selectedTime: $selectedTime");
+    debugPrint("seizureSymptom: $seizureSymptom");
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    medDropdownList = medicationEntries.map<DropdownMenuItem<Medication>>((entry) {
+      return DropdownMenuItem<Medication>(
+        value: entry,
+        child: Text(entry.name),
+      );
+    }).toList();
   }
 
   @override
@@ -76,21 +90,16 @@ class _AddMedAllergyInputState extends State<AddMedAllergyInput> {
 
                     DropdownButtonFormField(
                       isExpanded: true, //https://stackoverflow.com/a/55376107
-                      value: dropDownValue,
+                      value: selectedMedication,
                       icon: const Icon(Icons.keyboard_arrow_down),
                       decoration: InputDecoration(border: OutlineInputBorder()),
-                      onChanged: (String? val) {
+                      onChanged: (Medication? val) {
                         setState(() {
-                          dropDownValue = val!;
+                          selectedMedication = val!;
                           // print(dropDownValue);
                         });
                       },
-                      items: list.map<DropdownMenuItem<String>>((String value) {
-                        return DropdownMenuItem<String>(
-                          value: value,
-                          child: Text(value),
-                        );
-                      }).toList(),
+                      items: medDropdownList,
                     ),
 
                     SizedBox(height: 20),

@@ -41,8 +41,8 @@ class _GraphHistoryState extends State<GraphHistory> {
 
   @override
   Widget build(BuildContext context) {
-    return ScreenWithAppBar(
-      title: 'graph',
+    return Scaffold(
+      // title: 'graph',
       body: Column(
         children: [
           Text("ปริมาณยา (mg)"),

@@ -39,8 +39,8 @@ class _AddAlarmState extends State<AddAlarm> {
   @override
   final _formKey = GlobalKey<FormState>(); //Validate
 
-  String? medDose; // Input อาการ
-  String? medTakeDetail; // Input สถานที่
+  String? medDose; // Input ปริมาณยา
+  String? medTakeDetail; // Input รายละเอียด
   String drugDropDownValue = drugList.first; // dropDown init value
   String alarmModeDropDownValue = alarmModeList.first;
   DateTime selectedDate = DateTime.now(); // Date from datepicker
@@ -224,16 +224,7 @@ class _AddAlarmState extends State<AddAlarm> {
                                 onPressed: () {
                                   Navigator.of(context).pop();
                                 },
-                                style: ElevatedButton.styleFrom(
-                                    backgroundColor: Colors.white,
-                                    side: BorderSide(
-                                        color:
-                                            Color.fromARGB(255, 201, 128, 247)),
-                                    padding: EdgeInsets.all(20),
-                                    fixedSize: Size.fromWidth(140),
-                                    shape: RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(8))),
+                                style: secondaryButtonStyle
                               ),
                               ElevatedButton(
                                 child: Text("ตกลง",

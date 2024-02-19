@@ -5,23 +5,6 @@ import 'package:epilepsy_care_pmk/screens/wiki/medication/medication.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-// const List<String> list = <String>[ //DropDown Item List (All Drug)
-//   'Carbamazepine / Tegretol®',
-//   'Clonazepam / Rivotrill®',
-//   'Lamotrigine / Lamictal®',
-//   'Levetiracetam / Keppra®',
-//   'Oxcarbazepine / Trileptal®',
-//   'Phenobarbital',
-//   'Phenytoin / Dilantin®',
-//   'Sodium valproate / Depakin®',
-//   'Topiramate / Topamax®',
-//   'Vigabatrin / Sabril®',
-//   'Perampanel / Fycompa®',
-//   'Lacosamide / Vimpat®',
-//   'Pregabalin / Lyrica®',
-//   'Gabapentin / Neurontin® / Berlontin®'
-// ];
-
 class AddMedIntakeInput extends StatefulWidget {
   const AddMedIntakeInput({super.key});
 

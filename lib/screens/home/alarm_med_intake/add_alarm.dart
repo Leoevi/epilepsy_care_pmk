@@ -1,31 +1,14 @@
 import 'package:epilepsy_care_pmk/constants/styling.dart';
-import 'package:epilepsy_care_pmk/custom_widgets/horizontal_date_picker.dart';
 import 'package:epilepsy_care_pmk/screens/commons/screen_with_app_bar.dart';
+import 'package:epilepsy_care_pmk/screens/wiki/medication/medication.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 const List<String> alarmModeList = <String>[
   //DropDown Item List (All Alarm Mode)
   'ทุกวัน',
   'ทุก 2 วัน',
   'ทุก 3 วัน',
-];
-
-const List<String> drugList = <String>[
-  //DropDown Item List (All Drug)
-  'Carbamazepine / Tegretol®',
-  'Clonazepam / Rivotrill®',
-  'Lamotrigine / Lamictal®',
-  'Levetiracetam / Keppra®',
-  'Oxcarbazepine / Trileptal®',
-  'Phenobarbital',
-  'Phenytoin / Dilantin®',
-  'Sodium valproate / Depakin®',
-  'Topiramate / Topamax®',
-  'Vigabatrin / Sabril®',
-  'Perampanel / Fycompa®',
-  'Lacosamide / Vimpat®',
-  'Pregabalin / Lyrica®',
-  'Gabapentin / Neurontin® / Berlontin®'
 ];
 
 class AddAlarm extends StatefulWidget {
@@ -36,16 +19,29 @@ class AddAlarm extends StatefulWidget {
 }
 
 class _AddAlarmState extends State<AddAlarm> {
-  @override
-  final _formKey = GlobalKey<FormState>(); //Validate
-
-  String? medDose; // Input ปริมาณยา
-  String? medTakeDetail; // Input รายละเอียด
-  String drugDropDownValue = drugList.first; // dropDown init value
-  String alarmModeDropDownValue = alarmModeList.first;
-  DateTime selectedDate = DateTime.now(); // Date from datepicker
+  Medication? selectedMedication; // dropDown init value
+  String? medicationQuantity; // Input ปริมาณยา
+  MeasureUnit? selectedMeasureUnit;
+  String? alarmDetail; // Input รายละเอียด
+  String selectedRepetition = alarmModeList.first;
   TimeOfDay selectedTime = TimeOfDay.now(); // default time
 
+  late final List<DropdownMenuItem<Medication>> medDropdownList;  // DropdownMenuItem is a generic, so we will assign it type that we need straight away.
+  List<DropdownMenuItem<MeasureUnit>>? unitDropdownList;
+  final _formKey = GlobalKey<FormState>(); //Validate
+
+  @override
+  void initState() {
+    super.initState();
+    medDropdownList = medicationEntries.map<DropdownMenuItem<Medication>>((entry) {
+      return DropdownMenuItem<Medication>(
+        value: entry,
+        child: Text(entry.name),
+      );
+    }).toList();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return ScreenWithAppBar(
         title: "ตั้งเวลากินยา",
@@ -73,49 +69,97 @@ class _AddAlarmState extends State<AddAlarm> {
 
                           DropdownButtonFormField(
                             isExpanded: true,
-                            value: drugDropDownValue,
+                            value: selectedMedication,
                             icon: const Icon(Icons.keyboard_arrow_down),
-                            decoration:
-                                InputDecoration(border: OutlineInputBorder()),
-                            onChanged: (String? val) {
+                            decoration: const InputDecoration(border: OutlineInputBorder()),
+                            onChanged: (Medication? val) {
+                              // 2 things that this onChange does
+                              // 1) set the selectedMedication
                               setState(() {
-                                drugDropDownValue = val!;
+                                selectedMedication = val!;
+                                selectedMeasureUnit = null;  // For some reason, not setting this to null will cause an assertion error saying that there are 0 or 2 duplicate entries in the unit's drop down menu.
                               });
+
+                              // 2) Update the measure drop down menu
+                              // use the ".?" operator to make the whole expr null if selectedMedication is null
+                              unitDropdownList = selectedMedication?.medicationIntakeMethod.measureList.map<DropdownMenuItem<MeasureUnit>>((measure) {
+                                return DropdownMenuItem<MeasureUnit>(
+                                  value: measure,
+                                  child: Text(measure.measureName),
+                                );
+                              }).toList();
                             },
-                            items: drugList
-                                .map<DropdownMenuItem<String>>((String value) {
-                              return DropdownMenuItem<String>(
-                                value: value,
-                                child: Text(value),
-                              );
-                            }).toList(),
+                            items: medDropdownList,
+                            validator: (val) {
+                              if (val == null) {
+                                return "กรุณาเลือกยาที่จะบันทึก";
+                              }
+                            },
                           ),
 
                           SizedBox(height: 20),
 
                           //field ปริมาณยา
-                          Text("โปรดระบุปริมาณยา",
-                              style: TextStyle(fontSize: 18)),
+                          Text("โปรดระบุปริมาณยา", style: TextStyle(fontSize: 18)),
 
                           SizedBox(height: 10),
                           //spacing between label and TextInput
 
-                          TextFormField(
-                            validator: (val) {
-                              if (val == null || val.isEmpty) {
-                                return 'กรุณาระบุปริมาณยา';
-                              }
-                              return null;
-                            },
-                            //Collect data by use update_text function
-                            onChanged: (val) {
-                              setState(() {
-                                medDose = val;
-                              });
-                            },
-                            decoration: InputDecoration(
-                                hintText: "ระบุปริมาณยา",
-                                border: OutlineInputBorder()),
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,  // This is so that error msg from validator doesn't misalign the whole widget
+                            children: [
+                              Expanded(
+                                flex: 2,
+                                child: TextFormField(
+                                  // https://stackoverflow.com/questions/49577781/how-to-create-number-input-field-in-flutter & https://stackoverflow.com/a/61215563
+                                  keyboardType: const TextInputType.numberWithOptions(decimal: true),
+                                  inputFormatters: [
+                                    FilteringTextInputFormatter.allow(RegExp(r'(^\d*\.?\d*)'))
+                                  ],
+                                  validator: (val) {
+                                    if (val == null || val.isEmpty) {
+                                      return 'กรุณาระบุปริมาณยา';
+                                    }
+                                    else if (double.tryParse(val) == null) {
+                                      return 'กรุณาระบุตัวเลขที่ถูกต้อง';
+                                    }
+                                    return null;
+                                  },
+                                  //Collect data by use update_text function
+                                  onChanged: (val) {
+                                    setState(() {
+                                      medicationQuantity = val;
+                                    });
+                                  },
+                                  decoration: InputDecoration(
+                                      hintText: "ระบุปริมาณยา",
+                                      border: OutlineInputBorder()),
+                                ),
+                              ),
+                              SizedBox(width: kSmallPadding,),
+                              Expanded(child: DropdownButtonFormField(
+                                isExpanded: true,
+                                value: selectedMeasureUnit,
+                                icon: const Icon(Icons.keyboard_arrow_down),
+                                decoration: const InputDecoration(
+                                  border: OutlineInputBorder(),
+                                  hintText: "หน่วย",  // For some reason, on first render, the word "หน่วย" isn't vertically center, instead it drops below a bit, I tried to fix it with hintStyle according to https://github.com/flutter/flutter/issues/40248, but it wasn't enough
+                                  hintStyle: TextStyle(textBaseline: TextBaseline.alphabetic),
+                                  errorMaxLines: 3,
+                                ),
+                                onChanged: (MeasureUnit? val) {
+                                  setState(() {
+                                    selectedMeasureUnit = val!;
+                                  });
+                                },
+                                items: unitDropdownList,
+                                validator: (val) {
+                                  if (val == null) {
+                                    return "กรุณาเลือกหน่วยของปริมาณยา";
+                                  }
+                                },
+                              ),)
+                            ],
                           ),
 
                           SizedBox(height: 20),
@@ -136,7 +180,7 @@ class _AddAlarmState extends State<AddAlarm> {
                             //Collect data by use update_text function
                             onChanged: (val) {
                               setState(() {
-                                medTakeDetail = val;
+                                alarmDetail = val;
                               });
                             },
                             decoration: InputDecoration(
@@ -189,19 +233,19 @@ class _AddAlarmState extends State<AddAlarm> {
 
                           SizedBox(height: 20),
                           //spacing between input
-                          Text("ชื่อยาที่บันทึก",
+                          Text("แจ้งเตือนซ้ำ",
                               style: TextStyle(fontSize: 18)),
 
                           SizedBox(height: 10),
 
                           DropdownButtonFormField(
-                            value: alarmModeDropDownValue,
+                            value: selectedRepetition,
                             icon: const Icon(Icons.keyboard_arrow_down),
                             decoration:
                                 InputDecoration(border: OutlineInputBorder()),
                             onChanged: (String? val) {
                               setState(() {
-                                alarmModeDropDownValue = val!;
+                                selectedRepetition = val!;
                               });
                             },
                             items: alarmModeList

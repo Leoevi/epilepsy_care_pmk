@@ -1,8 +1,7 @@
 import 'package:epilepsy_care_pmk/constants/styling.dart';
-import 'package:epilepsy_care_pmk/screens/commons/screen_with_app_bar.dart';
-import 'package:epilepsy_care_pmk/screens/commons/screen_with_app_bar_and_white_container.dart';
-import 'package:epilepsy_care_pmk/screens/home/graph_history/graph_history.dart';
 import 'package:flutter/material.dart';
+
+import '../../../custom_widgets/dosage_graph.dart';
 
 class GraphHistoryWithTab extends StatefulWidget {
   const GraphHistoryWithTab({super.key});
@@ -67,7 +66,7 @@ class _GraphHistoryWithTabState extends State<GraphHistoryWithTab> {
                                 ),
                                 DosageGraph(
                                   medIntakes: [
-                                    MedIntakePerDay(100, DateTime(2023, 1, 5)),
+                                    MedIntakePerDay(400, DateTime(2023, 1, 5)),
                                     MedIntakePerDay(300, DateTime(2023, 1, 6)),
                                     MedIntakePerDay(300, DateTime(2023, 1, 7)),
                                     MedIntakePerDay(80, DateTime(2023, 1, 8)),

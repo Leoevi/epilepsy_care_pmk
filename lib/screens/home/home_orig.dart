@@ -1,37 +1,15 @@
+// The original of home, before revamping it for db
 import 'package:epilepsy_care_pmk/constants/styling.dart';
 import 'package:epilepsy_care_pmk/custom_widgets/event_card.dart';
-import 'package:epilepsy_care_pmk/models/seizure_event.dart';
-import 'package:epilepsy_care_pmk/services/database_service.dart';
 import 'package:flutter/material.dart';
-import 'package:sqflite/sqflite.dart';
 
-class Home extends StatefulWidget {
+class Home extends StatelessWidget {
   const Home({super.key});
-
-  @override
-  State<Home> createState() => _HomeState();
-}
-
-class _HomeState extends State<Home> {
-  dynamic futureData;
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    futureData = DatabaseService.getAllSeizureEvents();
-    // futureData = getStr();
-  }
-
-  Future<String> getStr() async {
-    await Future.delayed(Duration(seconds: 3));
-    return getDatabasesPath();
-  }
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(kLargePadding),
+      padding: EdgeInsets.all(kLargePadding),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -45,6 +23,11 @@ class _HomeState extends State<Home> {
                       alignment: Alignment.centerLeft,
                       image: AssetImage("image/header_logo_eng.png"),
                     )),
+                // Spacer(flex: 1),
+
+                // SizedBox(
+                //   width: 20,
+                // ),
 
                 Expanded(
                   flex: 3,
@@ -69,9 +52,9 @@ class _HomeState extends State<Home> {
                           //Name
                           Expanded(
                               child: Text(
-                            "FirstName",
-                            textAlign: TextAlign.justify,
-                          )),
+                                "FirstName",
+                                textAlign: TextAlign.justify,
+                              )),
                           //Button
 
                           IconButton(
@@ -87,40 +70,52 @@ class _HomeState extends State<Home> {
             ),
           ),
           const SizedBox(height: kLargePadding),
-          Flexible(
+          Expanded(
               flex: 4, //standard layout
-              // FutureBuilder structure inspiration: https://www.youtube.com/watch?v=lkpPg0ieklg
-              child: FutureBuilder(
-                  future: futureData,
-                  builder: (context, snapshot) {
-                    switch (snapshot.connectionState) {
-                      case ConnectionState.waiting:
-                        return const CircularProgressIndicator();
-                      case ConnectionState.done:
-                      default:
-                        if (snapshot.hasError) {
-                          return Text("Error: ${snapshot.error}");
-                        } else if (snapshot.hasData) {
-                          return SingleChildScrollView(
-                            child: Column(
-                              children: [
-                                for (SeizureEvent entry in snapshot.data! as List<SeizureEvent>)
-                                  Text(entry.toString())
-                              ],
-                            ),
-                          );
-                        } else {
-                          return Column(
-                            children: [
-                              Text("No data, but..."),
-                              Text("${snapshot.data}")
-                            ],
-                          );
-                        }
-                    }
-                  },
-              )
-          )
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    // A event_list here
+                    EventCard(
+                      time: '9:00 น',
+                      title:
+                      'Title This is a test for handling long text and line breaking',
+                      detail:
+                      'DetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetail',
+                      type: 'seizure',
+                      place: 'home',
+                      colorWarningIcon: Colors.red,
+                    ),
+                    EventCard(
+                      time: '9:00 น',
+                      title: 'Title',
+                      detail:
+                      'DetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetail',
+                      type: 'seizure',
+                      place: 'home',
+                      colorWarningIcon: Colors.red,
+                    ),
+                    EventCard(
+                      time: '9:00 น',
+                      title: 'Title',
+                      detail:
+                      'DetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetail',
+                      type: 'seizure',
+                      place: 'home',
+                      colorWarningIcon: Colors.red,
+                    ),
+                    EventCard(
+                      time: '9:00 น',
+                      title: 'Title',
+                      detail:
+                      'DetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetailDetail',
+                      type: 'seizure',
+                      place: 'home',
+                      colorWarningIcon: Colors.red,
+                    )
+                  ],
+                ),
+              ))
         ],
       ),
     );

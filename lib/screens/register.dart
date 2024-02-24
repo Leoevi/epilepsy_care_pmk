@@ -118,7 +118,7 @@ class _RegisterState extends State<Register> {
                                 lastDate: DateTime(2101, 12, 31));
 
                             if (birthDate != null) {
-                              birthDateFieldController.text = dateFormat.format(birthDate!);
+                              birthDateFieldController.text = dateDateFormat.format(birthDate!);
                               // TODO: instead of formatting manually like so, we can detect localization; however, this requires setting localization for the whole app
                               // birthDateFieldController.text =
                               //     DateFormat.yMd(Localizations

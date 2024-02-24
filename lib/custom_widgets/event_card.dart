@@ -1,3 +1,5 @@
+// This file only serves as a example and will be deleted soon
+
 import 'package:epilepsy_care_pmk/constants/styling.dart';
 import 'package:flutter/material.dart';
 
@@ -6,23 +8,23 @@ class EventCard extends StatelessWidget {
       {super.key,
       required this.time,
       required this.title, // The button must have a header label
-      required this.detail,
+      this.detail,
       required this.colorWarningIcon,
       required this.place,
       required this.type});
 
   final String type;
   final String place;
-  final String time;
+  final DateTime time;
   final String title;
-  final String detail;
+  final String? detail;
   final Color colorWarningIcon;
 
   @override
   Widget build(BuildContext context) {
     return Card(
       child: Padding(
-        padding: EdgeInsets.all(kMediumPadding),
+        padding: const EdgeInsets.all(kMediumPadding),
         child: IntrinsicHeight(
           // Wrap with IntrinsicHeight so that we can see the VerticalDivider (https://stackoverflow.com/questions/49388281/flutter-vertical-divider-and-horizontal-divider)
           child: Row(children: [
@@ -31,7 +33,7 @@ class EventCard extends StatelessWidget {
                 flex: 1,
                 child: Center(
                     child: Text(
-                  time,
+                  dateTimeDateFormat.format(time),
                   style: mediumLargeBoldText,
                 ))),
             //Vertical Line
@@ -55,13 +57,15 @@ class EventCard extends StatelessWidget {
                         child: Text(
                           title,
                           style:
-                              mediumLargeBoldText, //TODO: Make title not overflow
+                              mediumLargeBoldText,
                         ),
                       ),
                       IconButton(
+                        visualDensity: VisualDensity.compact,
                           onPressed: () {}, icon: Icon(Icons.edit_outlined)),
                       //TODO: Make edit and delete works
                       IconButton(
+                          visualDensity: VisualDensity.compact,
                           onPressed: () {}, icon: Icon(Icons.delete_outline))
                     ],
                   ),
@@ -69,7 +73,7 @@ class EventCard extends StatelessWidget {
                     height: kSmallPadding,
                   ),
                   //Detail
-                  Text(detail),
+                  Text(detail ?? ""),
                   SizedBox(
                     height: kSmallPadding,
                   ),
@@ -78,6 +82,7 @@ class EventCard extends StatelessWidget {
                     children: [
                       Icon(Icons.map_outlined),
                       Text(place),
+                      SizedBox(width: kSmallPadding,),
                       Icon(
                         Icons.warning_rounded,
                         color: colorWarningIcon,

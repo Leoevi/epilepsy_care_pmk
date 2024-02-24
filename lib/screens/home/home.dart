@@ -20,12 +20,6 @@ class _HomeState extends State<Home> {
     // TODO: implement initState
     super.initState();
     futureData = DatabaseService.getAllSeizureEvents();
-    // futureData = getStr();
-  }
-
-  Future<String> getStr() async {
-    await Future.delayed(Duration(seconds: 3));
-    return getDatabasesPath();
   }
 
   @override
@@ -104,8 +98,9 @@ class _HomeState extends State<Home> {
                           return SingleChildScrollView(
                             child: Column(
                               children: [
+                                // snapshot.data cannot be null since we just checked in if-else earlier
                                 for (SeizureEvent entry in snapshot.data! as List<SeizureEvent>)
-                                  Text(entry.toString())
+                                  EventCard(time: DateTime.fromMillisecondsSinceEpoch(entry.time*1000), title: entry.seizureType, detail: entry.seizureSymptom, colorWarningIcon: Colors.red, place: entry.seizurePlace, type: "อาการชัก")
                               ],
                             ),
                           );

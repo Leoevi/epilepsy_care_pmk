@@ -63,8 +63,9 @@ const splashBackgroundDecoration = BoxDecoration(
     ] // TODO: use colors from theme instead of hardcoding
         ));
 
-/// Used for formatting DateTime objects to just "dd-MM-yyyy" instead of the ususal "dd-MM-yyyy hh:mm:ssss" or whatever it is
-DateFormat dateFormat = DateFormat("dd-MM-yyyy");
+/// Used for formatting DateTime objects to just "dd-MM-yyyy" instead of the usual "dd-MM-yyyy hh:mm:ssss" or whatever it is
+DateFormat dateDateFormat = DateFormat("dd-MM-yyyy");
+DateFormat dateTimeDateFormat = DateFormat("yyyy-MM-dd – kk:mm");
 
 /// A picture that is used if the user doesn't set their profile picture
 const profilePlaceholder = AssetImage("image/profile_placeholder.png");

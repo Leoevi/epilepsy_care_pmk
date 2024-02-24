@@ -34,9 +34,9 @@ class _AddSeizureInputState extends State<AddSeizureInput> {
 
   void saveToDB() {
     // Convert from DateTime to unix timestamp in int (https://stackoverflow.com/questions/52153920/how-to-convert-from-datetime-to-unix-timestamp-in-flutter-or-dart-in-general)
-    int finalTime = DateTime(selectedDate.year, selectedDate.month, selectedDate.day, selectedTime.hour, selectedTime.minute).millisecondsSinceEpoch * 1000;
+    int finalTime = DateTime(selectedDate.year, selectedDate.month, selectedDate.day, selectedTime.hour, selectedTime.minute).millisecondsSinceEpoch~/1000;
     // null on primary key for auto-increment (https://stackoverflow.com/questions/7905859/is-there-auto-increment-in-sqlite)
-    SeizureEvent seizureEvent = SeizureEvent(seizureId: null, time: finalTime, seizureType: dropDownValue, seizurePlace: seizurePlace!);
+    SeizureEvent seizureEvent = SeizureEvent(seizureId: null, time: finalTime, seizureType: dropDownValue, seizureSymptom: seizureSymptom, seizurePlace: seizurePlace!);
     DatabaseService.addSeizureEvent(seizureEvent);
   }
 

@@ -1,4 +1,5 @@
 import 'package:epilepsy_care_pmk/constants/styling.dart';
+import 'package:epilepsy_care_pmk/helpers/date_time_helpers.dart';
 import 'package:epilepsy_care_pmk/models/seizure_event.dart';
 import 'package:epilepsy_care_pmk/screens/commons/screen_with_app_bar.dart';
 import 'package:epilepsy_care_pmk/services/database_service.dart';
@@ -6,10 +7,17 @@ import 'package:flutter/material.dart';
 
 import '../../../custom_widgets/horizontal_date_picker.dart';
 
-const List<String> list = <String>['ชักทั้งตัว', 'ชักเฉพาะ', 'เหม่อลอย', 'อื่นๆ'];
+const List<String> seizureTypes = <String>['ชักทั้งตัว', 'ชักเฉพาะ', 'เหม่อลอย', 'อื่นๆ'];
 
 class AddSeizureInput extends StatefulWidget {
-  const AddSeizureInput({super.key});
+  /// For launching this page with a pre-existing seizure entry (for editing).
+  /// Should be passed as null if this is a new seizure event entry.
+  final SeizureEvent? initSeizureEvent;
+
+  const AddSeizureInput({
+    super.key,
+    this.initSeizureEvent,
+  });
 
   @override
   State<AddSeizureInput> createState() => _AddSeizureInputState();
@@ -18,26 +26,45 @@ class AddSeizureInput extends StatefulWidget {
 class _AddSeizureInputState extends State<AddSeizureInput> {
   final _formKey = GlobalKey<FormState>(); //Validate
 
-  String? seizureSymptom; // Input อาการ
-  String? seizurePlace; // Input สถานที่
-  String dropDownValue = list.first; // dropDown init value
-  DateTime selectedDate = DateTime.now(); // Date from datepicker
-  TimeOfDay selectedTime = TimeOfDay.now(); // default time
+  String? _inputSeizureSymptom; // Input อาการ
+  String? _inputSeizurePlace; // Input สถานที่
+  String? _inputSeizureType;
+  late DateTime _inputDate; // Date from DatePicker
+  late TimeOfDay _inputTime; // Time from TimePicker
 
-  void printAll() {
-    debugPrint("seizureSymptom: $seizureSymptom");
-    debugPrint("seizurePlace: $seizurePlace");
-    debugPrint("dropDownValue: $dropDownValue");
-    debugPrint("selectedDate: $selectedDate");
-    debugPrint("selectedTime: $selectedTime");
+  // load initSeizureEvent, if it exists
+  @override
+  void initState() {
+    super.initState();
+    _inputSeizureSymptom = widget.initSeizureEvent?.seizureSymptom;
+    _inputSeizurePlace = widget.initSeizureEvent?.seizurePlace;
+    _inputSeizureType = widget.initSeizureEvent?.seizureType;
+
+    // Date and time have their default values
+    if (widget.initSeizureEvent != null) {
+      DateTime initTime = unixTimeToDateTime(widget.initSeizureEvent!.time);
+      var r = separateDateTimeAndTimeOfDay(initTime);
+      _inputDate = r.$1;
+      _inputTime = r.$2;
+    } else {
+      _inputDate = DateTime.now();
+      _inputTime = TimeOfDay.now();
+    }
   }
 
-  void saveToDB() {
-    // Convert from DateTime to unix timestamp in int (https://stackoverflow.com/questions/52153920/how-to-convert-from-datetime-to-unix-timestamp-in-flutter-or-dart-in-general)
-    int finalTime = DateTime(selectedDate.year, selectedDate.month, selectedDate.day, selectedTime.hour, selectedTime.minute).millisecondsSinceEpoch~/1000;
+  // For creating new seizureEvent
+  void addToDB() {
+    int combinedUnixTime = dateTimeToUnixTime(combineDateTimeWithTimeOfDay(_inputDate, _inputTime));
     // null on primary key for auto-increment (https://stackoverflow.com/questions/7905859/is-there-auto-increment-in-sqlite)
-    SeizureEvent seizureEvent = SeizureEvent(seizureId: null, time: finalTime, seizureType: dropDownValue, seizureSymptom: seizureSymptom, seizurePlace: seizurePlace!);
-    DatabaseService.addSeizureEvent(seizureEvent);
+    SeizureEvent newSeizureEvent = SeizureEvent(seizureId: null, time: combinedUnixTime, seizureType: _inputSeizureType!, seizureSymptom: _inputSeizureSymptom, seizurePlace: _inputSeizurePlace!);
+    DatabaseService.addSeizureEvent(newSeizureEvent);
+  }
+
+  // For editing an already existing seizureEvent
+  void updateToDB() {
+    int combinedUnixTime = dateTimeToUnixTime(combineDateTimeWithTimeOfDay(_inputDate, _inputTime));
+    SeizureEvent updatedSeizureEvent = SeizureEvent(seizureId: widget.initSeizureEvent!.seizureId, time: combinedUnixTime, seizureType: _inputSeizureType!, seizureSymptom: _inputSeizureSymptom, seizurePlace: _inputSeizurePlace!);
+    DatabaseService.updateSeizureEvent(updatedSeizureEvent);
   }
 
   @override
@@ -62,10 +89,10 @@ class _AddSeizureInputState extends State<AddSeizureInput> {
                           //Start here
 
                           HorizontalDatePicker(
-                            startDate: selectedDate,
+                            startDate: _inputDate,
                             onDateChange: (date) {
                               setState(() {
-                                selectedDate = date;
+                                _inputDate = date;
                               });
                             },
                           ),
@@ -75,16 +102,16 @@ class _AddSeizureInputState extends State<AddSeizureInput> {
                           SizedBox(height: 10),
 
                           DropdownButtonFormField(
-                            value: dropDownValue,
+                            value: _inputSeizureType,
                             icon: const Icon(Icons.keyboard_arrow_down),
                             decoration:
                                 InputDecoration(border: OutlineInputBorder()),
                             onChanged: (String? val) {
                               setState(() {
-                                dropDownValue = val!;
+                                _inputSeizureType = val!;
                               });
                             },
-                            items: list
+                            items: seizureTypes
                                 .map<DropdownMenuItem<String>>((String value) {
                               return DropdownMenuItem<String>(
                                 value: value,
@@ -94,7 +121,7 @@ class _AddSeizureInputState extends State<AddSeizureInput> {
                           ),
 
                           SizedBox(height: 20),
-                          //Time
+
                           Text("โปรดกรอกเวลา", style: TextStyle(fontSize: 18)),
 
                           SizedBox(height: 10),
@@ -107,7 +134,7 @@ class _AddSeizureInputState extends State<AddSeizureInput> {
                                   //Collect data by use update_text function
                                   enabled: false,
                                   decoration: InputDecoration(
-                                      hintText: selectedTime.format(context),
+                                      hintText: _inputTime.format(context),
                                       // TODO: Change PM to 12-hour
                                       border: OutlineInputBorder()),
                                 ),
@@ -121,12 +148,12 @@ class _AddSeizureInputState extends State<AddSeizureInput> {
                                   final TimeOfDay? timeOfDay =
                                       await showTimePicker(
                                     context: context,
-                                    initialTime: selectedTime,
+                                    initialTime: _inputTime,
                                     initialEntryMode: TimePickerEntryMode.dial,
                                   );
                                   if (timeOfDay != null) {
                                     setState(() {
-                                      selectedTime = timeOfDay;
+                                      _inputTime = timeOfDay;
                                     });
                                   }
                                 },
@@ -144,10 +171,11 @@ class _AddSeizureInputState extends State<AddSeizureInput> {
                           //spacing between label and TextInput
 
                           TextFormField(
-                            //Collect data by use update_text function
+                            initialValue: _inputSeizureSymptom,  // For loading from an existing seizureEvent (if null then the field will be empty, just like normal)
+                            // Could also use TextEditingController, but initialValue is more concise
                             onChanged: (val) {
                               setState(() {
-                                seizureSymptom = val;
+                                _inputSeizureSymptom = val;
                               });
                             },
                             decoration: InputDecoration(
@@ -171,18 +199,16 @@ class _AddSeizureInputState extends State<AddSeizureInput> {
                               }
                               return null;
                             },
-                            //Collect data by use update_text function
+                            initialValue: _inputSeizurePlace,
                             onChanged: (val) {
                               setState(() {
-                                seizurePlace = val;
+                                _inputSeizurePlace = val;
                               });
                             },
                             decoration: InputDecoration(
                                 hintText: "ระบุสถานที่",
                                 border: OutlineInputBorder()),
                           ),
-                          // Text(
-                          //     "input 1 : $seizure_symtomp ---- input 2 : $seizure_place")   Input value check
 
                           SizedBox(height: 20),
 
@@ -214,8 +240,11 @@ class _AddSeizureInputState extends State<AddSeizureInput> {
                                                 onPressed: () {}),
                                             content:
                                                 Text('บันทึกข้อมูลสำเร็จ')));
-                                    printAll();  // TODO: remove this if not needed
-                                    saveToDB();
+                                    if (widget.initSeizureEvent == null) {
+                                      addToDB();
+                                    } else {
+                                      updateToDB();
+                                    }
                                     Navigator.of(context)
                                         .popUntil((route) => route.isFirst);
                                   }

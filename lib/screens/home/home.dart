@@ -1,9 +1,10 @@
 import 'package:epilepsy_care_pmk/constants/styling.dart';
 import 'package:epilepsy_care_pmk/custom_widgets/event_card.dart';
+import 'package:epilepsy_care_pmk/helpers/date_time_helpers.dart';
 import 'package:epilepsy_care_pmk/models/seizure_event.dart';
+import 'package:epilepsy_care_pmk/screens/add_event/seizure/add_seizure_input.dart';
 import 'package:epilepsy_care_pmk/services/database_service.dart';
 import 'package:flutter/material.dart';
-import 'package:sqflite/sqflite.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -39,7 +40,6 @@ class _HomeState extends State<Home> {
                       alignment: Alignment.centerLeft,
                       image: AssetImage("image/header_logo_eng.png"),
                     )),
-
                 Expanded(
                   flex: 3,
                   child: Card(
@@ -82,49 +82,61 @@ class _HomeState extends State<Home> {
           ),
           const SizedBox(height: kLargePadding),
           Flexible(
-              flex: 4, //standard layout
+              flex: 4,
+              //standard layout
               // FutureBuilder structure inspiration: https://www.youtube.com/watch?v=lkpPg0ieklg
+              // TODO: make home refresh after adding entry (currently need to rebuild widget to get update)
               child: FutureBuilder(
-                  future: futureData,
-                  builder: (context, snapshot) {
-                    switch (snapshot.connectionState) {
-                      case ConnectionState.waiting:
-                        return const CircularProgressIndicator();
-                      case ConnectionState.done:
-                      default:
-                        if (snapshot.hasError) {
-                          return Text("Error: ${snapshot.error}");
-                        } else if (snapshot.hasData) {
-                          return SingleChildScrollView(
-                            child: Column(
-                              children: [
-                                // snapshot.data cannot be null since we just checked in if-else earlier
-                                for (SeizureEvent entry in snapshot.data! as List<SeizureEvent>)
-                                  EventCard(time: DateTime.fromMillisecondsSinceEpoch(entry.time*1000), title: entry.seizureType, detail: entry.seizureSymptom, colorWarningIcon: Colors.red, place: entry.seizurePlace, type: "อาการชัก")
-                              ],
-                            ),
-                          );
-                        } else {
-                          return Column(
+                future: futureData,
+                builder: (context, snapshot) {
+                  switch (snapshot.connectionState) {
+                    case ConnectionState.waiting:
+                      return const CircularProgressIndicator();
+                    case ConnectionState.done:
+                    default:
+                      if (snapshot.hasError) {
+                        return Text("Error: ${snapshot.error}");
+                      } else if (snapshot.hasData) {
+                        return SingleChildScrollView(
+                          child: Column(
                             children: [
-                              Text("No data, but..."),
-                              Text("${snapshot.data}")
+                              // snapshot.data cannot be null since we just checked in if-else earlier
+                              for (SeizureEvent entry
+                                  in snapshot.data! as List<SeizureEvent>)
+                                EventCard(
+                                  time: unixTimeToDateTime(entry.time),
+                                  title: entry.seizureType,
+                                  detail: entry.seizureSymptom,
+                                  colorWarningIcon: Colors.red,
+                                  place: entry.seizurePlace,
+                                  type: "อาการชัก",
+                                  onEdit: () {
+                                    Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                AddSeizureInput(
+                                                    initSeizureEvent: entry)));
+                                  },
+                                )
                             ],
-                          );
-                        }
-                    }
-                  },
-              )
-          )
+                          ),
+                        );
+                      } else {
+                        return Column(
+                          children: [
+                            Text("No data, but..."),
+                            Text("${snapshot.data}")
+                          ],
+                        );
+                      }
+                  }
+                },
+              ))
         ],
       ),
     );
   }
 }
-
-
-
-
 
 // child: Center(
 //             child: Column(children: <Widget>[

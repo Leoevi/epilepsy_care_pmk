@@ -4,14 +4,16 @@ import 'package:epilepsy_care_pmk/constants/styling.dart';
 import 'package:flutter/material.dart';
 
 class EventCard extends StatelessWidget {
-  const EventCard(
-      {super.key,
-      required this.time,
-      required this.title, // The button must have a header label
-      this.detail,
-      required this.colorWarningIcon,
-      required this.place,
-      required this.type});
+  const EventCard({super.key,
+    required this.time,
+    required this.title, // The button must have a header label
+    this.detail,
+    required this.colorWarningIcon,
+    required this.place,
+    required this.type,
+    this.onEdit,
+    this.onDelete,
+  });
 
   final String type;
   final String place;
@@ -19,6 +21,8 @@ class EventCard extends StatelessWidget {
   final String title;
   final String? detail;
   final Color colorWarningIcon;
+  final Function()? onEdit;
+  final Function()? onDelete;
 
   @override
   Widget build(BuildContext context) {
@@ -62,11 +66,11 @@ class EventCard extends StatelessWidget {
                       ),
                       IconButton(
                         visualDensity: VisualDensity.compact,
-                          onPressed: () {}, icon: Icon(Icons.edit_outlined)),
+                          onPressed: onEdit, icon: Icon(Icons.edit_outlined)),
                       //TODO: Make edit and delete works
                       IconButton(
                           visualDensity: VisualDensity.compact,
-                          onPressed: () {}, icon: Icon(Icons.delete_outline))
+                          onPressed: onDelete, icon: Icon(Icons.delete_outline))
                     ],
                   ),
                   SizedBox(

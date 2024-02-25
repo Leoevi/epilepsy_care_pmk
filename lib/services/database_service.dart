@@ -2,6 +2,7 @@ import 'package:epilepsy_care_pmk/models/seizure_event.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
+// Inspired by this: https://www.youtube.com/watch?v=q8UXj-44dk8
 class DatabaseService {
   static const int _version = 1;
   static const String _dbName = "epilepsy_care_pmk.db";

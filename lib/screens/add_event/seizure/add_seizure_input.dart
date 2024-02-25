@@ -70,7 +70,7 @@ class _AddSeizureInputState extends State<AddSeizureInput> {
   @override
   Widget build(BuildContext context) {
     return ScreenWithAppBar(
-        title: "บันทึกอาการลมชัก",
+        title: widget.initSeizureEvent == null ? "บันทึกอาการลมชัก" : "แก้ไขอาการลมชัก",
         body: Padding(
             padding: const EdgeInsets.all(kMediumPadding),
             child: Container(
@@ -172,7 +172,7 @@ class _AddSeizureInputState extends State<AddSeizureInput> {
 
                           TextFormField(
                             initialValue: _inputSeizureSymptom,  // For loading from an existing seizureEvent (if null then the field will be empty, just like normal)
-                            // Could also use TextEditingController, but initialValue is more concise
+                            // Could also use TextEditingController, but initialValue is more concise (https://stackoverflow.com/questions/46481638/how-to-properly-pre-fill-flutter-form-field)
                             onChanged: (val) {
                               setState(() {
                                 _inputSeizureSymptom = val;

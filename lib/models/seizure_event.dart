@@ -1,3 +1,5 @@
+import 'package:epilepsy_care_pmk/helpers/date_time_helpers.dart';
+
 class SeizureEvent {
   // In camelCase, Acronyms are usually written with the only the first letter capitalized.
   // https://stackoverflow.com/questions/15526107/acronyms-in-camelcase
@@ -5,7 +7,7 @@ class SeizureEvent {
   /// [time] stored as unix time (seconds since epoch).
   ///
   /// Can be converted to DateTime object
-  /// with DateTime.fromMillisecondsSinceEpoch([time]*1000)
+  /// with [unixTimeToDateTime]
   final int time;
   final String seizureType;
   final String? seizureSymptom;

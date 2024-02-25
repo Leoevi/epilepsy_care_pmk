@@ -83,11 +83,10 @@ class _HomeState extends State<Home> {
           const SizedBox(height: kLargePadding),
           Flexible(
               flex: 4,
-              //standard layout
               // FutureBuilder structure inspiration: https://www.youtube.com/watch?v=lkpPg0ieklg
-              // TODO: make home refresh after adding entry (currently need to rebuild widget to get update)
+              // TODO: Find a better way to refresh the list (both add and edit)
               child: FutureBuilder(
-                future: futureData,
+                future: DatabaseService.getAllSeizureEvents(),  // I know that getting the future in future builder is not a good practice, but this way, I can easily force a rerender after
                 builder: (context, snapshot) {
                   switch (snapshot.connectionState) {
                     case ConnectionState.waiting:
@@ -97,6 +96,7 @@ class _HomeState extends State<Home> {
                       if (snapshot.hasError) {
                         return Text("Error: ${snapshot.error}");
                       } else if (snapshot.hasData) {
+                        // TODO: Use ListView.builder instead (https://docs.flutter.dev/cookbook/lists/long-lists)
                         return SingleChildScrollView(
                           child: Column(
                             children: [
@@ -110,12 +110,18 @@ class _HomeState extends State<Home> {
                                   colorWarningIcon: Colors.red,
                                   place: entry.seizurePlace,
                                   type: "อาการชัก",
-                                  onEdit: () {
-                                    Navigator.of(context).push(
+                                  // We want the list to update after we edited it, so we will rerender the list by calling setState after the navigation finished
+                                  onEdit: () async {
+                                    await Navigator.of(context).push(
                                         MaterialPageRoute(
                                             builder: (context) =>
                                                 AddSeizureInput(
                                                     initSeizureEvent: entry)));
+                                    setState(() {});
+                                  },
+                                  onDelete: () async {
+                                    await DatabaseService.deleteSeizureEvent(entry);
+                                    setState(() {});
                                   },
                                 )
                             ],

@@ -73,7 +73,8 @@ class _HomeState extends State<Home> {
             ),
           ),
           // const SizedBox(height: kLargePadding),
-          Expanded(
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: kSmallPadding),
             child: Row(children: [
               Icon(
                 Icons.info_rounded,
@@ -82,21 +83,29 @@ class _HomeState extends State<Home> {
               SizedBox(
                 width: kSmallPadding,
               ),
-              Expanded(child: Text("เหตุการณ์ที่เกิดขึ้น")),
+              Expanded(child: Text("เหตุการณ์ที่เกิดขึ้น", style: mediumLargeBoldText,)),
               SizedBox(
                 width: kLargePadding,
               ),
               TimeRangeDropdown()
             ]),
           ),
-          // const SizedBox(height: kLargePadding),
           Flexible(
               flex: 5,
-              // FutureBuilder structure inspiration: https://www.youtube.com/watch?v=lkpPg0ieklg
-              // TODO: Find a better way to refresh the list (is nesting FutureBuilder and StreamBuilder okay?)
+              // TODO: Find a better way to refresh the list (is nesting FutureBuilder in StreamBuilder okay?)
+              // Originally, this list was just a FutureBuilder that has all the entries to display as a Future.
+              // However, when an entry is added (via the add button) or an entry is edited or deleted,
+              // the list doesn't update to reflect that change. So, I had to find a way to make the list
+              // change on database change, that makes me resort to wrapping the whole FutureBuilder within a
+              // StreamBuilder that listens to DatabaseService.updateTriggerStream.
+              // The way it works is that whenever the database has been modified, the stream will send out a
+              // "true" value, which will make the builder within the StreamBuilder (aka the FutureBuilder)
+              // rebuilds. This works, but nesting FutureBuilder within a StreamBuilder seems redundant.
+              // Maybe there is a way to make the whole thing just be only a StreamBuilder?
               child: StreamBuilder<bool>(
                   stream: DatabaseService.updateTriggerStream,
-                  builder: (context, snapshot) {
+                  builder: (_, __) {
+                    // FutureBuilder structure inspiration: https://www.youtube.com/watch?v=lkpPg0ieklg
                     return FutureBuilder(
                       future: DatabaseService.getAllSeizureEvents(),
                       // I know that getting the future in future builder is not a good practice, but this way, I can easily force a rebuild when the stream updated

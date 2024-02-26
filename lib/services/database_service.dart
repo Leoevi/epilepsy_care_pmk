@@ -13,12 +13,15 @@ class DatabaseService {
   // inspired from: https://github.com/alextekartik/flutter_app_example/blob/master/notepad_sqflite/lib/provider/note_provider.dart
   static final _updateTriggerController = StreamController<bool>.broadcast();
 
+  /// This will be called on every method that modified the database.
+  /// By calling it, the stream can send out an event to let the listener
+  /// know that they should reload data from the database
   static void _triggerUpdate() {
     _updateTriggerController.sink.add(true);
   }
 
   /// A stream that sends out an event when there is a change to the database,
-  /// can be used to trigger rebuilds of a StreamBuilder widget.
+  /// can be used to indicate that new data is available to reload.
   static final updateTriggerStream = _updateTriggerController.stream;
 
   // Table names for each of the tables in the db
@@ -26,6 +29,8 @@ class DatabaseService {
   static const String seizureEventTablePrimaryKeyName =
       "seizureId"; // Will use this for update and deletion of a row
 
+  /// Retrieve an instance of the database, will run onCreate once when
+  /// there is no existing database.
   static Future<Database> _getDB() async {
     return openDatabase(
       join(await getDatabasesPath(), _dbName),
@@ -39,11 +44,13 @@ class DatabaseService {
     );
   }
 
+  /// Delete the whole database
   static Future deleteDb() async {
     deleteDatabase(join(await getDatabasesPath(), _dbName));
     _triggerUpdate();
   }
 
+  /// Add a SeizureEvent to the database
   static Future<int> addSeizureEvent(SeizureEvent seizureEvent) async {
     final db = await _getDB();
     return await db
@@ -55,6 +62,7 @@ class DatabaseService {
     });
   }
 
+  /// Edit a SeizureEvent in the database
   static Future<int> updateSeizureEvent(SeizureEvent seizureEvent) async {
     final db = await _getDB();
     return await db
@@ -69,6 +77,7 @@ class DatabaseService {
     });
   }
 
+  /// Delete a SeizureEvent from the database
   static Future<int> deleteSeizureEvent(SeizureEvent seizureEvent) async {
     final db = await _getDB();
     return await db.delete(seizureEventTableName,
@@ -79,6 +88,7 @@ class DatabaseService {
     });
   }
 
+  /// Retrieve all SeizureEvent(s) from the database
   static Future<List<SeizureEvent>?> getAllSeizureEvents() async {
     final db = await _getDB();
     final List<Map<String, dynamic>> maps =

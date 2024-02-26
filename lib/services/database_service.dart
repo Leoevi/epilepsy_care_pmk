@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:epilepsy_care_pmk/helpers/date_time_helpers.dart';
 import 'package:epilepsy_care_pmk/models/seizure_event.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
@@ -93,6 +94,33 @@ class DatabaseService {
     final db = await _getDB();
     final List<Map<String, dynamic>> maps =
         await db.query(seizureEventTableName);
+    if (maps.isEmpty) {
+      return null;
+    }
+    return List.generate(
+        maps.length, (index) => SeizureEvent.fromJson(maps[index]));
+  }
+
+  /// Retrieve all SeizureEvent(s) from the database with a specific date range.
+  /// Requires at least the start date [from].
+  ///
+  /// When providing only [from], the method will return all SeizureEvents
+  /// starting from then to now. But if also provided [to], then it will
+  /// query from that specified range
+  static Future<List<SeizureEvent>?> getAllSeizureEventsFrom(DateTime from,
+      [DateTime? to]) async {
+    // Want to make [to] default to DateTime.now(), but it is not a const value
+    // so we'll have to manually assign it here instead.
+    to ??= DateTime.now();  // https://dart.dev/codelabs/dart-cheatsheet#null-aware-operators
+
+    assert(from.isBefore(to));
+
+    final db = await _getDB();
+    final List<Map<String, dynamic>> maps = await db.query(
+        seizureEventTableName,
+        where: "time BETWEEN ? and ?",
+        whereArgs: [dateTimeToUnixTime(from), dateTimeToUnixTime(to)]);
+
     if (maps.isEmpty) {
       return null;
     }

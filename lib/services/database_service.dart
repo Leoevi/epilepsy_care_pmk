@@ -9,17 +9,22 @@ class DatabaseService {
   static const int _version = 1;
   static const String _dbName = "epilepsy_care_pmk.db";
 
-  // Table names for each of the tables in the db
-  static const String seizureEventTableName = "SeizureEvent";
-  static const String seizureEventTablePrimaryKeyName =
-      "seizureId"; // Will use this for update and deletion of a row
-
   // Stream for sending out database changes, intend for refreshing page on change
+  // inspired from: https://github.com/alextekartik/flutter_app_example/blob/master/notepad_sqflite/lib/provider/note_provider.dart
   static final _updateTriggerController = StreamController<bool>.broadcast();
 
   static void _triggerUpdate() {
     _updateTriggerController.sink.add(true);
   }
+
+  /// A stream that sends out an event when there is a change to the database,
+  /// can be used to trigger rebuilds of a StreamBuilder widget.
+  static final updateTriggerStream = _updateTriggerController.stream;
+
+  // Table names for each of the tables in the db
+  static const String seizureEventTableName = "SeizureEvent";
+  static const String seizureEventTablePrimaryKeyName =
+      "seizureId"; // Will use this for update and deletion of a row
 
   static Future<Database> _getDB() async {
     return openDatabase(
@@ -46,24 +51,32 @@ class DatabaseService {
             conflictAlgorithm: ConflictAlgorithm.replace)
         .then((value) {
       _triggerUpdate();
-      return value;  // return the original value from insert
+      return value; // return the original value from insert
     });
   }
 
   static Future<int> updateSeizureEvent(SeizureEvent seizureEvent) async {
     final db = await _getDB();
-    return await db.update(seizureEventTableName, seizureEvent.toJson(),
-        where: "$seizureEventTablePrimaryKeyName = ?",
-        // This where args is plugged into the ? symbol
-        whereArgs: [seizureEvent.seizureId],
-        conflictAlgorithm: ConflictAlgorithm.replace);
+    return await db
+        .update(seizureEventTableName, seizureEvent.toJson(),
+            where: "$seizureEventTablePrimaryKeyName = ?",
+            // This where args is plugged into the ? symbol
+            whereArgs: [seizureEvent.seizureId],
+            conflictAlgorithm: ConflictAlgorithm.replace)
+        .then((value) {
+      _triggerUpdate();
+      return value;
+    });
   }
 
   static Future<int> deleteSeizureEvent(SeizureEvent seizureEvent) async {
     final db = await _getDB();
     return await db.delete(seizureEventTableName,
         where: "$seizureEventTablePrimaryKeyName = ?",
-        whereArgs: [seizureEvent.seizureId]);
+        whereArgs: [seizureEvent.seizureId]).then((value) {
+      _triggerUpdate();
+      return value;
+    });
   }
 
   static Future<List<SeizureEvent>?> getAllSeizureEvents() async {

@@ -102,6 +102,12 @@ class _AddSeizureInputState extends State<AddSeizureInput> {
                           SizedBox(height: 10),
 
                           DropdownButtonFormField(
+                            validator: (val) {
+                              if (val == null || val.isEmpty) {
+                                return 'กรุณาระบุประเภทการชัก';
+                              }
+                              return null;
+                            },
                             value: _inputSeizureType,
                             icon: const Icon(Icons.keyboard_arrow_down),
                             decoration:

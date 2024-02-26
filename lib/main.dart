@@ -137,7 +137,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       // https://stackoverflow.com/questions/49809351/how-to-create-a-circle-icon-button-in-flutter
                       onPressed: () {
                         Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => const AddSelect())).then((_) {setState(() {});});
+                            builder: (context) => const AddSelect()));
                       },
                       elevation: 2.0,
                       fillColor: Colors.white,

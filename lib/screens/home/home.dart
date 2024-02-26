@@ -15,15 +15,6 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  dynamic futureData;
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    futureData = DatabaseService.getAllSeizureEvents();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -89,11 +80,11 @@ class _HomeState extends State<Home> {
                 color: Color.fromARGB(255, 0, 195, 0),
               ),
               SizedBox(
-                width: 10,
+                width: kSmallPadding,
               ),
-              Text("เหตุการณ์ที่เกิดขึ้น"),
+              Expanded(child: Text("เหตุการณ์ที่เกิดขึ้น")),
               SizedBox(
-                width: 100,
+                width: kLargePadding,
               ),
               TimeRangeDropdown()
             ]),
@@ -102,91 +93,67 @@ class _HomeState extends State<Home> {
           Flexible(
               flex: 5,
               // FutureBuilder structure inspiration: https://www.youtube.com/watch?v=lkpPg0ieklg
-              // TODO: Find a better way to refresh the list (both add and edit)
-              child: FutureBuilder(
-                future: DatabaseService.getAllSeizureEvents(),
-                // I know that getting the future in future builder is not a good practice, but this way, I can easily force a rerender after
-                builder: (context, snapshot) {
-                  switch (snapshot.connectionState) {
-                    case ConnectionState.waiting:
-                      return const CircularProgressIndicator();
-                    case ConnectionState.done:
-                    default:
-                      if (snapshot.hasError) {
-                        return Text("Error: ${snapshot.error}");
-                      } else if (snapshot.hasData) {
-                        // TODO: Use ListView.builder instead (https://docs.flutter.dev/cookbook/lists/long-lists)
-                        return SingleChildScrollView(
-                          child: Column(
-                            children: [
-                              // snapshot.data cannot be null since we just checked in if-else earlier
-                              for (SeizureEvent entry
-                                  in snapshot.data! as List<SeizureEvent>)
-                                EventCard(
-                                  time: unixTimeToDateTime(entry.time),
-                                  title: entry.seizureType,
-                                  detail: entry.seizureSymptom,
-                                  colorWarningIcon: Colors.red,
-                                  place: entry.seizurePlace,
-                                  type: "อาการชัก",
-                                  // We want the list to update after we edited it, so we will rerender the list by calling setState after the navigation finished
-                                  onEdit: () {
-                                    Navigator.of(context)
-                                        .push(MaterialPageRoute(
-                                            builder: (context) =>
-                                                AddSeizureInput(
-                                                    initSeizureEvent: entry)))
-                                        .then((_) {
-                                      setState(() {});
-                                    });
-                                  },
-                                  onDelete: () {
-                                    DatabaseService.deleteSeizureEvent(entry)
-                                        .then((_) {
-                                      setState(() {});
-                                    });
-                                  },
-                                )
-                            ],
-                          ),
-                        );
-                      } else {
-                        return Column(
-                          children: [
-                            Text("No data, but..."),
-                            Text("${snapshot.data}")
-                          ],
-                        );
-                      }
-                  }
-                },
-              ))
+              // TODO: Find a better way to refresh the list (is nesting FutureBuilder and StreamBuilder okay?)
+              child: StreamBuilder<bool>(
+                  stream: DatabaseService.updateTriggerStream,
+                  builder: (context, snapshot) {
+                    return FutureBuilder(
+                      future: DatabaseService.getAllSeizureEvents(),
+                      // I know that getting the future in future builder is not a good practice, but this way, I can easily force a rebuild when the stream updated
+                      builder: (context, snapshot) {
+                        switch (snapshot.connectionState) {
+                          case ConnectionState.waiting:
+                            return const CircularProgressIndicator();
+                          case ConnectionState.done:
+                          default:
+                            if (snapshot.hasError) {
+                              return Text("Error: ${snapshot.error}");
+                            } else if (snapshot.hasData) {
+                              // TODO: Use ListView.builder instead (https://docs.flutter.dev/cookbook/lists/long-lists)
+                              return SingleChildScrollView(
+                                child: Column(
+                                  children: [
+                                    // snapshot.data cannot be null since we just checked in if-else earlier
+                                    for (SeizureEvent entry
+                                        in snapshot.data! as List<SeizureEvent>)
+                                      EventCard(
+                                        time: unixTimeToDateTime(entry.time),
+                                        title: entry.seizureType,
+                                        detail: entry.seizureSymptom,
+                                        colorWarningIcon: Colors.red,
+                                        place: entry.seizurePlace,
+                                        type: "อาการชัก",
+                                        // We want the list to update after we edited it, so we will rerender the list by calling setState after the navigation finished
+                                        onEdit: () {
+                                          Navigator.of(context).push(
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      AddSeizureInput(
+                                                          initSeizureEvent:
+                                                              entry)));
+                                        },
+                                        onDelete: () {
+                                          DatabaseService.deleteSeizureEvent(
+                                              entry);
+                                        },
+                                      )
+                                  ],
+                                ),
+                              );
+                            } else {
+                              return Column(
+                                children: [
+                                  Text("No data, but..."),
+                                  Text("${snapshot.data}")
+                                ],
+                              );
+                            }
+                        }
+                      },
+                    );
+                  })),
         ],
       ),
     );
   }
 }
-
-// child: Center(
-//             child: Column(children: <Widget>[
-//           Text(
-//             "This is Home",
-//             style: TextStyle(
-//               color: Colors.green[900],
-//               fontSize: 45,
-//               fontWeight: FontWeight.w500,
-//             ),
-//           ),
-//           TextButton(
-//             onPressed: () async {
-//               DateTime? pickedDate = await showDatePicker(
-//                   context: context,
-//                   initialDate: DateTime.now(),
-//                   //get today's date
-//                   firstDate: DateTime(2000),
-//                   //DateTime.now() - not to allow to choose before today.
-//                   lastDate: DateTime(2101));
-//             },
-//             child: Text("Date Picker"),
-//           )
-//         ])),

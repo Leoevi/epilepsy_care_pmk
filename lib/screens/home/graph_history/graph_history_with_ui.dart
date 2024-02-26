@@ -1,4 +1,5 @@
 import 'package:epilepsy_care_pmk/constants/styling.dart';
+import 'package:epilepsy_care_pmk/custom_widgets/dropdown_button.dart';
 import 'package:flutter/material.dart';
 
 import '../../../custom_widgets/dosage_graph.dart';
@@ -61,9 +62,12 @@ class _GraphHistoryWithTabState extends State<GraphHistoryWithTab> {
                           child: TabBarView(children: [
                             Column(
                               children: [
-                                Container(
-                                  child: Text("Hello"),
-                                ),
+                                Padding(
+                                    padding: EdgeInsets.all(kSmallPadding),
+                                    child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.end,
+                                        children: [TimeRangeDropdown()])),
                                 DosageGraph(
                                   medIntakes: [
                                     MedIntakePerDay(400, DateTime(2023, 1, 5)),
@@ -78,9 +82,12 @@ class _GraphHistoryWithTabState extends State<GraphHistoryWithTab> {
                             ),
                             Column(
                               children: [
-                                Container(
-                                  child: Text("Hello"),
-                                ),
+                                Padding(
+                                    padding: EdgeInsets.all(kSmallPadding),
+                                    child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.end,
+                                        children: [TimeRangeDropdown()])),
                                 DosageGraph(
                                   medIntakes: [
                                     MedIntakePerDay(100, DateTime(2023, 1, 5)),

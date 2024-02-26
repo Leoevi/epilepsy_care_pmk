@@ -30,13 +30,12 @@ class _CalendarState extends State<Calendar> {
       children: [
         Container(
           decoration: BoxDecoration(
-            color: Colors.white,
-            border:Border.all(
-              color: Colors.black,
-              width: 2.0,
-            ),
-            borderRadius: BorderRadius.circular(10.0)
-          ),
+              color: Colors.white,
+              border: Border.all(
+                color: Colors.black,
+                width: 2.0,
+              ),
+              borderRadius: BorderRadius.circular(10.0)),
           padding: const EdgeInsets.all(kSmallPadding),
           margin: const EdgeInsets.all(kLargePadding),
           child: TableCalendar(
@@ -51,6 +50,7 @@ class _CalendarState extends State<Calendar> {
             firstDay: DateTime.utc(2020, 1, 14),
             lastDay: DateTime.utc(2030, 3, 14),
             onDaySelected: _onDaySelected,
+            locale: 'en_US', //TODO: change to TH lang.
           ),
         ),
       ],

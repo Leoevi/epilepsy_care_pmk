@@ -1,4 +1,5 @@
 import 'package:epilepsy_care_pmk/constants/styling.dart';
+import 'package:epilepsy_care_pmk/custom_widgets/dropdown_button.dart';
 import 'package:epilepsy_care_pmk/custom_widgets/event_card.dart';
 import 'package:epilepsy_care_pmk/helpers/date_time_helpers.dart';
 import 'package:epilepsy_care_pmk/models/seizure_event.dart';
@@ -80,9 +81,26 @@ class _HomeState extends State<Home> {
               ],
             ),
           ),
-          const SizedBox(height: kLargePadding),
+          // const SizedBox(height: kLargePadding),
+          Expanded(
+            child: Row(children: [
+              Icon(
+                Icons.info_rounded,
+                color: Color.fromARGB(255, 0, 195, 0),
+              ),
+              SizedBox(
+                width: 10,
+              ),
+              Text("เหตุการณ์ที่เกิดขึ้น"),
+              SizedBox(
+                width: 100,
+              ),
+              TimeRangeDropdown()
+            ]),
+          ),
+          // const SizedBox(height: kLargePadding),
           Flexible(
-              flex: 4,
+              flex: 5,
               // FutureBuilder structure inspiration: https://www.youtube.com/watch?v=lkpPg0ieklg
               // TODO: Find a better way to refresh the list (both add and edit)
               child: FutureBuilder(

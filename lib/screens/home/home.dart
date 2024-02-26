@@ -86,7 +86,8 @@ class _HomeState extends State<Home> {
               // FutureBuilder structure inspiration: https://www.youtube.com/watch?v=lkpPg0ieklg
               // TODO: Find a better way to refresh the list (both add and edit)
               child: FutureBuilder(
-                future: DatabaseService.getAllSeizureEvents(),  // I know that getting the future in future builder is not a good practice, but this way, I can easily force a rerender after
+                future: DatabaseService.getAllSeizureEvents(),
+                // I know that getting the future in future builder is not a good practice, but this way, I can easily force a rerender after
                 builder: (context, snapshot) {
                   switch (snapshot.connectionState) {
                     case ConnectionState.waiting:
@@ -111,17 +112,21 @@ class _HomeState extends State<Home> {
                                   place: entry.seizurePlace,
                                   type: "อาการชัก",
                                   // We want the list to update after we edited it, so we will rerender the list by calling setState after the navigation finished
-                                  onEdit: () async {
-                                    await Navigator.of(context).push(
-                                        MaterialPageRoute(
+                                  onEdit: () {
+                                    Navigator.of(context)
+                                        .push(MaterialPageRoute(
                                             builder: (context) =>
                                                 AddSeizureInput(
-                                                    initSeizureEvent: entry)));
-                                    setState(() {});
+                                                    initSeizureEvent: entry)))
+                                        .then((_) {
+                                      setState(() {});
+                                    });
                                   },
-                                  onDelete: () async {
-                                    await DatabaseService.deleteSeizureEvent(entry);
-                                    setState(() {});
+                                  onDelete: () {
+                                    DatabaseService.deleteSeizureEvent(entry)
+                                        .then((_) {
+                                      setState(() {});
+                                    });
                                   },
                                 )
                             ],

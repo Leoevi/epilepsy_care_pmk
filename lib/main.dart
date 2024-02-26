@@ -135,10 +135,9 @@ class _MyHomePageState extends State<MyHomePage> {
                     // top: addButtonOffset.dy,
                     child: RawMaterialButton(
                       // https://stackoverflow.com/questions/49809351/how-to-create-a-circle-icon-button-in-flutter
-                      onPressed: () async {
-                        await Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => const AddSelect()));
-                        setState(() {});
+                      onPressed: () {
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => const AddSelect())).then((_) {setState(() {});});
                       },
                       elevation: 2.0,
                       fillColor: Colors.white,

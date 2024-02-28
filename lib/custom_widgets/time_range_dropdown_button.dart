@@ -10,9 +10,10 @@ enum TimeRangeDropdownOption { sevenDays, thirtyDays, ninetyDays, custom }
 class TimeRangeDropdownButton extends StatefulWidget {
   /// A callback function that will get called with a new date range
   /// every time a date range from the dropdown is selected.
-  /// The only case where a new date is not returned is when the user select the
+  /// The only cases where a new date is not returned are 1) when the user select the
   /// "custom" option and doesn't select a date range by tapping the back button
   /// or the "x" button shown by the showDateRangePicker dialog.
+  /// or 2) The user doesn't tap on any dropdown buttons.
   ///
   /// Note, if onChange is null, then the DateRangePicker won't be shown.
   final Function(DateTimeRange)? onChanged;
@@ -72,7 +73,7 @@ class _TimeRangeDropdownButtonState extends State<TimeRangeDropdownButton> {
           padding: EdgeInsetsDirectional.fromSTEB(5, 0, 0, 3),
           value: dropdownValue,
           onChanged: (TimeRangeDropdownOption? newValue) {
-            _updateCurrentValue(newValue!);
+            _updateCurrentValue(newValue);
           },
           items: [
             DropdownMenuItem(

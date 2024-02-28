@@ -1,5 +1,5 @@
 import 'package:epilepsy_care_pmk/constants/styling.dart';
-import 'package:epilepsy_care_pmk/custom_widgets/dropdown_button.dart';
+import 'package:epilepsy_care_pmk/custom_widgets/time_range_dropdown_button.dart';
 import 'package:epilepsy_care_pmk/custom_widgets/event_card.dart';
 import 'package:epilepsy_care_pmk/helpers/date_time_helpers.dart';
 import 'package:epilepsy_care_pmk/models/seizure_event.dart';
@@ -15,6 +15,8 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  DateTimeRange range = DateTimeRange(start: DateUtils.dateOnly(DateTime.now()).subtract(Duration(days: 7)), end: DateTime.now());
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -87,7 +89,15 @@ class _HomeState extends State<Home> {
               SizedBox(
                 width: kLargePadding,
               ),
-              TimeRangeDropdown()
+              TimeRangeDropdownButton(
+                initialChoice: TimeRangeDropdownOption.sevenDays,
+                onChanged: (selectedRange) {
+                  setState(() {
+                    range = selectedRange;
+                    print(range);
+                  });
+                },
+              )
             ]),
           ),
           Flexible(

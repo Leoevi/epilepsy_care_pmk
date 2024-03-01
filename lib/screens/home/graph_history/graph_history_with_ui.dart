@@ -60,6 +60,7 @@ class _GraphHistoryWithTabState extends State<GraphHistoryWithTab> {
                       Expanded(
                         child: Container(
                           child: TabBarView(children: [
+                            //Tab 1 อาการชัก
                             Column(
                               children: [
                                 Padding(
@@ -68,6 +69,62 @@ class _GraphHistoryWithTabState extends State<GraphHistoryWithTab> {
                                         mainAxisAlignment:
                                             MainAxisAlignment.end,
                                         children: [TimeRangeDropdownButton()])),
+                                Container(
+                                  width: 340,
+                                  decoration: BoxDecoration(
+                                      color: Color(0xFFF5F2FF),
+                                      borderRadius: BorderRadius.circular(8)),
+                                  child: Padding(
+                                    padding: EdgeInsets.all(kLargePadding),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Row(children: [
+                                          Text(
+                                            "ข้อมูลของอาการชัก",
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold),
+                                          )
+                                        ]),
+                                        SizedBox(
+                                          height: 15,
+                                        ),
+                                        Row(children: [
+                                          Text("จำนวนครั้งที่เกิดอาการ")
+                                        ]),
+                                        SizedBox(
+                                          height: 10,
+                                        ),
+                                        Row(children: [
+                                          Text(
+                                              "จำนวนครั้งที่เกิดอาการมากที่สุด")
+                                        ]),
+                                        SizedBox(
+                                          height: 10,
+                                        ),
+                                        Row(children: [
+                                          Text(
+                                              "จำนวนครั้งที่เกิดอาการน้อยที่สุด")
+                                        ]),
+                                        SizedBox(
+                                          height: 10,
+                                        ),
+                                        Row(children: [Text("ค่าเฉลี่ย")]),
+                                        SizedBox(
+                                          height: 10,
+                                        ),
+                                        Row(children: [Text("------")]),
+                                        SizedBox(
+                                          height: 20,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 20,
+                                ),
                                 DosageGraph(
                                   medIntakes: [
                                     MedIntakePerDay(400, DateTime(2023, 1, 5)),
@@ -80,6 +137,8 @@ class _GraphHistoryWithTabState extends State<GraphHistoryWithTab> {
                                 )
                               ],
                             ),
+
+                            //Tab 2 บันทึกยา
                             Column(
                               children: [
                                 Padding(
@@ -88,6 +147,54 @@ class _GraphHistoryWithTabState extends State<GraphHistoryWithTab> {
                                         mainAxisAlignment:
                                             MainAxisAlignment.end,
                                         children: [TimeRangeDropdownButton()])),
+                                Container(
+                                  width: 340,
+                                  decoration: BoxDecoration(
+                                      color: Color(0xFFF5F2FF),
+                                      borderRadius: BorderRadius.circular(8)),
+                                  child: Padding(
+                                    padding: EdgeInsets.all(kLargePadding),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Row(children: [
+                                          Text(
+                                            "ข้อมูลบันทึกกินยา",
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.bold),
+                                          )
+                                        ]),
+                                        SizedBox(
+                                          height: 15,
+                                        ),
+                                        Row(children: [Text("ชื่อยา")]),
+                                        SizedBox(
+                                          height: 10,
+                                        ),
+                                        Row(children: [Text("ขนาด")]),
+                                        SizedBox(
+                                          height: 10,
+                                        ),
+                                        Row(children: [Text("---------")]),
+                                        SizedBox(
+                                          height: 10,
+                                        ),
+                                        Row(children: [Text("---------")]),
+                                        SizedBox(
+                                          height: 10,
+                                        ),
+                                        Row(children: [Text("---------")]),
+                                        SizedBox(
+                                          height: 20,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 20,
+                                ),
                                 DosageGraph(
                                   medIntakes: [
                                     MedIntakePerDay(100, DateTime(2023, 1, 5)),

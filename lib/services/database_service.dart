@@ -1,7 +1,10 @@
 import 'dart:async';
 
 import 'package:epilepsy_care_pmk/helpers/date_time_helpers.dart';
+import 'package:epilepsy_care_pmk/models/med_allergy_event.dart';
+import 'package:epilepsy_care_pmk/models/med_intake_event.dart';
 import 'package:epilepsy_care_pmk/models/seizure_event.dart';
+import 'package:flutter/material.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
@@ -27,8 +30,11 @@ class DatabaseService {
 
   // Table names for each of the tables in the db
   static const String seizureEventTableName = "SeizureEvent";
-  static const String seizureEventTablePrimaryKeyName =
-      "seizureId"; // Will use this for update and deletion of a row
+  static const String seizureEventTablePrimaryKeyName = "seizureId";
+  static const String medAllergyEventTableName = "MedAllergyEvent";
+  static const String medAllergyEventPrimaryKeyName = "medAllergyId";
+  static const String medIntakeEventTableName = "MedIntakeEvent";
+  static const String medIntakeEventTablePrimaryKeyName = "medIntakeId";
 
   /// Retrieve an instance of the database, will run onCreate once when
   /// there is no existing database.
@@ -38,20 +44,45 @@ class DatabaseService {
       // onCreate will only run (because we specify the db version) once
       // sqflite create the database file at "/data/user/0/app_name/databases" (just use getDatabasePath() if unsure)
       // (https://stackoverflow.com/questions/68552185/where-is-my-sqflite-database-stored-inside-flutter-app)
-      onCreate: (db, version) async => await db.execute(
-          'CREATE TABLE IF NOT EXISTS "$seizureEventTableName" ("$seizureEventTablePrimaryKeyName" INTEGER NOT NULL, "time" INTEGER NOT NULL, "seizureType" TEXT NOT NULL, "seizureSymptom" TEXT NULL, "seizurePlace" TEXT NOT NULL, PRIMARY KEY ("$seizureEventTablePrimaryKeyName"));'),
-      // TODO: finish query for every table
+      onCreate: (db, version) async {
+        // db.execute only execute 1 statement. So we need to call it once for each table.
+        await db.execute("""
+          CREATE TABLE IF NOT EXISTS "$seizureEventTableName"
+            ("$seizureEventTablePrimaryKeyName" INTEGER NOT NULL,
+            "time" INTEGER NOT NULL,
+            "seizureType" TEXT NOT NULL, 
+            "seizureSymptom" TEXT NULL,
+            "seizurePlace" TEXT NOT NULL,
+            PRIMARY KEY ("$seizureEventTablePrimaryKeyName"));
+         """);
+        await db.execute("""
+          CREATE TABLE IF NOT EXISTS "$medAllergyEventTableName"
+            ("$medAllergyEventPrimaryKeyName" INTEGER NOT NULL,
+            "time" INTEGER NOT NULL,
+            "med" TEXT NOT NULL,
+            "medAllergySymptom" TEXT NOT NULL, 
+            PRIMARY KEY ("$medAllergyEventPrimaryKeyName"));
+        """);
+        await db.execute("""
+          CREATE TABLE IF NOT EXISTS "$medIntakeEventTableName"
+            ("$medIntakeEventTablePrimaryKeyName" INTEGER NOT NULL,
+            "time" INTEGER NOT NULL,
+            "med" TEXT NOT NULL,
+            "mgAmount" INTEGER NOT NULL, 
+            PRIMARY KEY ("$medIntakeEventTablePrimaryKeyName"));
+        """);
+      },
       version: _version,
     );
   }
 
-  /// Delete the whole database
+  /// Delete the whole database.
   static Future deleteDb() async {
     deleteDatabase(join(await getDatabasesPath(), _dbName));
     _triggerUpdate();
   }
 
-  /// Add a SeizureEvent to the database
+  /// Add a SeizureEvent to the database.
   static Future<int> addSeizureEvent(SeizureEvent seizureEvent) async {
     final db = await _getDB();
     return await db
@@ -63,7 +94,7 @@ class DatabaseService {
     });
   }
 
-  /// Edit a SeizureEvent in the database
+  /// Edit a SeizureEvent in the database.
   static Future<int> updateSeizureEvent(SeizureEvent seizureEvent) async {
     final db = await _getDB();
     return await db
@@ -78,7 +109,7 @@ class DatabaseService {
     });
   }
 
-  /// Delete a SeizureEvent from the database
+  /// Delete a SeizureEvent from the database.
   static Future<int> deleteSeizureEvent(SeizureEvent seizureEvent) async {
     final db = await _getDB();
     return await db.delete(seizureEventTableName,
@@ -89,7 +120,7 @@ class DatabaseService {
     });
   }
 
-  /// Retrieve all SeizureEvent(s) from the database
+  /// Retrieve all SeizureEvent(s) from the database.
   static Future<List<SeizureEvent>?> getAllSeizureEvents() async {
     final db = await _getDB();
     final List<Map<String, dynamic>> maps =
@@ -102,29 +133,147 @@ class DatabaseService {
   }
 
   /// Retrieve all SeizureEvent(s) from the database with a specific date range.
-  /// Requires at least the start date [from].
-  ///
-  /// When providing only [from], the method will return all SeizureEvents
-  /// starting from then to now. But if also provided [to], then it will
-  /// query from that specified range
-  static Future<List<SeizureEvent>?> getAllSeizureEventsFrom(DateTime from,
-      [DateTime? to]) async {
-    // Want to make [to] default to DateTime.now(), but it is not a const value
-    // so we'll have to manually assign it here instead.
-    to ??= DateTime.now();  // https://dart.dev/codelabs/dart-cheatsheet#null-aware-operators
-
-    assert(from.isBefore(to));
-
+  static Future<List<SeizureEvent>?> getAllSeizureEventsFrom(DateTimeRange dateTimeRange) async {
     final db = await _getDB();
     final List<Map<String, dynamic>> maps = await db.query(
         seizureEventTableName,
         where: "time BETWEEN ? and ?",
-        whereArgs: [dateTimeToUnixTime(from), dateTimeToUnixTime(to)]);
+        whereArgs: [dateTimeToUnixTime(dateTimeRange.start), dateTimeToUnixTime(dateTimeRange.end)]);
 
     if (maps.isEmpty) {
       return null;
     }
     return List.generate(
         maps.length, (index) => SeizureEvent.fromJson(maps[index]));
+  }
+
+  /// Add a MedAllergyEvent to the database.
+  static Future<int> addMedAllergyEvent(MedAllergyEvent medAllergyEvent) async {
+    final db = await _getDB();
+    return await db
+        .insert(medAllergyEventTableName, medAllergyEvent.toJson(),
+        conflictAlgorithm: ConflictAlgorithm.replace)
+        .then((value) {
+      _triggerUpdate();
+      return value; // return the original value from insert
+    });
+  }
+
+  /// Edit a MedAllergyEvent in the database.
+  static Future<int> updateMedAllergyEvent(MedAllergyEvent medAllergyEvent) async {
+    final db = await _getDB();
+    return await db
+        .update(medAllergyEventTableName, medAllergyEvent.toJson(),
+        where: "$medAllergyEventPrimaryKeyName = ?",
+        // This where args is plugged into the ? symbol
+        whereArgs: [medAllergyEvent.medAllergyId],
+        conflictAlgorithm: ConflictAlgorithm.replace)
+        .then((value) {
+      _triggerUpdate();
+      return value;
+    });
+  }
+
+  /// Delete a MedAllergyEvent from the database.
+  static Future<int> deleteMedAllergyEvent(MedAllergyEvent medAllergyEvent) async {
+    final db = await _getDB();
+    return await db.delete(medAllergyEventTableName,
+        where: "$medAllergyEventPrimaryKeyName = ?",
+        whereArgs: [medAllergyEvent.medAllergyId]).then((value) {
+      _triggerUpdate();
+      return value;
+    });
+  }
+
+  /// Retrieve all MedAllergyEvent(s) from the database.
+  static Future<List<MedAllergyEvent>?> getAllMedAllergyEvent() async {
+    final db = await _getDB();
+    final List<Map<String, dynamic>> maps =
+    await db.query(medAllergyEventTableName);
+    if (maps.isEmpty) {
+      return null;
+    }
+    return List.generate(
+        maps.length, (index) => MedAllergyEvent.fromJson(maps[index]));
+  }
+
+  /// Retrieve all MedAllergyEvent(s) from the database with a specific date range.
+  static Future<List<MedAllergyEvent>?> getAllMedAllergyEventFrom(DateTimeRange dateTimeRange) async {
+    final db = await _getDB();
+    final List<Map<String, dynamic>> maps = await db.query(
+        medIntakeEventTableName,
+        where: "time BETWEEN ? and ?",
+        whereArgs: [dateTimeToUnixTime(dateTimeRange.start), dateTimeToUnixTime(dateTimeRange.end)]);
+
+    if (maps.isEmpty) {
+      return null;
+    }
+    return List.generate(
+        maps.length, (index) => MedAllergyEvent.fromJson(maps[index]));
+  }
+
+  /// Add a MedIntakeEvent to the database.
+  static Future<int> addMedIntakeEvent(MedIntakeEvent medIntakeEvent) async {
+    final db = await _getDB();
+    return await db
+        .insert(medIntakeEventTableName, medIntakeEvent.toJson(),
+        conflictAlgorithm: ConflictAlgorithm.replace)
+        .then((value) {
+      _triggerUpdate();
+      return value; // return the original value from insert
+    });
+  }
+
+  /// Edit a MedIntakeEvent in the database.
+  static Future<int> updateMedIntakeEvent(MedIntakeEvent medIntakeEvent) async {
+    final db = await _getDB();
+    return await db
+        .update(medIntakeEventTableName, medIntakeEvent.toJson(),
+        where: "$medIntakeEventTablePrimaryKeyName = ?",
+        // This where args is plugged into the ? symbol
+        whereArgs: [medIntakeEvent.medIntakeId],
+        conflictAlgorithm: ConflictAlgorithm.replace)
+        .then((value) {
+      _triggerUpdate();
+      return value;
+    });
+  }
+
+  /// Delete a MedIntakeEvent from the database.
+  static Future<int> deleteMedIntakeEvent(MedIntakeEvent medIntakeEvent) async {
+    final db = await _getDB();
+    return await db.delete(medIntakeEventTableName,
+        where: "$medIntakeEventTablePrimaryKeyName = ?",
+        whereArgs: [medIntakeEvent.medIntakeId]).then((value) {
+      _triggerUpdate();
+      return value;
+    });
+  }
+
+  /// Retrieve all MedIntakeEvent(s) from the database.
+  static Future<List<MedIntakeEvent>?> getAllMedIntakeEvents() async {
+    final db = await _getDB();
+    final List<Map<String, dynamic>> maps =
+    await db.query(medIntakeEventTableName);
+    if (maps.isEmpty) {
+      return null;
+    }
+    return List.generate(
+        maps.length, (index) => MedIntakeEvent.fromJson(maps[index]));
+  }
+
+  /// Retrieve all MedIntakeEvent(s) from the database with a specific date range.
+  static Future<List<MedIntakeEvent>?> getAllMedIntakeEventFrom(DateTimeRange dateTimeRange) async {
+    final db = await _getDB();
+    final List<Map<String, dynamic>> maps = await db.query(
+        medIntakeEventTableName,
+        where: "time BETWEEN ? and ?",
+        whereArgs: [dateTimeToUnixTime(dateTimeRange.start), dateTimeToUnixTime(dateTimeRange.end)]);
+
+    if (maps.isEmpty) {
+      return null;
+    }
+    return List.generate(
+        maps.length, (index) => MedIntakeEvent.fromJson(maps[index]));
   }
 }

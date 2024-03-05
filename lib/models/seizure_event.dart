@@ -6,8 +6,7 @@ class SeizureEvent {
   final int? seizureId;
   /// [time] stored as unix time (seconds since epoch).
   ///
-  /// Can be converted to DateTime object
-  /// with [unixTimeToDateTime]
+  /// Can be converted to DateTime object with [unixTimeToDateTime]
   final int time;
   final String seizureType;
   final String? seizureSymptom;

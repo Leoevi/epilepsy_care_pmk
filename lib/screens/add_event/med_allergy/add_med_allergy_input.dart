@@ -1,48 +1,39 @@
 import 'package:epilepsy_care_pmk/constants/styling.dart';
 import 'package:epilepsy_care_pmk/custom_widgets/horizontal_date_picker.dart';
+import 'package:epilepsy_care_pmk/helpers/date_time_helpers.dart';
+import 'package:epilepsy_care_pmk/models/med_allergy_event.dart';
 import 'package:epilepsy_care_pmk/screens/commons/screen_with_app_bar.dart';
 import 'package:epilepsy_care_pmk/screens/wiki/medication/medication.dart';
+import 'package:epilepsy_care_pmk/services/database_service.dart';
 import 'package:flutter/material.dart';
 
-// const List<String> list = <String>[
-//   //DropDown Item List (All Drug)
-//   'Carbamazepine / Tegretol®',
-//   'Clonazepam / Rivotrill®',
-//   'Lamotrigine / Lamictal®',
-//   'Levetiracetam / Keppra®',
-//   'Oxcarbazepine / Trileptal®',
-//   'Phenobarbital',
-//   'Phenytoin / Dilantin®',
-//   'Sodium valproate / Depakin®',
-//   'Topiramate / Topamax®',
-//   'Vigabatrin / Sabril®',
-//   'Perampanel / Fycompa®',
-//   'Lacosamide / Vimpat®',
-//   'Pregabalin / Lyrica®',
-//   'Gabapentin / Neurontin®  / Berlontin®' //Fix Overflow item by https://stackoverflow.com/a/55376107
-// ];
-
 class AddMedAllergyInput extends StatefulWidget {
-  const AddMedAllergyInput({super.key});
+  /// For launching this page with a pre-existing med allergy entry (for editing).
+  /// Should be passed as null if this is a new allergy event entry.
+  // final MedAllergyEvent? initMedAllergyEvent;
+
+  const AddMedAllergyInput({
+    super.key,
+    // this.initMedAllergyEvent,
+  });
 
   @override
   State<AddMedAllergyInput> createState() => _AddMedAllergyInputState();
 }
 
 class _AddMedAllergyInputState extends State<AddMedAllergyInput> {
-  DateTime selectedDate = DateTime.now(); // Date from datepicker
-  Medication? selectedMedication; // dropDown init value
-  TimeOfDay selectedTime = TimeOfDay.now();
-  String? seizureSymptom; // Input อาการ
+  Medication? _inputMedication; // dropDown init value
+  String? _inputMedAllergySymptom; // Input อาการ
+  DateTime _inputDate = DateTime.now(); // Date from datepicker
+  TimeOfDay _inputTime = TimeOfDay.now();
 
   late final List<DropdownMenuItem<Medication>> medDropdownList;
   final _formKey = GlobalKey<FormState>(); //Validate
 
-  void printAll() {
-    debugPrint("selectedDate: $selectedDate");
-    debugPrint("selectedMedication: $selectedMedication");
-    debugPrint("selectedTime: $selectedTime");
-    debugPrint("seizureSymptom: $seizureSymptom");
+  void _addToDB() {
+    int combinedUnixTime = dateTimeToUnixTime(combineDateTimeWithTimeOfDay(_inputDate, _inputTime));
+    MedAllergyEvent newMedAllergyEvent = MedAllergyEvent(time: combinedUnixTime, med: _inputMedication!.name, medAllergySymptom: _inputMedAllergySymptom);
+    DatabaseService.addMedAllergyEvent(newMedAllergyEvent);
   }
 
   @override
@@ -75,10 +66,10 @@ class _AddMedAllergyInputState extends State<AddMedAllergyInput> {
                   children: [
                     //
                     HorizontalDatePicker(
-                      startDate: selectedDate,
+                      startDate: _inputDate,
                       onDateChange: (date) {
                         setState(() {
-                          selectedDate = date;
+                          _inputDate = date;
                         });
                       },
                     ),
@@ -90,12 +81,12 @@ class _AddMedAllergyInputState extends State<AddMedAllergyInput> {
 
                     DropdownButtonFormField(
                       isExpanded: true, //https://stackoverflow.com/a/55376107
-                      value: selectedMedication,
+                      value: _inputMedication,
                       icon: const Icon(Icons.keyboard_arrow_down),
                       decoration: InputDecoration(border: OutlineInputBorder()),
                       onChanged: (Medication? val) {
                         setState(() {
-                          selectedMedication = val!;
+                          _inputMedication = val!;
                           // print(dropDownValue);
                         });
                       },
@@ -116,7 +107,7 @@ class _AddMedAllergyInputState extends State<AddMedAllergyInput> {
                             //Collect data by use update_text function
                             enabled: false,
                             decoration: InputDecoration(
-                                hintText: selectedTime.format(context),
+                                hintText: _inputTime.format(context),
                                 // TODO: Change PM to 12-hour
                                 border: OutlineInputBorder()),
                           ),
@@ -129,12 +120,12 @@ class _AddMedAllergyInputState extends State<AddMedAllergyInput> {
                           onPressed: () async {
                             final TimeOfDay? timeOfDay = await showTimePicker(
                               context: context,
-                              initialTime: selectedTime,
+                              initialTime: _inputTime,
                               initialEntryMode: TimePickerEntryMode.dial,
                             );
                             if (timeOfDay != null) {
                               setState(() {
-                                selectedTime = timeOfDay;
+                                _inputTime = timeOfDay;
                                 //time result : timeOfDay
                                 // print("time>>>>>> $selectedTime");
                               });
@@ -163,7 +154,7 @@ class _AddMedAllergyInputState extends State<AddMedAllergyInput> {
                       //Collect data by use update_text function
                       onChanged: (val) {
                         setState(() {
-                          seizureSymptom = val;
+                          _inputMedAllergySymptom = val;
                           // print(seizureSymptom);
                         });
                       },
@@ -198,10 +189,11 @@ class _AddMedAllergyInputState extends State<AddMedAllergyInput> {
                                           textColor: Colors.black,
                                           onPressed: () {}),
                                       content: Text('บันทึกข้อมูลสำเร็จ')));
-                              printAll();  // TODO: remove later
+
                               Navigator.of(context)
                                   .popUntil((route) => route.isFirst);
                             }
+                            _addToDB();
                           },
                           style: primaryButtonStyle,
                         )

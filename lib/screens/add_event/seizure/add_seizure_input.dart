@@ -53,7 +53,7 @@ class _AddSeizureInputState extends State<AddSeizureInput> {
   }
 
   // For creating new seizureEvent
-  void addToDB() {
+  void _addToDB() {
     int combinedUnixTime = dateTimeToUnixTime(combineDateTimeWithTimeOfDay(_inputDate, _inputTime));
     // null on primary key for auto-increment (https://stackoverflow.com/questions/7905859/is-there-auto-increment-in-sqlite)
     SeizureEvent newSeizureEvent = SeizureEvent(seizureId: null, time: combinedUnixTime, seizureType: _inputSeizureType!, seizureSymptom: _inputSeizureSymptom, seizurePlace: _inputSeizurePlace!);
@@ -61,7 +61,7 @@ class _AddSeizureInputState extends State<AddSeizureInput> {
   }
 
   // For editing an already existing seizureEvent
-  void updateToDB() {
+  void _updateToDB() {
     int combinedUnixTime = dateTimeToUnixTime(combineDateTimeWithTimeOfDay(_inputDate, _inputTime));
     SeizureEvent updatedSeizureEvent = SeizureEvent(seizureId: widget.initSeizureEvent!.seizureId, time: combinedUnixTime, seizureType: _inputSeizureType!, seizureSymptom: _inputSeizureSymptom, seizurePlace: _inputSeizurePlace!);
     DatabaseService.updateSeizureEvent(updatedSeizureEvent);
@@ -247,9 +247,9 @@ class _AddSeizureInputState extends State<AddSeizureInput> {
                                             content:
                                                 Text('บันทึกข้อมูลสำเร็จ')));
                                     if (widget.initSeizureEvent == null) {
-                                      addToDB();
+                                      _addToDB();
                                     } else {
-                                      updateToDB();
+                                      _updateToDB();
                                     }
                                     Navigator.of(context)
                                         .popUntil((route) => route.isFirst);

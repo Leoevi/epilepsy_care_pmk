@@ -67,7 +67,6 @@ class EventCard extends StatelessWidget {
                       IconButton(
                         visualDensity: VisualDensity.compact,
                           onPressed: onEdit, icon: Icon(Icons.edit_outlined)),
-                      //TODO: Make edit and delete works
                       IconButton(
                           visualDensity: VisualDensity.compact,
                           onPressed: onDelete, icon: Icon(Icons.delete_outline))
@@ -85,13 +84,13 @@ class EventCard extends StatelessWidget {
                   Row(
                     children: [
                       Icon(Icons.map_outlined),
-                      Text(place),
+                      Flexible(child: Text(place)),
                       SizedBox(width: kSmallPadding,),
                       Icon(
                         Icons.warning_rounded,
                         color: colorWarningIcon,
                       ),
-                      Text(type)
+                      Flexible(child: Text(type))
                     ],
                   )
                 ],

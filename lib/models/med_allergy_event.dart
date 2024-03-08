@@ -1,10 +1,8 @@
-import 'package:epilepsy_care_pmk/helpers/date_time_helpers.dart';
+import 'package:epilepsy_care_pmk/models/event.dart';
 
-class MedAllergyEvent {
+class MedAllergyEvent extends Event {
   final int? medAllergyId;
-  /// [time] stored as unix time (seconds since epoch).
-  ///
-  /// Can be converted to DateTime object with [unixTimeToDateTime]
+  @override
   final int time;
   final String med;
   final String? medAllergySymptom;

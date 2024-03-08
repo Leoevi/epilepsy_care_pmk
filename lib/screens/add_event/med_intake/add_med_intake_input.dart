@@ -1,43 +1,85 @@
 import 'package:epilepsy_care_pmk/constants/styling.dart';
 import 'package:epilepsy_care_pmk/custom_widgets/horizontal_date_picker.dart';
+import 'package:epilepsy_care_pmk/models/med_intake_event.dart';
 import 'package:epilepsy_care_pmk/screens/commons/screen_with_app_bar.dart';
 import 'package:epilepsy_care_pmk/screens/wiki/medication/medication.dart';
+import 'package:epilepsy_care_pmk/services/database_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:collection/collection.dart';  // firstWhereOrNull
+
+import '../../../helpers/date_time_helpers.dart';
 
 class AddMedIntakeInput extends StatefulWidget {
-  const AddMedIntakeInput({super.key});
+  final MedIntakeEvent? initMedIntakeEvent;
+
+  const AddMedIntakeInput({
+    super.key,
+    this.initMedIntakeEvent,
+  });
 
   @override
   State<AddMedIntakeInput> createState() => _AddMedIntakeInputState();
 }
 
 class _AddMedIntakeInputState extends State<AddMedIntakeInput> {
-  DateTime selectedDate = DateTime.now(); // Date from datepicker
-  Medication? selectedMedication; // dropDown init value
-  TimeOfDay selectedTime = TimeOfDay.now(); // default time
-  String? medicationQuantity; // Input ปริมาณ, will be parsed into double when OK is pressed
-  MeasureUnit? selectedMeasureUnit;
-
-  late final List<DropdownMenuItem<Medication>> medDropdownList;  // DropdownMenuItem is a generic, so we will assign it type that we need straight away.
-  List<DropdownMenuItem<MeasureUnit>>? unitDropdownList;
+  late final List<DropdownMenuItem<Medication>> _medDropdownList;  // DropdownMenuItem is a generic, so we will assign it type that we need straight away.
+  List<DropdownMenuItem<MeasureUnit>>? _unitDropdownList;
   final _formKey = GlobalKey<FormState>(); //Validate
 
-  void printAll() {
-    debugPrint("selectedDate: $selectedDate");
-    debugPrint("selectedMedication: $selectedMedication");
-    debugPrint("selectedTime: $selectedTime");
-    debugPrint("medicationQuantity: $medicationQuantity");
-    debugPrint("selectedMeasureUnit: $selectedMeasureUnit");
-  }
+  Medication? _inputMedication; // dropDown init value
+  String? _inputMedicationQuantity; // Input ปริมาณ, will be parsed into double when OK is pressed
+  MeasureUnit? _inputMeasureUnit;
+  late DateTime _inputDate; // Date from datepicker
+  late TimeOfDay _inputTime; // default time
+
 
   @override
   void initState() {
     super.initState();
-    medDropdownList = medicationEntries.map<DropdownMenuItem<Medication>>((entry) {
+    _medDropdownList = medicationEntries.map<DropdownMenuItem<Medication>>((entry) {
       return DropdownMenuItem<Medication>(
         value: entry,
         child: Text(entry.name),
+      );
+    }).toList();
+
+    _inputMedication = widget.initMedIntakeEvent == null ? null : medicationEntries.firstWhereOrNull((med) => med.name == widget.initMedIntakeEvent?.med);
+    _generateUnitDropdownList();  // Call this otherwise we'll need to reselect Medication to get unit drop down list
+    // TODO: May or may not implement loading _inputMedicationQuantity and _inputMeasureUnit, the user will have to select on their own.
+
+    // Date and time have their default values
+    if (widget.initMedIntakeEvent != null) {
+      DateTime initTime = unixTimeToDateTime(widget.initMedIntakeEvent!.time);
+      var r = separateDateTimeAndTimeOfDay(initTime);
+      _inputDate = r.$1;
+      _inputTime = r.$2;
+    } else {
+      _inputDate = DateTime.now();
+      _inputTime = TimeOfDay.now();
+    }
+  }
+
+  void _addToDb() {
+    int combinedUnixTime = dateTimeToUnixTime(combineDateTimeWithTimeOfDay(_inputDate, _inputTime));
+    // Parsing here shouldn't throw any errors since we used tryParse earlier in the validation function.
+    double mgAmount = double.parse(_inputMedicationQuantity!)*_inputMedication!.medicationIntakeMethod.getMgPerUnit(_inputMeasureUnit!);
+    MedIntakeEvent newMedIntakeEvent = MedIntakeEvent(medIntakeId: null, time: combinedUnixTime, med: _inputMedication!.name, mgAmount: mgAmount);
+    DatabaseService.addMedIntakeEvent(newMedIntakeEvent);
+  }
+
+  void _updateToDb() {
+    int combinedUnixTime = dateTimeToUnixTime(combineDateTimeWithTimeOfDay(_inputDate, _inputTime));
+    double mgAmount = double.parse(_inputMedicationQuantity!)*_inputMedication!.medicationIntakeMethod.getMgPerUnit(_inputMeasureUnit!);
+    MedIntakeEvent updateMedIntakeEvent = MedIntakeEvent(medIntakeId: widget.initMedIntakeEvent!.medIntakeId, time: combinedUnixTime, med: _inputMedication!.name, mgAmount: mgAmount);
+    DatabaseService.addMedIntakeEvent(updateMedIntakeEvent);
+  }
+
+  void _generateUnitDropdownList() {
+    _unitDropdownList = _inputMedication?.medicationIntakeMethod.measureList.map<DropdownMenuItem<MeasureUnit>>((measure) {
+      return DropdownMenuItem<MeasureUnit>(
+        value: measure,
+        child: Text(measure.measureName),
       );
     }).toList();
   }
@@ -60,10 +102,10 @@ class _AddMedIntakeInputState extends State<AddMedIntakeInput> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     HorizontalDatePicker(
-                      startDate: selectedDate,
+                      startDate: _inputDate,
                       onDateChange: (date) {
                         setState(() {
-                          selectedDate = date;
+                          _inputDate = date;
                         });
                       },
                     ),
@@ -74,27 +116,22 @@ class _AddMedIntakeInputState extends State<AddMedIntakeInput> {
 
                     DropdownButtonFormField(
                       isExpanded: true,
-                      value: selectedMedication,
+                      value: _inputMedication,
                       icon: const Icon(Icons.keyboard_arrow_down),
                       decoration: InputDecoration(border: OutlineInputBorder()),
                       onChanged: (Medication? val) {
                         // 2 things that this onChange does
                         // 1) set the selectedMedication
                         setState(() {
-                          selectedMedication = val!;
-                          selectedMeasureUnit = null;  // For some reason, not setting this to null will cause an assertion error saying that there are 0 or 2 duplicate entries in the unit's drop down menu.
+                          _inputMedication = val!;
+                          _inputMeasureUnit = null;  // For some reason, not setting this to null will cause an assertion error saying that there are 0 or 2 duplicate entries in the unit's drop down menu.
                         });
 
                         // 2) Update the measure drop down menu
                         // use the ".?" operator to make the whole expr null if selectedMedication is null
-                        unitDropdownList = selectedMedication?.medicationIntakeMethod.measureList.map<DropdownMenuItem<MeasureUnit>>((measure) {
-                          return DropdownMenuItem<MeasureUnit>(
-                            value: measure,
-                            child: Text(measure.measureName),
-                          );
-                        }).toList();
+                        _generateUnitDropdownList();
                       },
-                      items: medDropdownList,
+                      items: _medDropdownList,
                       validator: (val) {
                         if (val == null) {
                           return "กรุณาเลือกยาที่จะบันทึก";
@@ -116,7 +153,7 @@ class _AddMedIntakeInputState extends State<AddMedIntakeInput> {
                             //Collect data by use update_text function
                             enabled: false,
                             decoration: InputDecoration(
-                                hintText: selectedTime.format(context),
+                                hintText: _inputTime.format(context),
                                 // TODO: Change PM to 12-hour
                                 border: OutlineInputBorder()),
                           ),
@@ -129,12 +166,12 @@ class _AddMedIntakeInputState extends State<AddMedIntakeInput> {
                           onPressed: () async {
                             final TimeOfDay? timeOfDay = await showTimePicker(
                               context: context,
-                              initialTime: selectedTime,
+                              initialTime: _inputTime,
                               initialEntryMode: TimePickerEntryMode.dial,
                             );
                             if (timeOfDay != null) {
                               setState(() {
-                                selectedTime = timeOfDay;
+                                _inputTime = timeOfDay;
                               });
                             }
                           },
@@ -173,7 +210,7 @@ class _AddMedIntakeInputState extends State<AddMedIntakeInput> {
                             //Collect data by use update_text function
                             onChanged: (val) {
                               setState(() {
-                                medicationQuantity = val;
+                                _inputMedicationQuantity = val;
                               });
                             },
                             decoration: InputDecoration(
@@ -184,7 +221,7 @@ class _AddMedIntakeInputState extends State<AddMedIntakeInput> {
                         SizedBox(width: kSmallPadding,),
                         Expanded(child: DropdownButtonFormField(
                           isExpanded: true,
-                          value: selectedMeasureUnit,
+                          value: _inputMeasureUnit,
                           icon: const Icon(Icons.keyboard_arrow_down),
                           decoration: const InputDecoration(
                               border: OutlineInputBorder(),
@@ -194,10 +231,10 @@ class _AddMedIntakeInputState extends State<AddMedIntakeInput> {
                           ),
                           onChanged: (MeasureUnit? val) {
                             setState(() {
-                              selectedMeasureUnit = val!;
+                              _inputMeasureUnit = val!;
                             });
                           },
-                          items: unitDropdownList,
+                          items: _unitDropdownList,
                           validator: (val) {
                             if (val == null) {
                               return "กรุณาเลือกหน่วยของปริมาณยา";
@@ -234,7 +271,11 @@ class _AddMedIntakeInputState extends State<AddMedIntakeInput> {
                                           textColor: Colors.black,
                                           onPressed: () {}),
                                       content: Text('บันทึกข้อมูลสำเร็จ')));
-                              printAll();  // TODO: remove later
+                              if (widget.initMedIntakeEvent == null) {
+                                _addToDb();
+                              } else {
+                                _updateToDb();
+                              }
                               Navigator.of(context)
                                   .popUntil((route) => route.isFirst);
                             }

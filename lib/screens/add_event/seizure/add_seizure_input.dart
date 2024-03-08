@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 
 import '../../../custom_widgets/horizontal_date_picker.dart';
 
-const List<String> seizureTypes = <String>['ชักทั้งตัว', 'ชักเฉพาะ', 'เหม่อลอย', 'อื่นๆ'];
+const List<String> seizureTypes = <String>['ชักทั้งตัว', 'ชักเฉพาะ', 'เหม่อลอย', 'อาการชักอื่นๆ'];
 
 class AddSeizureInput extends StatefulWidget {
   /// For launching this page with a pre-existing seizure entry (for editing).
@@ -53,7 +53,7 @@ class _AddSeizureInputState extends State<AddSeizureInput> {
   }
 
   // For creating new seizureEvent
-  void _addToDB() {
+  void _addToDb() {
     int combinedUnixTime = dateTimeToUnixTime(combineDateTimeWithTimeOfDay(_inputDate, _inputTime));
     // null on primary key for auto-increment (https://stackoverflow.com/questions/7905859/is-there-auto-increment-in-sqlite)
     SeizureEvent newSeizureEvent = SeizureEvent(seizureId: null, time: combinedUnixTime, seizureType: _inputSeizureType!, seizureSymptom: _inputSeizureSymptom, seizurePlace: _inputSeizurePlace!);
@@ -61,7 +61,7 @@ class _AddSeizureInputState extends State<AddSeizureInput> {
   }
 
   // For editing an already existing seizureEvent
-  void _updateToDB() {
+  void _updateToDb() {
     int combinedUnixTime = dateTimeToUnixTime(combineDateTimeWithTimeOfDay(_inputDate, _inputTime));
     SeizureEvent updatedSeizureEvent = SeizureEvent(seizureId: widget.initSeizureEvent!.seizureId, time: combinedUnixTime, seizureType: _inputSeizureType!, seizureSymptom: _inputSeizureSymptom, seizurePlace: _inputSeizurePlace!);
     DatabaseService.updateSeizureEvent(updatedSeizureEvent);
@@ -247,9 +247,9 @@ class _AddSeizureInputState extends State<AddSeizureInput> {
                                             content:
                                                 Text('บันทึกข้อมูลสำเร็จ')));
                                     if (widget.initSeizureEvent == null) {
-                                      _addToDB();
+                                      _addToDb();
                                     } else {
-                                      _updateToDB();
+                                      _updateToDb();
                                     }
                                     Navigator.of(context)
                                         .popUntil((route) => route.isFirst);

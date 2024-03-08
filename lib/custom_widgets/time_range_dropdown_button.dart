@@ -15,7 +15,7 @@ class TimeRangeDropdownButton extends StatefulWidget {
   /// or the "x" button shown by the showDateRangePicker dialog.
   /// or 2) The user doesn't tap on any dropdown buttons.
   ///
-  /// Note, if onChange is null, then the DateRangePicker won't be shown.
+  /// Note, if onChange is null, then the [DateRangePicker] won't be shown.
   final Function(DateTimeRange)? onChanged;
 
   /// What dropdown option to show by default on first build.
@@ -117,7 +117,8 @@ class _TimeRangeDropdownButtonState extends State<TimeRangeDropdownButton> {
                 // For more in-depth info: https://stackoverflow.com/a/55622474)
                 await Future.delayed(Duration.zero,
                         () async {
-                  customRange = await showDateRangePicker(context: context, firstDate: beginEpoch, lastDate: DateTime.now());
+                  customRange = await showDateRangePicker(context: context, firstDate: beginEpoch, lastDate: DateTime.now().add(Duration(days: 20)));
+                  // TODO: decide if dates after DateTime.now() can be selected
                 });
 
                 if (customRange != null) {

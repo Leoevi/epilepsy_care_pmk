@@ -48,7 +48,7 @@ abstract class MedicationIntakeMethod {
   abstract final List<MeasureUnit> measureList;
 
   /// Get the amount of meds taken in milligram
-  double getMg(MeasureUnit unit);
+  double getMgPerUnit(MeasureUnit unit);
 }
 /// A class that describes medication that is pill-like, as in a discrete unit
 /// of medication that can be eaten whole.
@@ -61,7 +61,7 @@ class PillMedication implements MedicationIntakeMethod {
   List<MeasureUnit> get measureList => [MeasureUnit("เม็ด", 1)];
 
   @override
-  double getMg(MeasureUnit unit) {
+  double getMgPerUnit(MeasureUnit unit) {
     return mgPerPill*unit.measureRatio;
   }
 
@@ -87,10 +87,11 @@ class LiquidMedication implements MedicationIntakeMethod {
   // (US teaspoon is 4.92892159375, metric teaspoon is 5 ml)
   // https://en.wikipedia.org/wiki/Teaspoon#Unit_of_measure
   @override
-  List<MeasureUnit> get measureList => [MeasureUnit("ช้อนชา", 5), MeasureUnit("ช้อนโต๊ะ", 15), MeasureUnit("มล.", 1)];
+  List<MeasureUnit> get measureList => [MeasureUnit("มล.", 1)];
+  // List<MeasureUnit> get measureList => [MeasureUnit("ช้อนชา", 5), MeasureUnit("ช้อนโต๊ะ", 15), MeasureUnit("มล.", 1)];  // Won't use other units anymore
 
   @override
-  double getMg(MeasureUnit unit) {
+  double getMgPerUnit(MeasureUnit unit) {
     return mgPerMl*unit.measureRatio;
   }
 

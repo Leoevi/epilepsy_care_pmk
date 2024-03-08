@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:epilepsy_care_pmk/helpers/date_time_helpers.dart';
+import 'package:epilepsy_care_pmk/models/event.dart';
 import 'package:epilepsy_care_pmk/models/med_allergy_event.dart';
 import 'package:epilepsy_care_pmk/models/med_intake_event.dart';
 import 'package:epilepsy_care_pmk/models/seizure_event.dart';
@@ -53,23 +54,23 @@ class DatabaseService {
             "seizureType" TEXT NOT NULL, 
             "seizureSymptom" TEXT NULL,
             "seizurePlace" TEXT NOT NULL,
-            PRIMARY KEY ("$seizureEventTablePrimaryKeyName"));
-         """);
+            PRIMARY KEY ("$seizureEventTablePrimaryKeyName")) STRICT;
+         """);  // STRICT is sqlite exclusive (https://www.sqlite.org/stricttables.html)
         await db.execute("""
           CREATE TABLE IF NOT EXISTS "$medAllergyEventTableName"
             ("$medAllergyEventPrimaryKeyName" INTEGER NOT NULL,
             "time" INTEGER NOT NULL,
             "med" TEXT NOT NULL,
             "medAllergySymptom" TEXT NOT NULL, 
-            PRIMARY KEY ("$medAllergyEventPrimaryKeyName"));
+            PRIMARY KEY ("$medAllergyEventPrimaryKeyName")) STRICT;
         """);
         await db.execute("""
           CREATE TABLE IF NOT EXISTS "$medIntakeEventTableName"
             ("$medIntakeEventTablePrimaryKeyName" INTEGER NOT NULL,
             "time" INTEGER NOT NULL,
             "med" TEXT NOT NULL,
-            "mgAmount" INTEGER NOT NULL, 
-            PRIMARY KEY ("$medIntakeEventTablePrimaryKeyName"));
+            "mgAmount" REAL NOT NULL, 
+            PRIMARY KEY ("$medIntakeEventTablePrimaryKeyName")) STRICT;
         """);
       },
       version: _version,
@@ -121,19 +122,21 @@ class DatabaseService {
   }
 
   /// Retrieve all SeizureEvent(s) from the database.
-  static Future<List<SeizureEvent>?> getAllSeizureEvents() async {
+  /// Does not guarantee any sorting order.
+  static Future<List<SeizureEvent>> getAllSeizureEvents() async {
     final db = await _getDB();
     final List<Map<String, dynamic>> maps =
         await db.query(seizureEventTableName);
     if (maps.isEmpty) {
-      return null;
+      return List.empty();
     }
     return List.generate(
         maps.length, (index) => SeizureEvent.fromJson(maps[index]));
   }
 
   /// Retrieve all SeizureEvent(s) from the database with a specific date range.
-  static Future<List<SeizureEvent>?> getAllSeizureEventsFrom(DateTimeRange dateTimeRange) async {
+  /// Does not guarantee any sorting order.
+  static Future<List<SeizureEvent>> getAllSeizureEventsFrom(DateTimeRange dateTimeRange) async {
     final db = await _getDB();
     final List<Map<String, dynamic>> maps = await db.query(
         seizureEventTableName,
@@ -141,7 +144,7 @@ class DatabaseService {
         whereArgs: [dateTimeToUnixTime(dateTimeRange.start), dateTimeToUnixTime(dateTimeRange.end)]);
 
     if (maps.isEmpty) {
-      return null;
+      return List.empty();
     }
     return List.generate(
         maps.length, (index) => SeizureEvent.fromJson(maps[index]));
@@ -186,19 +189,21 @@ class DatabaseService {
   }
 
   /// Retrieve all MedAllergyEvent(s) from the database.
-  static Future<List<MedAllergyEvent>?> getAllMedAllergyEvent() async {
+  /// Does not guarantee any sorting order.
+  static Future<List<MedAllergyEvent>> getAllMedAllergyEvents() async {
     final db = await _getDB();
     final List<Map<String, dynamic>> maps =
     await db.query(medAllergyEventTableName);
     if (maps.isEmpty) {
-      return null;
+      return List.empty();
     }
     return List.generate(
         maps.length, (index) => MedAllergyEvent.fromJson(maps[index]));
   }
 
   /// Retrieve all MedAllergyEvent(s) from the database with a specific date range.
-  static Future<List<MedAllergyEvent>?> getAllMedAllergyEventFrom(DateTimeRange dateTimeRange) async {
+  /// Does not guarantee any sorting order.
+  static Future<List<MedAllergyEvent>> getAllMedAllergyEventsFrom(DateTimeRange dateTimeRange) async {
     final db = await _getDB();
     final List<Map<String, dynamic>> maps = await db.query(
         medIntakeEventTableName,
@@ -206,7 +211,7 @@ class DatabaseService {
         whereArgs: [dateTimeToUnixTime(dateTimeRange.start), dateTimeToUnixTime(dateTimeRange.end)]);
 
     if (maps.isEmpty) {
-      return null;
+      return List.empty();
     }
     return List.generate(
         maps.length, (index) => MedAllergyEvent.fromJson(maps[index]));
@@ -251,19 +256,21 @@ class DatabaseService {
   }
 
   /// Retrieve all MedIntakeEvent(s) from the database.
-  static Future<List<MedIntakeEvent>?> getAllMedIntakeEvents() async {
+  /// Does not guarantee any sorting order.
+  static Future<List<MedIntakeEvent>> getAllMedIntakeEvents() async {
     final db = await _getDB();
     final List<Map<String, dynamic>> maps =
     await db.query(medIntakeEventTableName);
     if (maps.isEmpty) {
-      return null;
+      return List.empty();
     }
     return List.generate(
         maps.length, (index) => MedIntakeEvent.fromJson(maps[index]));
   }
 
   /// Retrieve all MedIntakeEvent(s) from the database with a specific date range.
-  static Future<List<MedIntakeEvent>?> getAllMedIntakeEventFrom(DateTimeRange dateTimeRange) async {
+  /// Does not guarantee any sorting order.
+  static Future<List<MedIntakeEvent>> getAllMedIntakeEventsFrom(DateTimeRange dateTimeRange) async {
     final db = await _getDB();
     final List<Map<String, dynamic>> maps = await db.query(
         medIntakeEventTableName,
@@ -271,9 +278,37 @@ class DatabaseService {
         whereArgs: [dateTimeToUnixTime(dateTimeRange.start), dateTimeToUnixTime(dateTimeRange.end)]);
 
     if (maps.isEmpty) {
-      return null;
+      return List.empty();
     }
     return List.generate(
         maps.length, (index) => MedIntakeEvent.fromJson(maps[index]));
+  }
+
+  /// Return all Event(s) from the database.
+  /// Does not guarantee any sorting order.
+  static Future<List<Event>> getAllEvents() async {
+    List<SeizureEvent> allSeizureEvents = await getAllSeizureEvents();
+    List<MedAllergyEvent> allMedAllergyEvent = await getAllMedAllergyEvents();
+    List<MedIntakeEvent> allMedIntakeEvent = await getAllMedIntakeEvents();
+
+    // Casting lists: https://stackoverflow.com/a/60461895
+    // Casting subclass to superclass will still make each element type-checkable (x is SubClass)
+    List<Event> allEvents = allSeizureEvents.cast<Event>() + allMedAllergyEvent.cast<Event>() + allMedIntakeEvent.cast<Event>();
+
+    return allEvents;
+  }
+
+  /// Return all Event(s) from the database with a specific date range.
+  /// Does not guarantee any sorting order.
+  static Future<List<Event>> getAllEventsFrom(DateTimeRange dateTimeRange) async {
+    List<SeizureEvent> allSeizureEvents = await getAllSeizureEventsFrom(dateTimeRange);
+    List<MedAllergyEvent> allMedAllergyEvent = await getAllMedAllergyEventsFrom(dateTimeRange);
+    List<MedIntakeEvent> allMedIntakeEvent = await getAllMedIntakeEventsFrom(dateTimeRange);
+
+    // Casting lists: https://stackoverflow.com/a/60461895
+    // Casting subclass to superclass will still make each element type-checkable (x is SubClass)
+    List<Event> allEvents = allSeizureEvents.cast<Event>() + allMedAllergyEvent.cast<Event>() + allMedIntakeEvent.cast<Event>();
+
+    return allEvents;
   }
 }

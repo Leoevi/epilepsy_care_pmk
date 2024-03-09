@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:collection/collection.dart';
 
 import '../constants/styling.dart';
+import '../models/med_intake_per_day.dart';
 
 class DosageGraph extends StatefulWidget {
   const DosageGraph({
@@ -179,14 +180,4 @@ class _DosageGraphState extends State<DosageGraph> {
       ),
     );
   }
-}
-
-
-/// A class representing a point on the graph like so:
-/// (DateTime, mg)
-class MedIntakePerDay {
-  final double totalDose;
-  final DateTime date;
-
-  MedIntakePerDay(this.totalDose, this.date);
 }

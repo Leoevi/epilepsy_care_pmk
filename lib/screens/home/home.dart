@@ -99,7 +99,7 @@ class _HomeState extends State<Home> {
           ),
           Flexible(
               flex: 5,
-              child: EventList(dateTimeRange: range),
+              child: EventList(),
           )
         ],
       ),

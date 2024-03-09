@@ -13,12 +13,13 @@ import 'event_card.dart';
 /// A list of events displayed with the EventCard widget
 class EventList extends StatefulWidget {
   /// [DateTimeRange] used to list the events within a specified range.
-  final DateTimeRange
+  /// if null, display all events in the database
+  final DateTimeRange?
       dateTimeRange; // TODO: decide to include or exclude the start and the end of range
 
   const EventList({
     super.key,
-    required this.dateTimeRange,
+    this.dateTimeRange,
   });
 
   @override
@@ -43,7 +44,7 @@ class _EventListState extends State<EventList> {
         builder: (_, __) {
           // FutureBuilder structure inspiration: https://www.youtube.com/watch?v=lkpPg0ieklg
           return FutureBuilder(
-            future: DatabaseService.getAllEvents(),  // TODO: implement filter and sorting
+            future: widget.dateTimeRange == null ? DatabaseService.getAllSortedEvents() : DatabaseService.getAllSortedEventsFrom(widget.dateTimeRange!),  // TODO: implement filter and sorting
             // I know that getting the future in future builder is not a good practice, but this way, I can easily force a rebuild when the stream updated
             builder: (context, snapshot) {
               switch (snapshot.connectionState) {

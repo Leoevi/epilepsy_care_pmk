@@ -35,6 +35,7 @@ class _HorizontalDatePickerState extends State<HorizontalDatePicker> {
   @override
   Widget build(BuildContext context) {
     return DatePicker(
+      // TODO: what about editing entries that are way in the past?
       DateTime.now().subtract(Duration(days: 45)),
       daysCount: 90,
       height: 90,

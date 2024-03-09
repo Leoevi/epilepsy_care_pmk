@@ -1,10 +1,13 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:epilepsy_care_pmk/helpers/date_time_helpers.dart';
 import 'package:epilepsy_care_pmk/models/event.dart';
 import 'package:epilepsy_care_pmk/models/med_allergy_event.dart';
 import 'package:epilepsy_care_pmk/models/med_intake_event.dart';
+import 'package:epilepsy_care_pmk/models/med_intake_per_day.dart';
 import 'package:epilepsy_care_pmk/models/seizure_event.dart';
+import 'package:epilepsy_care_pmk/screens/wiki/medication/medication.dart';
 import 'package:flutter/material.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
@@ -54,15 +57,15 @@ class DatabaseService {
             "seizureType" TEXT NOT NULL, 
             "seizureSymptom" TEXT NULL,
             "seizurePlace" TEXT NOT NULL,
-            PRIMARY KEY ("$seizureEventTablePrimaryKeyName")) STRICT;
-         """);  // STRICT is sqlite exclusive (https://www.sqlite.org/stricttables.html)
+            PRIMARY KEY ("$seizureEventTablePrimaryKeyName"));
+         """);  // Older versions of sqlite doesn't work with STRICT, so we won't use them anymore.
         await db.execute("""
           CREATE TABLE IF NOT EXISTS "$medAllergyEventTableName"
             ("$medAllergyEventPrimaryKeyName" INTEGER NOT NULL,
             "time" INTEGER NOT NULL,
             "med" TEXT NOT NULL,
             "medAllergySymptom" TEXT NOT NULL, 
-            PRIMARY KEY ("$medAllergyEventPrimaryKeyName")) STRICT;
+            PRIMARY KEY ("$medAllergyEventPrimaryKeyName"));
         """);
         await db.execute("""
           CREATE TABLE IF NOT EXISTS "$medIntakeEventTableName"
@@ -70,11 +73,41 @@ class DatabaseService {
             "time" INTEGER NOT NULL,
             "med" TEXT NOT NULL,
             "mgAmount" REAL NOT NULL, 
-            PRIMARY KEY ("$medIntakeEventTablePrimaryKeyName")) STRICT;
+            PRIMARY KEY ("$medIntakeEventTablePrimaryKeyName"));
         """);
       },
       version: _version,
     );
+  }
+
+  /// Generate dummy data for our database, for development purposes only.
+  static void generateDummyData(int setCount, int eachSet) {
+    Random random = Random();
+
+    for (int i = 0; i < setCount; i++) {
+      for (int j = 0; j < eachSet; j++) {
+        SeizureEvent seizureEvent = SeizureEvent(
+            time: dateTimeToUnixTime(DateTime.now().subtract(Duration(days: setCount - i, hours: random.nextInt(24)))),
+            seizureType: "ชักเฉพาะ",
+            seizurePlace: "home"
+        );
+        DatabaseService.addSeizureEvent(seizureEvent);
+
+        MedAllergyEvent medAllergyEvent = MedAllergyEvent(
+            time: dateTimeToUnixTime(DateTime.now().subtract(Duration(days: setCount - i, hours: random.nextInt(24)))),
+            med: medicationEntries[random.nextInt(medicationEntries.length)].name,
+            medAllergySymptom: "bruh this is a test"
+        );
+        DatabaseService.addMedAllergyEvent(medAllergyEvent);
+
+        MedIntakeEvent medIntakeEvent = MedIntakeEvent(
+            time: dateTimeToUnixTime(DateTime.now().subtract(Duration(days: setCount - i, hours: random.nextInt(24)))),
+            med: medicationEntries[random.nextInt(medicationEntries.length)].name,
+            mgAmount: random.nextDouble()*250
+        );
+        DatabaseService.addMedIntakeEvent(medIntakeEvent);
+      }
+    }
   }
 
   /// Delete the whole database.
@@ -268,6 +301,75 @@ class DatabaseService {
         maps.length, (index) => MedIntakeEvent.fromJson(maps[index]));
   }
 
+  /// Aggregate all MedicationIntakeEvent and sum up each day's intake. For dev purposes only.
+  static Future<List<MedIntakePerDay>> getAllMedIntakePerDay() async {
+    final db = await _getDB();
+    // We get this raw query from testing them in other programs
+    final List<Map<String, dynamic>> maps = await db.rawQuery("""
+      SELECT DATE(time, 'unixepoch') AS date, SUM(mgAmount) AS totalDose
+      FROM MedIntakeEvent
+      GROUP BY DATE(time, 'unixepoch')
+      ORDER BY DATE(time, 'unixepoch');
+    """);
+    // https://www.sqlite.org/lang_datefunc.html
+    // https://stackoverflow.com/questions/17821136/sqlite-group-by-count-hours-days-weeks-year
+    // https://stackoverflow.com/questions/40199091/group-by-day-when-column-is-in-unixtimestamp
+    // https://mode.com/sql-tutorial/sql-group-by
+    // Add order by just in case.
+    //
+    // So, what is happening here? Well, for starters, we used a sqlite helper fn called DATE
+    // Which will return date in the from of "YYYY-MM-DD" String, but we need to first give it
+    // the time that we want to convert, which is the "time" column. And since we are storing time
+    // in the unix timestamp format, we'll need to specify a modifier to tell the helper function
+    // what are we converting from. In this case, we use 'unixepoch'
+    //
+    // After that, we then used the group by clause to group all rows with the same date.
+    // Simple as that.
+
+    if (maps.isEmpty) {
+      return List.empty();
+    }
+    return List.generate(maps.length, (index) => MedIntakePerDay.fromJson(maps[index]));
+  }
+
+  /// Aggregate all MedicationIntakeEvent of a specified medication and sum up each day's intake
+  /// from a given [DateTimeRange] (inclusive).
+  ///
+  /// Will always sort from oldest to newest.
+  static Future<List<MedIntakePerDay>> getAllMedIntakePerDayFromOf(Medication med, DateTimeRange dateTimeRange) async {
+    final db = await _getDB();
+    // We get this raw query by experimenting in other querying programs.
+    // Use ? as placeholder to prevent SQL injection.
+    final List<Map<String, dynamic>> maps = await db.rawQuery("""
+      SELECT DATE(time, 'unixepoch') AS date, SUM(mgAmount) AS totalDose
+      FROM MedIntakeEvent
+      WHERE med = ?
+      AND TIME >= STRFTIME('%s', ?)
+      AND TIME < STRFTIME('%s', ?)
+      GROUP BY DATE(time, 'unixepoch')
+      ORDER BY DATE(time, 'unixepoch');
+    """, [med.name, dateTimeRange.start.toIso8601String(), dateTimeRange.end.add(Duration(days: 1)).toIso8601String()]);
+    // STRFTIME is also another helper function that returns time in the format of our desire
+    // In this case, since we are storing time in the unix timestamp format, we'll
+    // specify the function to also return unix timestamp by specifying the %s modifier.
+    // and the ? is just DateTime in String.
+    //
+    // Note that, the first seconds occur after midnight which means that, date wise,
+    // the condition is inclusive at start and exclusive at the end, so we'll
+    // need to +1 day at the end to make the range inclusive at the end.
+    //
+    // Also, the reason that we used < on the end of the range is because otherwise
+    // it will include the first second of the midnight of the next day, which we don't want.
+    //
+    // PS. You don't need any quotation marks around ?
+    // Okay, you CAN'T use quotation marks around ?
+
+    if (maps.isEmpty) {
+      return List.empty();
+    }
+    return List.generate(maps.length, (index) => MedIntakePerDay.fromJson(maps[index]));
+  }
+
   /// Retrieve all MedIntakeEvent(s) from the database with a specific date range.
   /// Does not guarantee any sorting order.
   static Future<List<MedIntakeEvent>> getAllMedIntakeEventsFrom(DateTimeRange dateTimeRange) async {
@@ -285,8 +387,8 @@ class DatabaseService {
   }
 
   /// Return all Event(s) from the database.
-  /// Does not guarantee any sorting order.
-  static Future<List<Event>> getAllEvents() async {
+  /// Also sorts from newest to oldest event.
+  static Future<List<Event>> getAllSortedEvents() async {
     List<SeizureEvent> allSeizureEvents = await getAllSeizureEvents();
     List<MedAllergyEvent> allMedAllergyEvent = await getAllMedAllergyEvents();
     List<MedIntakeEvent> allMedIntakeEvent = await getAllMedIntakeEvents();
@@ -294,20 +396,22 @@ class DatabaseService {
     // Casting lists: https://stackoverflow.com/a/60461895
     // Casting subclass to superclass will still make each element type-checkable (x is SubClass)
     List<Event> allEvents = allSeizureEvents.cast<Event>() + allMedAllergyEvent.cast<Event>() + allMedIntakeEvent.cast<Event>();
+    allEvents.sort((a, b) => b.compareTo(a));  // reverse the order so that latest events comes first
+    // I'm not 100% sure, but I think sorting in async method still blocks the UI, but if this
+    // was ever a concern, we can look into isolates and stuff
 
     return allEvents;
   }
 
   /// Return all Event(s) from the database with a specific date range.
-  /// Does not guarantee any sorting order.
-  static Future<List<Event>> getAllEventsFrom(DateTimeRange dateTimeRange) async {
+  /// Also sorts from newest to oldest event.
+  static Future<List<Event>> getAllSortedEventsFrom(DateTimeRange dateTimeRange) async {
     List<SeizureEvent> allSeizureEvents = await getAllSeizureEventsFrom(dateTimeRange);
     List<MedAllergyEvent> allMedAllergyEvent = await getAllMedAllergyEventsFrom(dateTimeRange);
     List<MedIntakeEvent> allMedIntakeEvent = await getAllMedIntakeEventsFrom(dateTimeRange);
 
-    // Casting lists: https://stackoverflow.com/a/60461895
-    // Casting subclass to superclass will still make each element type-checkable (x is SubClass)
     List<Event> allEvents = allSeizureEvents.cast<Event>() + allMedAllergyEvent.cast<Event>() + allMedIntakeEvent.cast<Event>();
+    allEvents.sort((a, b) => b.compareTo(a));
 
     return allEvents;
   }

@@ -1,5 +1,7 @@
 import 'package:epilepsy_care_pmk/constants/styling.dart';
 import 'package:epilepsy_care_pmk/custom_widgets/time_range_dropdown_button.dart';
+import 'package:epilepsy_care_pmk/screens/wiki/medication/medication.dart';
+import 'package:epilepsy_care_pmk/services/database_service.dart';
 import 'package:flutter/material.dart';
 
 import '../../../custom_widgets/dosage_graph.dart';
@@ -125,15 +127,28 @@ class _GraphHistoryWithTabState extends State<GraphHistoryWithTab> {
                                 SizedBox(
                                   height: 20,
                                 ),
-                                DosageGraph(
-                                  medIntakes: [
-                                    MedIntakePerDay(400, DateTime(2023, 1, 5)),
-                                    MedIntakePerDay(300, DateTime(2023, 1, 6)),
-                                    MedIntakePerDay(300, DateTime(2023, 1, 7)),
-                                    MedIntakePerDay(80, DateTime(2023, 1, 8)),
-                                    MedIntakePerDay(150, DateTime(2023, 1, 9)),
-                                    MedIntakePerDay(150, DateTime(2023, 1, 10)),
-                                  ],
+                                FutureBuilder(
+                                  future: DatabaseService.getAllMedIntakePerDayFromOf(medicationEntries[1], DateTimeRange(start: DateTime(2023,12,1), end: DateTime(2024,3,1))),  // TODO: implement filter and sorting
+                                  builder: (context, snapshot) {
+                                    switch (snapshot.connectionState) {
+                                      case ConnectionState.waiting:
+                                        return const CircularProgressIndicator();
+                                      case ConnectionState.done:
+                                      default:
+                                        if (snapshot.hasError) {
+                                          return Text("Error: ${snapshot.error}");
+                                        } else if (snapshot.hasData) {
+                                          return DosageGraph(medIntakes: snapshot.data!,);
+                                        } else {
+                                          return Column(
+                                            children: [
+                                              Text("No data, but..."),
+                                              Text("${snapshot.data}")
+                                            ],
+                                          );
+                                        }
+                                    }
+                                  },
                                 )
                               ],
                             ),
@@ -195,16 +210,16 @@ class _GraphHistoryWithTabState extends State<GraphHistoryWithTab> {
                                 SizedBox(
                                   height: 20,
                                 ),
-                                DosageGraph(
-                                  medIntakes: [
-                                    MedIntakePerDay(100, DateTime(2023, 1, 5)),
-                                    MedIntakePerDay(300, DateTime(2023, 1, 6)),
-                                    MedIntakePerDay(300, DateTime(2023, 1, 7)),
-                                    MedIntakePerDay(80, DateTime(2023, 1, 8)),
-                                    MedIntakePerDay(150, DateTime(2023, 1, 9)),
-                                    MedIntakePerDay(150, DateTime(2023, 1, 10)),
-                                  ],
-                                )
+                                // DosageGraph(
+                                //   medIntakes: [
+                                //     MedIntakePerDay(100, DateTime(2023, 1, 5)),
+                                //     MedIntakePerDay(300, DateTime(2023, 1, 6)),
+                                //     MedIntakePerDay(300, DateTime(2023, 1, 7)),
+                                //     MedIntakePerDay(80, DateTime(2023, 1, 8)),
+                                //     MedIntakePerDay(150, DateTime(2023, 1, 9)),
+                                //     MedIntakePerDay(150, DateTime(2023, 1, 10)),
+                                //   ],
+                                // )
                               ],
                             ),
                           ]),

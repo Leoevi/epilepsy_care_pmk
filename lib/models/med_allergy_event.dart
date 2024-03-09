@@ -5,13 +5,13 @@ class MedAllergyEvent extends Event {
   @override
   final int time;
   final String med;
-  final String? medAllergySymptom;
+  final String medAllergySymptom;
 
   const MedAllergyEvent({
     this.medAllergyId,
     required this.time,
     required this.med,
-    this.medAllergySymptom,
+    required this.medAllergySymptom,
   });
 
   factory MedAllergyEvent.fromJson(Map<String, dynamic> json) => MedAllergyEvent(

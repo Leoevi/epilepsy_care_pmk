@@ -61,13 +61,13 @@ class _AddMedAllergyInputState extends State<AddMedAllergyInput> {
 
   void _addToDb() {
     int combinedUnixTime = dateTimeToUnixTime(combineDateTimeWithTimeOfDay(_inputDate, _inputTime));
-    MedAllergyEvent newMedAllergyEvent = MedAllergyEvent(medAllergyId: null, time: combinedUnixTime, med: _inputMedication!.name, medAllergySymptom: _inputMedAllergySymptom);
+    MedAllergyEvent newMedAllergyEvent = MedAllergyEvent(medAllergyId: null, time: combinedUnixTime, med: _inputMedication!.name, medAllergySymptom: _inputMedAllergySymptom!);
     DatabaseService.addMedAllergyEvent(newMedAllergyEvent);
   }
 
   void _updateToDb() {
     int combinedUnixTime = dateTimeToUnixTime(combineDateTimeWithTimeOfDay(_inputDate, _inputTime));
-    MedAllergyEvent newMedAllergyEvent = MedAllergyEvent(medAllergyId: widget.initMedAllergyEvent!.medAllergyId, time: combinedUnixTime, med: _inputMedication!.name, medAllergySymptom: _inputMedAllergySymptom);
+    MedAllergyEvent newMedAllergyEvent = MedAllergyEvent(medAllergyId: widget.initMedAllergyEvent!.medAllergyId, time: combinedUnixTime, med: _inputMedication!.name, medAllergySymptom: _inputMedAllergySymptom!);
     DatabaseService.updateMedAllergyEvent(newMedAllergyEvent);
   }
 
@@ -88,7 +88,6 @@ class _AddMedAllergyInputState extends State<AddMedAllergyInput> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    //
                     HorizontalDatePicker(
                       startDate: _inputDate,
                       onDateChange: (date) {

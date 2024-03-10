@@ -19,7 +19,7 @@ class Medication {
 
   @override
   String toString() {
-    return name;
+    return "Medication object of $name";
   }
 }
 

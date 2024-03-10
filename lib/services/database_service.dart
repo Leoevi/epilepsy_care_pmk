@@ -301,7 +301,9 @@ class DatabaseService {
         maps.length, (index) => MedIntakeEvent.fromJson(maps[index]));
   }
 
-  /// Aggregate all MedicationIntakeEvent and sum up each day's intake. For dev purposes only.
+  /// Aggregate all MedicationIntakeEvent (without discerning differing medications)
+  /// and sum up each day's intake. For dev purposes only.
+  /// Will always sort from oldest to newest.
   static Future<List<MedIntakePerDay>> getAllMedIntakePerDay() async {
     final db = await _getDB();
     // We get this raw query from testing them in other programs
@@ -333,9 +335,10 @@ class DatabaseService {
   }
 
   /// Aggregate all MedicationIntakeEvent of a specified medication and sum up each day's intake
-  /// from a given [DateTimeRange] (inclusive).
+  /// from a given [DateTimeRange] (inclusive). Will always sort from oldest to newest.
   ///
-  /// Will always sort from oldest to newest.
+  /// If the given [Medication] haven't been recorded in the specified [DateTimeRange],
+  /// this method will return an empty list instead.
   static Future<List<MedIntakePerDay>> getAllMedIntakePerDayFromOf(Medication med, DateTimeRange dateTimeRange) async {
     final db = await _getDB();
     // We get this raw query by experimenting in other querying programs.
@@ -368,6 +371,23 @@ class DatabaseService {
       return List.empty();
     }
     return List.generate(maps.length, (index) => MedIntakePerDay.fromJson(maps[index]));
+  }
+
+  /// Aggregate all MedicationIntakeEvent of each medication and sum up each of that medication total
+  /// daily intake from a given [DateTimeRange] (inclusive).
+  ///
+  /// Will return a map with each member reflecting that medication's output of
+  /// [getAllMedIntakePerDayFromOf], but if the output of [getAllMedIntakePerDayFromOf] is an empty list,
+  /// then that map entry will be omitted.
+  static Future<Map<Medication, List<MedIntakePerDay>>> getAllMedIntakePerDayFrom(DateTimeRange dateTimeRange) async {
+    Map<Medication, List<MedIntakePerDay>> medIntakeMap = {};
+    for (Medication med in medicationEntries) {
+      List<MedIntakePerDay> eachMedIntakePerDay = await getAllMedIntakePerDayFromOf(med, dateTimeRange);
+      if (eachMedIntakePerDay.isNotEmpty) {
+        medIntakeMap[med] = eachMedIntakePerDay;
+      }
+    }
+    return medIntakeMap;
   }
 
   /// Retrieve all MedIntakeEvent(s) from the database with a specific date range.

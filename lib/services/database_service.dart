@@ -160,6 +160,7 @@ class DatabaseService {
     final db = await _getDB();
     final List<Map<String, dynamic>> maps =
         await db.query(seizureEventTableName);
+
     if (maps.isEmpty) {
       return List.empty();
     }
@@ -167,14 +168,14 @@ class DatabaseService {
         maps.length, (index) => SeizureEvent.fromJson(maps[index]));
   }
 
-  /// Retrieve all SeizureEvent(s) from the database with a specific date range.
-  /// Does not guarantee any sorting order.
+  /// Retrieve all SeizureEvent(s) from the database within the specify date range
+  /// (inclusive). Does not guarantee any sorting order.
   static Future<List<SeizureEvent>> getAllSeizureEventsFrom(DateTimeRange dateTimeRange) async {
     final db = await _getDB();
     final List<Map<String, dynamic>> maps = await db.query(
         seizureEventTableName,
-        where: "time BETWEEN ? and ?",
-        whereArgs: [dateTimeToUnixTime(dateTimeRange.start), dateTimeToUnixTime(dateTimeRange.end)]);
+        where: "time BETWEEN ? and ?",  // TODO: use and clause to exclude midnight of next day
+        whereArgs: [dateTimeToUnixTime(dateTimeRange.start), dateTimeToUnixTime(dateTimeRange.end.add(Duration(days: 1)))]);
 
     if (maps.isEmpty) {
       return List.empty();
@@ -234,14 +235,14 @@ class DatabaseService {
         maps.length, (index) => MedAllergyEvent.fromJson(maps[index]));
   }
 
-  /// Retrieve all MedAllergyEvent(s) from the database with a specific date range.
-  /// Does not guarantee any sorting order.
+  /// Retrieve all MedAllergyEvent(s) from the database with a specific date range
+  /// (inclusive). Does not guarantee any sorting order.
   static Future<List<MedAllergyEvent>> getAllMedAllergyEventsFrom(DateTimeRange dateTimeRange) async {
     final db = await _getDB();
     final List<Map<String, dynamic>> maps = await db.query(
-        medIntakeEventTableName,
+        medAllergyEventTableName,
         where: "time BETWEEN ? and ?",
-        whereArgs: [dateTimeToUnixTime(dateTimeRange.start), dateTimeToUnixTime(dateTimeRange.end)]);
+        whereArgs: [dateTimeToUnixTime(dateTimeRange.start), dateTimeToUnixTime(dateTimeRange.end.add(Duration(days: 1)))]);
 
     if (maps.isEmpty) {
       return List.empty();
@@ -390,14 +391,14 @@ class DatabaseService {
     return medIntakeMap;
   }
 
-  /// Retrieve all MedIntakeEvent(s) from the database with a specific date range.
-  /// Does not guarantee any sorting order.
+  /// Retrieve all MedIntakeEvent(s) from the database with a specific date range
+  /// (inclusive). Does not guarantee any sorting order.
   static Future<List<MedIntakeEvent>> getAllMedIntakeEventsFrom(DateTimeRange dateTimeRange) async {
     final db = await _getDB();
     final List<Map<String, dynamic>> maps = await db.query(
         medIntakeEventTableName,
         where: "time BETWEEN ? and ?",
-        whereArgs: [dateTimeToUnixTime(dateTimeRange.start), dateTimeToUnixTime(dateTimeRange.end)]);
+        whereArgs: [dateTimeToUnixTime(dateTimeRange.start), dateTimeToUnixTime(dateTimeRange.end.add(Duration(days: 1)))]);
 
     if (maps.isEmpty) {
       return List.empty();

@@ -2,7 +2,24 @@ import 'package:epilepsy_care_pmk/constants/styling.dart';
 import 'package:epilepsy_care_pmk/helpers/date_time_helpers.dart';
 import 'package:flutter/material.dart';
 
-enum TimeRangeDropdownOption { sevenDays, thirtyDays, ninetyDays, custom }
+/// An enum representing each option of the
+enum TimeRangeDropdownOption {
+  sevenDays(7),
+  thirtyDays(30),
+  ninetyDays(90),
+  custom(null);
+
+  const TimeRangeDropdownOption(this._daysCount);
+
+  final int? _daysCount;
+  // final String _optionName;
+
+  /// Returns the [DateTimeRange] that the option reflects
+  DateTimeRange get dateTimeRange => DateTimeRange(
+    start: DateUtils.dateOnly(DateTime.now().subtract(Duration(days: _daysCount!))),
+    end: DateUtils.dateOnly(DateTime.now()),
+  );
+}
 
 /// A button that brings up a dropdown menu of time ranges from the last
 /// 7 days/30 days/90 days or any custom date ranges using the
@@ -76,11 +93,12 @@ class _TimeRangeDropdownButtonState extends State<TimeRangeDropdownButton> {
             _updateCurrentValue(newValue);
           },
           items: [
+            // TODO: maybe use a map to make this more concise.
             DropdownMenuItem(
               // The null check is so that the callback fn is accidentally called
               // when it is not given
               onTap: widget.onChanged == null ? null : () {
-                widget.onChanged!(DateTimeRange(start: DateUtils.dateOnly(DateTime.now()).subtract(Duration(days: 7)), end: DateTime.now()));
+                widget.onChanged!(TimeRangeDropdownOption.sevenDays.dateTimeRange);
                 _updatePreviousValue(TimeRangeDropdownOption.sevenDays);
               },
               value: TimeRangeDropdownOption.sevenDays,
@@ -88,7 +106,7 @@ class _TimeRangeDropdownButtonState extends State<TimeRangeDropdownButton> {
             ),
             DropdownMenuItem(
               onTap: widget.onChanged == null ? null : () {
-                widget.onChanged!(DateTimeRange(start: DateUtils.dateOnly(DateTime.now()).subtract(Duration(days: 30)), end: DateTime.now()));
+                widget.onChanged!(TimeRangeDropdownOption.thirtyDays.dateTimeRange);
                 _updatePreviousValue(TimeRangeDropdownOption.thirtyDays);
               },
               value: TimeRangeDropdownOption.thirtyDays,
@@ -96,7 +114,7 @@ class _TimeRangeDropdownButtonState extends State<TimeRangeDropdownButton> {
             ),
             DropdownMenuItem(
               onTap: widget.onChanged == null ? null : () {
-                widget.onChanged!(DateTimeRange(start: DateUtils.dateOnly(DateTime.now()).subtract(Duration(days: 90)), end: DateTime.now()));
+                widget.onChanged!(TimeRangeDropdownOption.ninetyDays.dateTimeRange);
                 _updatePreviousValue(TimeRangeDropdownOption.ninetyDays);
               },
               value: TimeRangeDropdownOption.ninetyDays,
@@ -117,8 +135,7 @@ class _TimeRangeDropdownButtonState extends State<TimeRangeDropdownButton> {
                 // For more in-depth info: https://stackoverflow.com/a/55622474)
                 await Future.delayed(Duration.zero,
                         () async {
-                  customRange = await showDateRangePicker(context: context, firstDate: beginEpoch, lastDate: DateTime.now().add(Duration(days: 20)));
-                  // TODO: decide if dates after DateTime.now() can be selected
+                  customRange = await showDateRangePicker(context: context, firstDate: beginEpoch, lastDate: DateTime.now());
                 });
 
                 if (customRange != null) {

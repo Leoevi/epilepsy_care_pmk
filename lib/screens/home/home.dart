@@ -11,7 +11,14 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  DateTimeRange range = DateTimeRange(start: DateUtils.dateOnly(DateTime.now()).subtract(Duration(days: 7)), end: DateTime.now());
+  TimeRangeDropdownOption timeRangeDropdownOption = TimeRangeDropdownOption.sevenDays;
+  late DateTimeRange range;
+
+  @override
+  void initState() {
+    super.initState();
+    range = timeRangeDropdownOption.dateTimeRange;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -87,11 +94,10 @@ class _HomeState extends State<Home> {
               ),
 
               TimeRangeDropdownButton(
-                initialChoice: TimeRangeDropdownOption.sevenDays,
+                initialChoice: timeRangeDropdownOption,
                 onChanged: (selectedRange) {
                   setState(() {
                     range = selectedRange;
-                    print(range);
                   });
                 },
               )
@@ -99,7 +105,7 @@ class _HomeState extends State<Home> {
           ),
           Flexible(
               flex: 5,
-              child: EventList(),
+              child: EventList(dateTimeRange: range,),
           )
         ],
       ),

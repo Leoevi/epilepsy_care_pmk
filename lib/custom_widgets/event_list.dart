@@ -44,7 +44,7 @@ class _EventListState extends State<EventList> {
         builder: (_, __) {
           // FutureBuilder structure inspiration: https://www.youtube.com/watch?v=lkpPg0ieklg
           return FutureBuilder(
-            future: widget.dateTimeRange == null ? DatabaseService.getAllSortedEvents() : DatabaseService.getAllSortedEventsFrom(widget.dateTimeRange!),  // TODO: implement filter and sorting
+            future: widget.dateTimeRange == null ? DatabaseService.getAllSortedEvents() : DatabaseService.getAllSortedEventsFrom(widget.dateTimeRange!),
             // I know that getting the future in future builder is not a good practice, but this way, I can easily force a rebuild when the stream updated
             builder: (context, snapshot) {
               switch (snapshot.connectionState) {

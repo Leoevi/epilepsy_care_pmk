@@ -1,21 +1,55 @@
 import 'package:epilepsy_care_pmk/constants/styling.dart';
+import 'package:epilepsy_care_pmk/helpers/utility.dart';
 import 'package:epilepsy_care_pmk/screens/home/graph_history/graph_history_with_ui.dart';
 import 'package:epilepsy_care_pmk/screens/home/profile/profile.dart';
 import 'package:epilepsy_care_pmk/screens/register.dart';
 import 'package:epilepsy_care_pmk/services/database_service.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../screens/home/alarm_med_intake/alarm_med_intake.dart';
 
-class HomeDrawer extends StatelessWidget {
+class HomeDrawer extends StatefulWidget {
   const HomeDrawer({
     super.key,
-    this.icon,
-    this.name,
+    
   });
 
-  final ImageProvider<Object>? icon;
-  final String? name;
+  
+
+  @override
+  State<HomeDrawer> createState() => _HomeDrawerState();
+}
+
+class _HomeDrawerState extends State<HomeDrawer> {
+
+  String? firstName;
+  String? lastName;
+  Image? imageFromPreferences;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    loadData();
+    super.initState();
+    
+  }
+  
+  void loadData() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+      setState(() {
+        firstName = prefs.getString('firstName') ?? null;
+      lastName = prefs.getString('lastName') ?? null;
+
+      Utility.getImageFromPreferences().then((img) {
+        if (null == img) {
+          return;
+        }
+        imageFromPreferences = Utility.imageFromBase64String(img);
+    });
+      });
+      
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,12 +64,12 @@ class HomeDrawer extends StatelessWidget {
               children: [
                 CircleAvatar(
                   radius: kCircleRadius,
-                  backgroundImage: icon ?? profilePlaceholder,
+                  backgroundImage: imageFromPreferences?.image ?? profilePlaceholder,
                 ),
                 const SizedBox(
                   width: kSmallPadding,
                 ),
-                Expanded(child: Text(name ?? "Full Name"))
+                Expanded(child: Text("$firstName $lastName"))
               ],
             ),
           ),

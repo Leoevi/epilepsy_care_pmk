@@ -1,8 +1,8 @@
 import 'dart:convert';
 import 'dart:io';
-
 import 'package:epilepsy_care_pmk/constants/styling.dart';
 import 'package:epilepsy_care_pmk/custom_widgets/label_text_form_field.dart';
+import 'package:epilepsy_care_pmk/helpers/utility.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -17,6 +17,7 @@ class Register extends StatefulWidget {
 }
 
 class _RegisterState extends State<Register> {
+  Image? imageFromPreferences;
   XFile? selectedImage;
   String? hn;
   String? firstName;
@@ -25,7 +26,7 @@ class _RegisterState extends State<Register> {
   String? birthDateTimeStamp;
   String? gender; // TODO: define type for gender
 
-  // late Map<String, Object> data = {};
+  
 
   @override
   void initState() {
@@ -43,6 +44,14 @@ class _RegisterState extends State<Register> {
       gender = prefs.getString('gender') ?? null;
       birthDateTimeStamp = prefs.getString('birthDate') ?? null;
       //selectedImage = prefs.get('selectedImage') as XFile;
+
+      //image avatar save
+      Utility.getImageFromPreferences().then((img) {
+        if (null == img) {
+          return;
+        }
+        imageFromPreferences = Utility.imageFromBase64String(img);
+      });
     });
   }
 
@@ -60,17 +69,16 @@ class _RegisterState extends State<Register> {
 
   Future<void> register() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    
-      prefs.setString('hn', hn!);
-      prefs.setString('firstName', firstName!);
-      prefs.setString('lastName', lastName!);
-      prefs.setString('gender', gender!);
 
-      //birthDate save
-      birthDateTimeStamp = birthDate!.toIso8601String();
-      print("BD val : $birthDateTimeStamp");
-      prefs.setString('birthDate', birthDateTimeStamp!);
-    
+    prefs.setString('hn', hn!);
+    prefs.setString('firstName', firstName!);
+    prefs.setString('lastName', lastName!);
+    prefs.setString('gender', gender!);
+
+    //birthDate save
+    birthDateTimeStamp = birthDate!.toIso8601String();
+    print("BD val : $birthDateTimeStamp");
+    prefs.setString('birthDate', birthDateTimeStamp!);
   }
 
   void printAll() {
@@ -91,6 +99,8 @@ class _RegisterState extends State<Register> {
       setState(() {
         selectedImage = returnedImage;
       });
+      Utility.saveImageToPreferences(
+          Utility.base64String(await returnedImage.readAsBytes() as Uint8List));
     }
   }
 
@@ -146,8 +156,14 @@ class _RegisterState extends State<Register> {
                                 ))),
                         SizedBox(height: kSmallPadding),
                         LabelTextFormField(
+                           validator: (val) {
+                              if (val == null || val.isEmpty) {
+                                return 'กรุณาระบุเลขประจำตัวผู้ป่วย';
+                              }
+                              return null;
+                            },
                           label: "HN",
-                          onChanged: (String hnValue) async {
+                          onChanged: (String hnValue){
                             setState(() {
                               hn = hnValue; //retieve input value to hn
                             });
@@ -157,7 +173,13 @@ class _RegisterState extends State<Register> {
                           children: [
                             Expanded(
                                 child: LabelTextFormField(
-                              label: "ชื่อจริง",
+                                   validator: (val) {
+                              if (val == null || val.isEmpty) {
+                                return 'กรุณาระบุชื่อ';
+                              }
+                              return null;
+                            },
+                              label: "ชื่อ",
                               onChanged: (String firstNameValue) {
                                 //async
                                 // final SharedPreferences prefs =
@@ -173,6 +195,12 @@ class _RegisterState extends State<Register> {
                             ),
                             Expanded(
                                 child: LabelTextFormField(
+                                   validator: (val) {
+                              if (val == null || val.isEmpty) {
+                                return 'กรุณาระบุนามสกุล';
+                              }
+                              return null;
+                            },
                               label: "นามสกุล",
                               onChanged: (String lastNameValue) {
                                 //async
@@ -190,6 +218,12 @@ class _RegisterState extends State<Register> {
                         Text("วันเกิด", style: TextStyle(fontSize: 18)),
                         SizedBox(height: 10),
                         TextFormField(
+                           validator: (val) {
+                              if (val == null || val.isEmpty) {
+                                return 'กรุณาระบุวันเกิดของผู้ป่วย';
+                              }
+                              return null;
+                            },
                           readOnly: true,
                           controller: birthDateFieldController,
                           decoration: InputDecoration(
@@ -217,6 +251,12 @@ class _RegisterState extends State<Register> {
                           },
                         ),
                         LabelTextFormField(
+                           validator: (val) {
+                              if (val == null || val.isEmpty) {
+                                return 'กรุณาระบุเพศสภาพ';
+                              }
+                              return null;
+                            },
                           label: "เพศ",
                           onChanged: (String genderValue) {
                             //async

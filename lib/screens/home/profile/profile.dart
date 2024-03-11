@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:epilepsy_care_pmk/helpers/utility.dart';
 import 'package:intl/intl.dart';
 import 'package:epilepsy_care_pmk/constants/styling.dart';
 import 'package:epilepsy_care_pmk/screens/commons/screen_with_app_bar.dart';
@@ -15,6 +16,7 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
+  Image? imageFromPreferences;
   XFile? selectedImage;
   String? hn;
   String? firstName;
@@ -39,10 +41,17 @@ class _ProfileState extends State<Profile> {
       firstName = prefs.getString('firstName') ?? null;
       lastName = prefs.getString('lastName') ?? null;
       gender = prefs.getString('gender') ?? null;
-      birthDateTimeStamp = prefs.getString('birthDate') ?? null;
-
-      birthDateTimeStampParse = DateTime.parse(birthDateTimeStamp!);
-      timeString = dateDateFormat.format(birthDateTimeStampParse!);
+      //birthDate 
+      birthDateTimeStamp = prefs.getString('birthDate') ?? null; //birthDate from prefs.
+      birthDateTimeStampParse = DateTime.parse(birthDateTimeStamp!);//parse to DateTime
+      timeString = dateDateFormat.format(birthDateTimeStampParse!);//formating
+      //image
+      Utility.getImageFromPreferences().then((img) {
+        if (null == img) {
+          return;
+        }
+        imageFromPreferences = Utility.imageFromBase64String(img);
+      });
       //selectedImage = prefs.get('selectedImage') as XFile;
     });
   }
@@ -71,9 +80,7 @@ class _ProfileState extends State<Profile> {
                 //from register.dart
                 child: CircleAvatar(
                     radius: 2 * kCircleRadius,
-                    backgroundImage: selectedImage == null
-                        ? profilePlaceholder
-                        : Image.file(File(selectedImage!.path)).image,
+                    backgroundImage: imageFromPreferences?.image ?? profilePlaceholder, //image from register
                     child: Material(
                       shape: const CircleBorder(),
                       clipBehavior: Clip.hardEdge,
@@ -130,8 +137,7 @@ class _ProfileState extends State<Profile> {
                       SizedBox(
                         height: 10,
                       ),
-                      Text(
-                          "วันเกิด : $timeString"), //DateTime? birthDate;
+                      Text("วันเกิด : $timeString"), //DateTime? birthDate;
                       SizedBox(
                         height: 10,
                       ),

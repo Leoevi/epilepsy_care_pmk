@@ -1,7 +1,9 @@
 import 'package:epilepsy_care_pmk/constants/styling.dart';
 import 'package:epilepsy_care_pmk/custom_widgets/event_list.dart';
 import 'package:epilepsy_care_pmk/custom_widgets/time_range_dropdown_button.dart';
+import 'package:epilepsy_care_pmk/helpers/utility.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -11,13 +13,36 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-  TimeRangeDropdownOption timeRangeDropdownOption = TimeRangeDropdownOption.sevenDays;
+
+  TimeRangeDropdownOption timeRangeDropdownOption =
+      TimeRangeDropdownOption.sevenDays;
   late DateTimeRange range;
+
+  String? firstName;
+  // String? lastName;
+  Image? imageFromPreferences;
 
   @override
   void initState() {
+    loadData();
     super.initState();
     range = timeRangeDropdownOption.dateTimeRange;
+  }
+
+  void loadData() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+      setState(() {
+        firstName = prefs.getString('firstName') ?? null;
+      // lastName = prefs.getString('lastName') ?? null;
+
+      Utility.getImageFromPreferences().then((img) {
+        if (null == img) {
+          return;
+        }
+        imageFromPreferences = Utility.imageFromBase64String(img);
+    });
+      });
+      
   }
 
   @override
@@ -52,7 +77,7 @@ class _HomeState extends State<Home> {
                           //Image
                           CircleAvatar(
                             radius: 28,
-                            backgroundImage: profilePlaceholder,
+                            backgroundImage: imageFromPreferences?.image,
                           ),
                           SizedBox(
                             width: kSmallPadding,
@@ -60,7 +85,7 @@ class _HomeState extends State<Home> {
                           //Name
                           Expanded(
                               child: Text(
-                            "FirstName",
+                            "$firstName",
                             textAlign: TextAlign.justify,
                           )),
                           //Button
@@ -88,11 +113,14 @@ class _HomeState extends State<Home> {
               SizedBox(
                 width: kSmallPadding,
               ),
-              Expanded(child: Text("เหตุการณ์ที่เกิดขึ้น", style: mediumLargeBoldText,)),
+              Expanded(
+                  child: Text(
+                "เหตุการณ์ที่เกิดขึ้น",
+                style: mediumLargeBoldText,
+              )),
               SizedBox(
                 width: kLargePadding,
               ),
-
               TimeRangeDropdownButton(
                 initialChoice: timeRangeDropdownOption,
                 onChanged: (selectedRange) {
@@ -104,8 +132,10 @@ class _HomeState extends State<Home> {
             ]),
           ),
           Flexible(
-              flex: 5,
-              child: EventList(dateTimeRange: range,),
+            flex: 5,
+            child: EventList(
+              dateTimeRange: range,
+            ),
           )
         ],
       ),

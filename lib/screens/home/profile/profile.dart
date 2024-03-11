@@ -1,9 +1,11 @@
 import 'dart:io';
-
+import 'package:intl/intl.dart';
 import 'package:epilepsy_care_pmk/constants/styling.dart';
 import 'package:epilepsy_care_pmk/screens/commons/screen_with_app_bar.dart';
+import 'package:epilepsy_care_pmk/screens/register.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Profile extends StatefulWidget {
   const Profile({super.key});
@@ -14,11 +16,36 @@ class Profile extends StatefulWidget {
 
 class _ProfileState extends State<Profile> {
   XFile? selectedImage;
-  int? hn;
+  String? hn;
   String? firstName;
   String? lastName;
-  DateTime? birthDate;
-  var gender;
+  //String? birthDate;
+  String? birthDateTimeStamp;
+  String? gender;
+  DateTime? birthDateTimeStampParse;
+  String? timeString;
+
+  @override
+  void initState() {
+    loadData();
+    super.initState();
+  }
+
+  void loadData() async {
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    setState(() {
+      hn = prefs.getString('hn') ?? null;
+      firstName = prefs.getString('firstName') ?? null;
+      lastName = prefs.getString('lastName') ?? null;
+      gender = prefs.getString('gender') ?? null;
+      birthDateTimeStamp = prefs.getString('birthDate') ?? null;
+
+      birthDateTimeStampParse = DateTime.parse(birthDateTimeStamp!);
+      timeString = dateDateFormat.format(birthDateTimeStampParse!);
+      //selectedImage = prefs.get('selectedImage') as XFile;
+    });
+  }
 
   Future _pickImageFromGallery() async {
     final returnedImage =
@@ -94,20 +121,21 @@ class _ProfileState extends State<Profile> {
                       SizedBox(
                         height: 15,
                       ),
-                      Text("HN : 12345"), //int? hn;
+                      Text("HN : $hn "), //int? hn;
                       SizedBox(
                         height: 10,
                       ),
                       Text(
-                          "ชื่อ-นามสกุล : FirstName Surename"), //String? firstName; String? lastName;
+                          "ชื่อ-นามสกุล : $firstName $lastName"), //String? firstName; String? lastName;
                       SizedBox(
                         height: 10,
                       ),
-                      Text("วันเกิด : 08/06/2544"), //DateTime? birthDate;
+                      Text(
+                          "วันเกิด : $timeString"), //DateTime? birthDate;
                       SizedBox(
                         height: 10,
                       ),
-                      Text("เพศ : ชาย"), //var gender;
+                      Text("เพศ : $gender"), //var gender;
                     ],
                   ),
                 ),

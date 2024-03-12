@@ -34,3 +34,11 @@ DateTime combineDateTimeWithTimeOfDay(DateTime dateTime, TimeOfDay timeOfDay) {
     TimeOfDay(hour: dateTime.hour, minute: dateTime.minute)
   );
 }
+
+/// Return an integer that is the difference between 2 days
+/// From https://stackoverflow.com/a/67679455
+int daysBetween(DateTime from, DateTime to) {
+  from = DateTime(from.year, from.month, from.day);
+  to = DateTime(to.year, to.month, to.day);
+  return (to.difference(from).inHours / 24).round();
+}

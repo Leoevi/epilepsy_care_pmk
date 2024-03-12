@@ -303,11 +303,12 @@ class DatabaseService {
   }
 
   /// Aggregate all MedicationIntakeEvent (without discerning differing medications)
-  /// and sum up each day's intake. For dev purposes only.
-  /// Will always sort from oldest to newest.
+  /// and sum up each day's intake. Will always sort from oldest to newest.
+  /// For dev purposes only.
+  @Deprecated("For dev purposes only.")
   static Future<List<MedIntakePerDay>> getAllMedIntakePerDay() async {
     final db = await _getDB();
-    // We get this raw query from testing them in other programs
+    // We get this raw query from experimenting them in other programs
     final List<Map<String, dynamic>> maps = await db.rawQuery("""
       SELECT DATE(time, 'unixepoch') AS date, SUM(mgAmount) AS totalDose
       FROM MedIntakeEvent
@@ -338,39 +339,58 @@ class DatabaseService {
   /// Aggregate all MedicationIntakeEvent of a specified medication and sum up each day's intake
   /// from a given [DateTimeRange] (inclusive). Will always sort from oldest to newest.
   ///
-  /// If the given [Medication] haven't been recorded in the specified [DateTimeRange],
-  /// this method will return an empty list instead.
-  static Future<List<MedIntakePerDay>> getAllMedIntakePerDayFromOf(Medication med, DateTimeRange dateTimeRange) async {
+  /// TODO: If the given [Medication] haven't been recorded in the specified [DateTimeRange],
+  /// this method should return an empty list instead.
+  static Future<List<MedIntakePerDay>> _getAllMedIntakePerDayFromOf(Medication med, DateTimeRange dateTimeRange) async {
     final db = await _getDB();
     // We get this raw query by experimenting in other querying programs.
     // Use ? as placeholder to prevent SQL injection.
     final List<Map<String, dynamic>> maps = await db.rawQuery("""
-      SELECT DATE(time, 'unixepoch') AS date, SUM(mgAmount) AS totalDose
-      FROM MedIntakeEvent
-      WHERE med = ?
-      AND TIME >= STRFTIME('%s', ?)
-      AND TIME < STRFTIME('%s', ?)
-      GROUP BY DATE(time, 'unixepoch')
-      ORDER BY DATE(time, 'unixepoch');
-    """, [med.name, dateTimeRange.start.toIso8601String(), dateTimeRange.end.add(Duration(days: 1)).toIso8601String()]);
+-- Adapted from https://stackoverflow.com/a/70529890
+
+-- Generate column with each date between the start date and end date (inclusive).
+WITH Dates(dateRange) AS (
+  SELECT DATE(?, ?)
+  UNION ALL
+  SELECT DATE(dateRange, '+1 day') 
+  FROM Dates
+  WHERE dateRange < DATE(?)
+)
+
+-- Join the earlier table with our actual table for all dates, even if there is no data for that date.
+-- COALESCE is used for replacing null from the SUM function with 0 (https://365datascience.com/question/sum-for-columns-with-null-values/)
+-- In this case, we want a double 0, not an int 0, so we do 0.0
+SELECT d.dateRange AS date, COALESCE(SUM(m.mgAmount), 0.0) AS totalDose
+   FROM Dates d LEFT JOIN MedIntakeEvent m
+      ON DATE(m.time, 'unixepoch') = d.dateRange
+      AND med = ?
+      AND TIME >= STRFTIME('%s', DATE(?, ?))
+      AND TIME < STRFTIME('%s', DATE(?, '+1 day'))  -- Add 1 day (except the last second) so that data of the end day is also counted
+      -- When doing outer joins, DON'T use WHERE, use ON instead;
+      -- otherwise, WHERE will throw missing values away
+      -- https://stackoverflow.com/a/12467772
+   GROUP BY d.dateRange
+   ORDER BY d.dateRange;
+    """, [
+      dateTimeRange.end.toIso8601String(),
+      "-${dateTimeRange.end.difference(dateTimeRange.start).inDays} days",
+      dateTimeRange.end.toIso8601String(),
+      med.name,
+      dateTimeRange.end.toIso8601String(),
+      "-${dateTimeRange.end.difference(dateTimeRange.start).inDays} days",
+      dateTimeRange.end.toIso8601String(),
+    ]);
     // STRFTIME is also another helper function that returns time in the format of our desire
     // In this case, since we are storing time in the unix timestamp format, we'll
     // specify the function to also return unix timestamp by specifying the %s modifier.
     // and the ? is just DateTime in String.
     //
-    // Note that, the first seconds occur after midnight which means that, date wise,
-    // the condition is inclusive at start and exclusive at the end, so we'll
-    // need to +1 day at the end to make the range inclusive at the end.
-    //
     // Also, the reason that we used < on the end of the range is because otherwise
     // it will include the first second of the midnight of the next day, which we don't want.
     //
     // PS. You don't need any quotation marks around ?
-    // Okay, you CAN'T use quotation marks around ?
-
-    if (maps.isEmpty) {
-      return List.empty();
-    }
+    // Okay, you CAN'T use quotation marks around ?, it'll cause syntax errors.
+    // Because ? itself is a String.
     return List.generate(maps.length, (index) => MedIntakePerDay.fromJson(maps[index]));
   }
 
@@ -378,12 +398,12 @@ class DatabaseService {
   /// daily intake from a given [DateTimeRange] (inclusive).
   ///
   /// Will return a map with each member reflecting that medication's output of
-  /// [getAllMedIntakePerDayFromOf], but if the output of [getAllMedIntakePerDayFromOf] is an empty list,
+  /// [_getAllMedIntakePerDayFromOf], but if the output of [_getAllMedIntakePerDayFromOf] is an empty list,
   /// then that map entry will be omitted.
   static Future<Map<Medication, List<MedIntakePerDay>>> getAllMedIntakePerDayFrom(DateTimeRange dateTimeRange) async {
     Map<Medication, List<MedIntakePerDay>> medIntakeMap = {};
     for (Medication med in medicationEntries) {
-      List<MedIntakePerDay> eachMedIntakePerDay = await getAllMedIntakePerDayFromOf(med, dateTimeRange);
+      List<MedIntakePerDay> eachMedIntakePerDay = await _getAllMedIntakePerDayFromOf(med, dateTimeRange);
       if (eachMedIntakePerDay.isNotEmpty) {
         medIntakeMap[med] = eachMedIntakePerDay;
       }

@@ -7,28 +7,18 @@ import 'package:collection/collection.dart';
 import '../constants/styling.dart';
 import '../models/med_intake_per_day.dart';
 
-class DosageGraph extends StatefulWidget {
-  const DosageGraph({
+// Somehow, using StatefulWidget makes the graph not change, and we have to use StatelessWidget instead
+class DosageGraph extends StatelessWidget {
+  // Can't be const because we have a late final field.
+  DosageGraph({
     super.key,
     required this.medIntakes,
   });
 
   final List<MedIntakePerDay> medIntakes;
 
-  @override
-  State<DosageGraph> createState() => _DosageGraphState();
-}
-
-class _DosageGraphState extends State<DosageGraph> {
   // The main obstacle here is the fact that fl_chart accepts only (double, double) x,y coords,
-  // what we to plot here is (date, double), so we'll need to convert the dates into doubles.
-  late List<FlSpot> medIntakeSpots;
-
-  @override
-  void initState() {
-    super.initState();
-    medIntakeSpots = widget.medIntakes.mapIndexed((index, element) => FlSpot(index.toDouble(), element.totalDose)).toList();
-  }
+  late final List<FlSpot> medIntakeSpots;
 
   Widget bottomTitleWidgets(double value, TitleMeta meta, double chartWidth) {
     final style = TextStyle(
@@ -41,7 +31,7 @@ class _DosageGraphState extends State<DosageGraph> {
       fitInside: SideTitleFitInsideData.fromTitleMeta(meta, distanceFromEdge: 0),  // make the SideTitle not overflow over the edges
       axisSide: meta.axisSide,
       space: 16,
-      child: Text(dateDateFormat.format(widget.medIntakes[value.round()].date), style: style),
+      child: Text(dateDateFormat.format(medIntakes[value.round()].date), style: style),
     );
 
     // Instead of doing logic here, we will use interval instead
@@ -71,6 +61,7 @@ class _DosageGraphState extends State<DosageGraph> {
 
   @override
   Widget build(BuildContext context) {
+    medIntakeSpots = medIntakes.mapIndexed((index, element) => FlSpot(index.toDouble(), element.totalDose)).toList();
     return Padding(
       padding: const EdgeInsets.only(
         left: 12,
@@ -97,7 +88,7 @@ class _DosageGraphState extends State<DosageGraph> {
                           fontSize: 14,
                         );
                         return LineTooltipItem(
-                          '${dateDateFormat.format(widget.medIntakes[touchedSpot.x.round()].date)}, ${touchedSpot.y.toStringAsFixed(2)}',
+                          '${dateDateFormat.format(medIntakes[touchedSpot.x.round()].date)}, ${touchedSpot.y.toStringAsFixed(2)}',
                           textStyle,
                         );
                       }).toList();

@@ -69,3 +69,6 @@ DateFormat dateTimeDateFormat = DateFormat("yyyy-MM-dd – kk:mm");
 
 /// A picture that is used if the user doesn't set their profile picture
 const profilePlaceholder = AssetImage("image/profile_placeholder.png");
+
+/// Duration that is used for animations
+const Duration animationDuration = Duration(milliseconds: 250);

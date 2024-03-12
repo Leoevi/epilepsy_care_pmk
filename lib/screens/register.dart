@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:epilepsy_care_pmk/constants/styling.dart';
 import 'package:epilepsy_care_pmk/custom_widgets/label_text_form_field.dart';
 import 'package:epilepsy_care_pmk/helpers/utility.dart';
+import 'package:epilepsy_care_pmk/main.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -26,17 +27,25 @@ class _RegisterState extends State<Register> {
   String? birthDateTimeStamp;
   String? gender; // TODO: define type for gender
 
-  
+  // Future<void> loadFirstLaunch() async {
+  //   SharedPreferences prefs = await SharedPreferences.getInstance();
+  //   setState(() {
+  //     _isFirstLaunch = prefs.getBool('first_launch') ?? true;
+  //     if (_isFirstLaunch) {
+  //       prefs.setBool('first_launch', false);
+  //     }
+  //   });
+  // }
 
   @override
   void initState() {
+    // loadFirstLaunch();
     loadData();
     super.initState();
   }
 
   void loadData() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-
     setState(() {
       hn = prefs.getString('hn') ?? null;
       firstName = prefs.getString('firstName') ?? null;
@@ -54,18 +63,6 @@ class _RegisterState extends State<Register> {
       });
     });
   }
-
-  // Future<DateTime> getBirthDate() async {
-  //   final SharedPreferences prefs = await SharedPreferences.getInstance();
-  //   final birthDate = prefs.getString("birthDate");
-
-  //   return DateTime.tryParse(birthDate);
-  // }
-  // Future setBirthday(DateTime dateOfBirth) async {
-  //     final SharedPreferences prefs = await SharedPreferences.getInstance();
-  //     final birthDate = dateOfBirth.toIso8601String();
-  //     return await prefs.setString("birthDate", birthDate);
-  //   }
 
   Future<void> register() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -156,14 +153,14 @@ class _RegisterState extends State<Register> {
                                 ))),
                         SizedBox(height: kSmallPadding),
                         LabelTextFormField(
-                           validator: (val) {
-                              if (val == null || val.isEmpty) {
-                                return 'กรุณาระบุเลขประจำตัวผู้ป่วย';
-                              }
-                              return null;
-                            },
+                          validator: (val) {
+                            if (val == null || val.isEmpty) {
+                              return 'กรุณาระบุเลขประจำตัวผู้ป่วย';
+                            }
+                            return null;
+                          },
                           label: "HN",
-                          onChanged: (String hnValue){
+                          onChanged: (String hnValue) {
                             setState(() {
                               hn = hnValue; //retieve input value to hn
                             });
@@ -173,12 +170,12 @@ class _RegisterState extends State<Register> {
                           children: [
                             Expanded(
                                 child: LabelTextFormField(
-                                   validator: (val) {
-                              if (val == null || val.isEmpty) {
-                                return 'กรุณาระบุชื่อ';
-                              }
-                              return null;
-                            },
+                              validator: (val) {
+                                if (val == null || val.isEmpty) {
+                                  return 'กรุณาระบุชื่อ';
+                                }
+                                return null;
+                              },
                               label: "ชื่อ",
                               onChanged: (String firstNameValue) {
                                 //async
@@ -195,12 +192,12 @@ class _RegisterState extends State<Register> {
                             ),
                             Expanded(
                                 child: LabelTextFormField(
-                                   validator: (val) {
-                              if (val == null || val.isEmpty) {
-                                return 'กรุณาระบุนามสกุล';
-                              }
-                              return null;
-                            },
+                              validator: (val) {
+                                if (val == null || val.isEmpty) {
+                                  return 'กรุณาระบุนามสกุล';
+                                }
+                                return null;
+                              },
                               label: "นามสกุล",
                               onChanged: (String lastNameValue) {
                                 //async
@@ -218,12 +215,12 @@ class _RegisterState extends State<Register> {
                         Text("วันเกิด", style: TextStyle(fontSize: 18)),
                         SizedBox(height: 10),
                         TextFormField(
-                           validator: (val) {
-                              if (val == null || val.isEmpty) {
-                                return 'กรุณาระบุวันเกิดของผู้ป่วย';
-                              }
-                              return null;
-                            },
+                          validator: (val) {
+                            if (val == null || val.isEmpty) {
+                              return 'กรุณาระบุวันเกิดของผู้ป่วย';
+                            }
+                            return null;
+                          },
                           readOnly: true,
                           controller: birthDateFieldController,
                           decoration: InputDecoration(
@@ -251,12 +248,12 @@ class _RegisterState extends State<Register> {
                           },
                         ),
                         LabelTextFormField(
-                           validator: (val) {
-                              if (val == null || val.isEmpty) {
-                                return 'กรุณาระบุเพศสภาพ';
-                              }
-                              return null;
-                            },
+                          validator: (val) {
+                            if (val == null || val.isEmpty) {
+                              return 'กรุณาระบุเพศสภาพ';
+                            }
+                            return null;
+                          },
                           label: "เพศ",
                           onChanged: (String genderValue) {
                             //async
@@ -278,10 +275,13 @@ class _RegisterState extends State<Register> {
                             onPressed: () async {
                               //validate check
                               if (_formKey.currentState!.validate()) {
+                                // _isRegister = true;
                                 printAll(); // TODO: remove this if not needed
                                 register();
-                                Navigator.of(context)
-                                    .popUntil((route) => route.isFirst);
+                                Navigator.pushReplacement(context,
+                                    MaterialPageRoute(builder: (context)=> const MyHomePage(title: 'Epilepsy Care')));
+                                // Navigator.of(context)
+                                //     .popUntil((route) => route.isFirst);
                               }
                             },
                             style: primaryButtonStyle,

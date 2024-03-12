@@ -3,16 +3,32 @@ import 'package:epilepsy_care_pmk/screens/add_event/add_select.dart';
 import 'package:epilepsy_care_pmk/screens/calendar/calendar.dart';
 import 'package:epilepsy_care_pmk/screens/contacts/contact.dart';
 import 'package:epilepsy_care_pmk/screens/home/home.dart';
+import 'package:epilepsy_care_pmk/screens/register.dart';
 import 'package:epilepsy_care_pmk/screens/wiki/wiki.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
-void main() {
-  runApp(const MyApp());
+void main() async{
+  WidgetsFlutterBinding.ensureInitialized();
+  final String? hn  = await loadData();
+  runApp(MyApp(hn: hn,));
+}
+
+
+
+Future<String?> loadData() async {
+  final SharedPreferences prefs = await SharedPreferences.getInstance();
+  String? hn = prefs.getString('hn') ?? null;
+  return hn;
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  const MyApp({
+    super.key,
+    required this.hn,
+  });
 
+  final String? hn;
   // This widget is the root of the application.
   @override
   Widget build(BuildContext context) {
@@ -30,7 +46,9 @@ class MyApp extends StatelessWidget {
         //   labelSmall: TextStyle(fontWeight: FontWeight.bold,)
         // )
       ),
-      home: const MyHomePage(title: 'Epilepsy Care'),
+      // home: const MyHomePage(title: 'Epilepsy Care'),
+      home: hn == null ? Register() : const MyHomePage(title: 'Epilepsy Care'),
+      
     );
   }
 }

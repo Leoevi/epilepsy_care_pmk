@@ -2,6 +2,7 @@ import 'package:epilepsy_care_pmk/constants/styling.dart';
 import 'package:epilepsy_care_pmk/custom_widgets/time_range_dropdown_button.dart';
 import 'package:epilepsy_care_pmk/models/med_intake_per_day.dart';
 import 'package:epilepsy_care_pmk/screens/home/graph_history/med_intake_history.dart';
+import 'package:epilepsy_care_pmk/screens/home/graph_history/seizure_history.dart';
 import 'package:epilepsy_care_pmk/screens/wiki/medication/medication.dart';
 import 'package:epilepsy_care_pmk/services/database_service.dart';
 import 'package:flutter/material.dart';
@@ -67,72 +68,7 @@ class _GraphHistoryWithTabState extends State<GraphHistoryWithTab> {
                             physics: NeverScrollableScrollPhysics(),
                               children: [
                             //Tab 1 อาการชัก
-                            Column(
-                              children: [
-                                Padding(
-                                    padding: EdgeInsets.all(kSmallPadding),
-                                    child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.end,
-                                        children: [TimeRangeDropdownButton()])),
-                                Container(
-                                  width: 340,
-                                  decoration: BoxDecoration(
-                                      color: Color(0xFFF5F2FF),
-                                      borderRadius: BorderRadius.circular(8)),
-                                  child: Padding(
-                                    padding: EdgeInsets.all(kLargePadding),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Row(children: [
-                                          Text(
-                                            "ข้อมูลของอาการชัก",
-                                            style: TextStyle(
-                                                fontWeight: FontWeight.bold),
-                                          )
-                                        ]),
-                                        SizedBox(
-                                          height: 15,
-                                        ),
-                                        Row(children: [
-                                          Text("จำนวนครั้งที่เกิดอาการ")
-                                        ]),
-                                        SizedBox(
-                                          height: 10,
-                                        ),
-                                        Row(children: [
-                                          Text(
-                                              "จำนวนครั้งที่เกิดอาการมากที่สุด")
-                                        ]),
-                                        SizedBox(
-                                          height: 10,
-                                        ),
-                                        Row(children: [
-                                          Text(
-                                              "จำนวนครั้งที่เกิดอาการน้อยที่สุด")
-                                        ]),
-                                        SizedBox(
-                                          height: 10,
-                                        ),
-                                        Row(children: [Text("ค่าเฉลี่ย")]),
-                                        SizedBox(
-                                          height: 10,
-                                        ),
-                                        Row(children: [Text("------")]),
-                                        SizedBox(
-                                          height: 20,
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                                SizedBox(
-                                  height: 20,
-                                ),
-                              ],
-                            ),
+                            SeizureHistory(),
 
                             //Tab 2 บันทึกยา
                             MedIntakeHistory(),

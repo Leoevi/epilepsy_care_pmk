@@ -7,6 +7,7 @@ import 'package:epilepsy_care_pmk/models/med_allergy_event.dart';
 import 'package:epilepsy_care_pmk/models/med_intake_event.dart';
 import 'package:epilepsy_care_pmk/models/med_intake_per_day.dart';
 import 'package:epilepsy_care_pmk/models/seizure_event.dart';
+import 'package:epilepsy_care_pmk/models/seizure_per_day.dart';
 import 'package:epilepsy_care_pmk/screens/wiki/medication/medication.dart';
 import 'package:flutter/material.dart';
 import 'package:sqflite/sqflite.dart';
@@ -184,6 +185,43 @@ class DatabaseService {
         maps.length, (index) => SeizureEvent.fromJson(maps[index]));
   }
 
+  static Future<List<SeizurePerDay>> getAllSeizurePerDayFrom(DateTimeRange dateTimeRange) async {
+    final db = await _getDB();
+    // We get this raw query by experimenting in other querying programs.
+    // Use ? as placeholder to prevent SQL injection.
+    // Derived from the query in _getAllMedIntakePerDayFromOf
+    final List<Map<String, dynamic>> maps = await db.rawQuery("""
+-- Generate column with each date between the start date and end date (inclusive).
+WITH Dates(dateRange) AS (
+   SELECT DATE(?, ?)
+   UNION ALL
+   SELECT DATE(dateRange, '+1 day') 
+   FROM Dates
+   WHERE dateRange < DATE(?)
+)
+
+-- Join the earlier table with our actual table for all dates
+-- Gotta count with the SeizureEvent row.
+-- Otherwise, it will count at least 1 from the dateRange column.
+SELECT d.dateRange AS date, COUNT(s.seizureId) AS seizureOccurrence
+   FROM Dates d LEFT JOIN SeizureEvent s
+      ON DATE(s.time, 'unixepoch', 'localtime') = d.dateRange  -- by default, sqlite's DATE function will assume that the given time value is local time and will try to correct that to GMT time. But since we want the local time, we'll use the 'localtime' modifier.
+      AND s.time >= STRFTIME('%s', DATE(?, ?))
+      AND s.time < STRFTIME('%s', DATE(?, '+1 day'))
+   GROUP BY d."dateRange"
+   ORDER BY d."dateRange";
+    """, [
+      dateTimeRange.end.toIso8601String(),
+      "-${dateTimeRange.end.difference(dateTimeRange.start).inDays} days",
+      dateTimeRange.end.toIso8601String(),
+      dateTimeRange.end.toIso8601String(),
+      "-${dateTimeRange.end.difference(dateTimeRange.start).inDays} days",
+      dateTimeRange.end.toIso8601String(),
+    ]);
+
+    return List.generate(maps.length, (index) => SeizurePerDay.fromJson(maps[index]));
+  }
+
   /// Add a MedAllergyEvent to the database.
   static Future<int> addMedAllergyEvent(MedAllergyEvent medAllergyEvent) async {
     final db = await _getDB();
@@ -339,8 +377,8 @@ class DatabaseService {
   /// Aggregate all MedicationIntakeEvent of a specified medication and sum up each day's intake
   /// from a given [DateTimeRange] (inclusive). Will always sort from oldest to newest.
   ///
-  /// TODO: If the given [Medication] haven't been recorded in the specified [DateTimeRange],
-  /// this method should return an empty list instead.
+  /// If the given [Medication] haven't been recorded in the specified [DateTimeRange],
+  /// this method will return an empty list instead.
   static Future<List<MedIntakePerDay>> _getAllMedIntakePerDayFromOf(Medication med, DateTimeRange dateTimeRange) async {
     final db = await _getDB();
     // We get this raw query by experimenting in other querying programs.
@@ -362,7 +400,7 @@ WITH Dates(dateRange) AS (
 -- In this case, we want a double 0, not an int 0, so we do 0.0
 SELECT d.dateRange AS date, COALESCE(SUM(m.mgAmount), 0.0) AS totalDose
    FROM Dates d LEFT JOIN MedIntakeEvent m
-      ON DATE(m.time, 'unixepoch') = d.dateRange
+      ON DATE(m.time, 'unixepoch', 'localtime') = d.dateRange  -- by default, sqlite's DATE function will assume that the given time value is local time and will try to correct that to GMT time. But since we want the local time, we'll use the 'localtime' modifier.
       AND med = ?
       AND TIME >= STRFTIME('%s', DATE(?, ?))
       AND TIME < STRFTIME('%s', DATE(?, '+1 day'))  -- Add 1 day (except the last second) so that data of the end day is also counted
@@ -391,7 +429,20 @@ SELECT d.dateRange AS date, COALESCE(SUM(m.mgAmount), 0.0) AS totalDose
     // PS. You don't need any quotation marks around ?
     // Okay, you CAN'T use quotation marks around ?, it'll cause syntax errors.
     // Because ? itself is a String.
-    return List.generate(maps.length, (index) => MedIntakePerDay.fromJson(maps[index]));
+    List<MedIntakePerDay> result = List.generate(maps.length, (index) => MedIntakePerDay.fromJson(maps[index]));
+
+    // Check for at least one day with non-zero med intake; otherwise, return an empty list
+    int index = 0;
+    bool valid = false;
+    while (!valid) {
+      if (index < result.length) {
+        if (result[index].totalDose != 0) valid = true;
+        index++;
+      } else {
+        return List.empty();
+      }
+    }
+    return result;
   }
 
   /// Aggregate all MedicationIntakeEvent of each medication and sum up each of that medication total

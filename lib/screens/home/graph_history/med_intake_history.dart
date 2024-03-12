@@ -61,60 +61,63 @@ class _MedIntakeHistoryState extends State<MedIntakeHistory> {
                         return Text("Error: ${snapshot.error} $snapshot");
                       } else if (snapshot.hasData) {
                         List<Medication> mapKeys = snapshot.data!.keys.toList();
-
-                        // For more info on ChangeNotifierProvider:
-                        // https://docs.flutter.dev/data-and-backend/state-mgmt/simple#changenotifierprovider
-                        // Use state management so that the PageView can change the DosageGraph state/data
-                        return ChangeNotifierProvider(
-                          create: (context) => GraphModel(snapshot.data![mapKeys[0]]!),  // Init medIntakePerDay with content of first page
-                          builder: (context, child) {  // Use builder instead of child, otherwise may run into Provider not found
-                            return Column(
-                              children: [
-                                Flexible(
-                                  // PageView must have constraint, so we wrap it in a flex widget
-                                  child: PageView(
-                                    controller: medIntakePerDayPageController,
-                                    onPageChanged: (index) {
-                                      // Tell the graph that we have changed page
-                                      Provider.of<GraphModel>(context, listen: false).medIntakePerDays = snapshot.data![mapKeys[index]]!;
-                                    },
-                                    children: [
-                                      for (Medication med in mapKeys) MedIntakePerDayPage(medication: med)
-                                    ],
-                                  ),
-                                ),
-                                Row(
+                        if (mapKeys.isNotEmpty) {
+                          // For more info on ChangeNotifierProvider:
+                          // https://docs.flutter.dev/data-and-backend/state-mgmt/simple#changenotifierprovider
+                          // Use state management so that the PageView can change the DosageGraph state/data
+                          return ChangeNotifierProvider(
+                              create: (context) => GraphModel(snapshot.data![mapKeys[0]]!),  // Init medIntakePerDay with content of first page
+                              builder: (context, child) {  // Use builder instead of child, otherwise may run into Provider not found
+                                return Column(
                                   children: [
-                                    // https://stackoverflow.com/questions/58047009/flutter-how-to-flip-an-icon-to-get-mirror-effect
-                                    IconButton(
-                                      onPressed: () {
-                                        medIntakePerDayPageController.previousPage(duration: animationDuration, curve: Curves.easeInOut);
-                                      },
-                                      icon: Transform.flip(flipX: true, child: Icon(Icons.play_arrow)),
+                                    Flexible(
+                                      // PageView must have constraint, so we wrap it in a flex widget
+                                      child: PageView(
+                                        controller: medIntakePerDayPageController,
+                                        onPageChanged: (index) {
+                                          // Tell the graph that we have changed page
+                                          Provider.of<GraphModel>(context, listen: false).medIntakePerDays = snapshot.data![mapKeys[index]]!;
+                                        },
+                                        children: [
+                                          for (Medication med in mapKeys) MedIntakePerDayPage(medication: med)
+                                        ],
+                                      ),
                                     ),
-                                    Expanded(
-                                        child: Center(child: Text("Page Count"))
+                                    Row(
+                                      children: [
+                                        // https://stackoverflow.com/questions/58047009/flutter-how-to-flip-an-icon-to-get-mirror-effect
+                                        IconButton(
+                                          onPressed: () {
+                                            medIntakePerDayPageController.previousPage(duration: animationDuration, curve: Curves.easeInOut);
+                                          },
+                                          icon: Transform.flip(flipX: true, child: Icon(Icons.play_arrow)),
+                                        ),
+                                        Expanded(
+                                            child: Center(child: Text("Page Count"))
+                                        ),
+                                        IconButton(
+                                          onPressed: () {
+                                            medIntakePerDayPageController.nextPage(duration: animationDuration, curve: Curves.easeInOut);
+                                          },
+                                          icon: Icon(Icons.play_arrow),
+                                        ),
+                                      ],
                                     ),
-                                    IconButton(
-                                      onPressed: () {
-                                        medIntakePerDayPageController.nextPage(duration: animationDuration, curve: Curves.easeInOut);
-                                      },
-                                      icon: Icon(Icons.play_arrow),
+                                    const SizedBox(height: kSmallPadding,),
+
+                                    // Wrap the graph with a consumer so that we can get the value from GraphModel
+                                    Consumer<GraphModel>(
+                                        builder: (context, graph, child) {
+                                          return DosageGraph(medIntakes: graph.medIntakePerDays);
+                                        }
                                     ),
                                   ],
-                                ),
-                                const SizedBox(height: kSmallPadding,),
-
-                                // Wrap the graph with a consumer so that we can get the value from GraphModel
-                                Consumer<GraphModel>(
-                                    builder: (context, graph, child) {
-                                      return DosageGraph(medIntakes: graph.medIntakePerDays);
-                                    }
-                                ),
-                              ],
-                            );
-                          }
-                        );
+                                );
+                              }
+                          );
+                        } else {
+                          return Text("ไม่มีการบันทึกประวัติการทานยาในช่วงที่เลือก");
+                        }
                       } else {
                         return Column(
                           children: [

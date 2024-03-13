@@ -1,3 +1,4 @@
+import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:epilepsy_care_pmk/custom_widgets/home_drawer.dart';
 import 'package:epilepsy_care_pmk/screens/add_event/add_select.dart';
 import 'package:epilepsy_care_pmk/screens/calendar/calendar.dart';
@@ -8,13 +9,13 @@ import 'package:epilepsy_care_pmk/screens/wiki/wiki.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-void main() async{
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  final String? hn  = await loadData();
-  runApp(MyApp(hn: hn,));
+  final String? hn = await loadData();
+  runApp(MyApp(
+    hn: hn,
+  ));
 }
-
-
 
 Future<String?> loadData() async {
   final SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -33,23 +34,56 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      // To change the app's name, you need to go into each platform's manifest file (https://stackoverflow.com/questions/49353199/how-can-i-change-the-app-display-name-build-with-flutter)
-      title: 'Epilepsy Care',
-      // https://docs.flutter.dev/cookbook/design/themes
-      theme: ThemeData(
-        useMaterial3: true,
-        // https://docs.flutter.dev/release/breaking-changes/material-3-default
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.purple),
-        // Was going to use textTheme to handle the whole app's font,
-        // but it seemed like it will impact other widgets too much, so we'll defined extra ones instead
-        // textTheme: TextTheme(
-        //   labelSmall: TextStyle(fontWeight: FontWeight.bold,)
-        // )
-      ),
-      // home: const MyHomePage(title: 'Epilepsy Care'),
-      home: hn == null ? Register() : const MyHomePage(title: 'Epilepsy Care'),
-      
-    );
+        // To change the app's name, you need to go into each platform's manifest file (https://stackoverflow.com/questions/49353199/how-can-i-change-the-app-display-name-build-with-flutter)
+        title: 'Epilepsy Care',
+        // https://docs.flutter.dev/cookbook/design/themes
+        theme: ThemeData(
+          useMaterial3: true,
+          // https://docs.flutter.dev/release/breaking-changes/material-3-default
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.purple),
+          // Was going to use textTheme to handle the whole app's font,
+          // but it seemed like it will impact other widgets too much, so we'll defined extra ones instead
+          // textTheme: TextTheme(
+          //   labelSmall: TextStyle(fontWeight: FontWeight.bold,)
+          // )
+        ),
+        // home: const MyHomePage(title: 'Epilepsy Care'),
+        home: hn == null ? Register() : const MyHomePage(title: 'Epilepsy Care'),
+        // home: Container(
+        //    decoration: const BoxDecoration(
+        //   gradient: LinearGradient(
+        //       begin: Alignment.topCenter,
+        //       end: Alignment.bottomCenter,
+        //       colors: [
+        //     Color(0xFFF6C0FF),
+        //     Color(0xFFF69AFF)
+        //   ] // TODO: use colors from theme instead of hardcoding
+        //       )),
+        //   child: AnimatedSplashScreen(
+        //     duration: 1000,
+        //     splashTransition: SplashTransition.fadeTransition,
+        //     backgroundColor: Colors.transparent,
+        //     splash: Scaffold(
+        //         backgroundColor: Colors.transparent,
+        //         body: Center(
+        //           child: Column(
+        //             children: [
+        //               Expanded(
+        //                   flex: 1,
+        //                   child: Image(
+        //                     alignment: Alignment.centerLeft,
+        //                     image: AssetImage("image/header_logo_eng.png"),
+        //                   )),
+        //             ],
+        //           ),
+        //         ),
+        //       ),
+            
+        //     nextScreen: hn == null
+        //         ? Register()
+        //         : const MyHomePage(title: 'Epilepsy Care'),
+        //   ),
+        );
   }
 }
 

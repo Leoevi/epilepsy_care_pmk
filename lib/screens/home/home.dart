@@ -41,7 +41,6 @@ class _HomeState extends State<Home> {
   late DateTimeRange range;
 
   String? firstName;
-  // String? lastName;
   Image? imageFromPreferences;
 
   @override
@@ -55,7 +54,6 @@ class _HomeState extends State<Home> {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
       setState(() {
         firstName = prefs.getString('firstName') ?? null;
-      // lastName = prefs.getString('lastName') ?? null;
 
       Utility.getImageFromPreferences().then((img) {
         if (null == img) {
@@ -75,7 +73,7 @@ class _HomeState extends State<Home> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Expanded(
-            // flex: 1,
+            
             child: Row(
               children: [
                 Expanded(
@@ -124,7 +122,7 @@ class _HomeState extends State<Home> {
               ],
             ),
           ),
-          // const SizedBox(height: kLargePadding),
+          
           Padding(
             padding: const EdgeInsets.symmetric(vertical: kSmallPadding),
             child: Row(children: [

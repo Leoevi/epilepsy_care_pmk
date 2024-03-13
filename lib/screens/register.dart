@@ -47,21 +47,10 @@ class _RegisterState extends State<Register> {
   String? lastName;
   DateTime? birthDate;
   String? birthDateTimeStamp;
-  String? gender; // TODO: define type for gender
-
-  // Future<void> loadFirstLaunch() async {
-  //   SharedPreferences prefs = await SharedPreferences.getInstance();
-  //   setState(() {
-  //     _isFirstLaunch = prefs.getBool('first_launch') ?? true;
-  //     if (_isFirstLaunch) {
-  //       prefs.setBool('first_launch', false);
-  //     }
-  //   });
-  // }
+  String? gender; 
 
   @override
   void initState() {
-    // loadFirstLaunch();
     loadData();
     super.initState();
   }
@@ -74,7 +63,6 @@ class _RegisterState extends State<Register> {
       lastName = prefs.getString('lastName') ?? null;
       gender = prefs.getString('gender') ?? null;
       birthDateTimeStamp = prefs.getString('birthDate') ?? null;
-      //selectedImage = prefs.get('selectedImage') as XFile;
 
       //image avatar save
       Utility.getImageFromPreferences().then((img) {
@@ -261,7 +249,7 @@ class _RegisterState extends State<Register> {
                               birthDateFieldController.text =
                                   dateDateFormat.format(birthDate!);
 
-                              // TODO: instead of formatting manually like so, we can detect localization; however, this requires setting localization for the whole app
+                              
                               // birthDateFieldController.text =
                               //     DateFormat.yMd(Localizations
                               //         .localeOf(context)
@@ -297,8 +285,6 @@ class _RegisterState extends State<Register> {
                             onPressed: () async {
                               //validate check
                               if (_formKey.currentState!.validate()) {
-                                // _isRegister = true;
-                                printAll(); // TODO: remove this if not needed
                                 register();
                                 Navigator.pushReplacement(context,
                                     MaterialPageRoute(builder: (context)=> const MyHomePage(title: 'Epilepsy Care')));

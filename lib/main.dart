@@ -69,42 +69,9 @@ class MyApp extends StatelessWidget {
           //   labelSmall: TextStyle(fontWeight: FontWeight.bold,)
           // )
         ),
-        // home: const MyHomePage(title: 'Epilepsy Care'),
+        
         home: hn == null ? Register() : const MyHomePage(title: 'Epilepsy Care'),
-        // home: Container(
-        //    decoration: const BoxDecoration(
-        //   gradient: LinearGradient(
-        //       begin: Alignment.topCenter,
-        //       end: Alignment.bottomCenter,
-        //       colors: [
-        //     Color(0xFFF6C0FF),
-        //     Color(0xFFF69AFF)
-        //   ] // TODO: use colors from theme instead of hardcoding
-        //       )),
-        //   child: AnimatedSplashScreen(
-        //     duration: 1000,
-        //     splashTransition: SplashTransition.fadeTransition,
-        //     backgroundColor: Colors.transparent,
-        //     splash: Scaffold(
-        //         backgroundColor: Colors.transparent,
-        //         body: Center(
-        //           child: Column(
-        //             children: [
-        //               Expanded(
-        //                   flex: 1,
-        //                   child: Image(
-        //                     alignment: Alignment.centerLeft,
-        //                     image: AssetImage("image/header_logo_eng.png"),
-        //                   )),
-        //             ],
-        //           ),
-        //         ),
-        //       ),
-            
-        //     nextScreen: hn == null
-        //         ? Register()
-        //         : const MyHomePage(title: 'Epilepsy Care'),
-        //   ),
+        
         );
   }
 }
@@ -149,7 +116,7 @@ class _MyHomePageState extends State<MyHomePage> {
               colors: [
             Color(0xFFF6C0FF),
             Color(0xFFF69AFF)
-          ] // TODO: use colors from theme instead of hardcoding
+          ] 
               )),
       child: Scaffold(
         endDrawer: SafeArea(child: HomeDrawer()),
@@ -160,7 +127,7 @@ class _MyHomePageState extends State<MyHomePage> {
           decoration: BoxDecoration(
             color: Theme.of(context)
                 .colorScheme
-                .inversePrimary, // TODO: use colors from theme instead of hardcoding
+                .inversePrimary, 
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -201,7 +168,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
               ),
               Stack(
-                // TODO: Make the button float a bit above the bottom nav bar
+          
                 // alignment: AlignmentDirectional.center,
                 // clipBehavior: Clip.none,
                 children: <Widget>[

@@ -10,6 +10,7 @@ class LabelTextFormField extends StatefulWidget {
     this.hintText,
     this.onChanged,
     this.validator,
+    this.initialValue,
   });
 
   /// The label above the [TextFormField]
@@ -26,6 +27,8 @@ class LabelTextFormField extends StatefulWidget {
   /// (https://docs.flutter.dev/cookbook/forms/validation)
   final String? Function(String? x)? validator;
 
+  final String? initialValue;
+
   @override
   State<LabelTextFormField> createState() => _LabelTextFormFieldState();
 }
@@ -40,7 +43,7 @@ class _LabelTextFormFieldState extends State<LabelTextFormField> {
         SizedBox(height: 10),
         //spacing between label and TextInput
         TextFormField(
-          //Collect data by use update_text function
+          initialValue: widget.initialValue,
           onChanged: widget.onChanged,
           validator: widget.validator,
           decoration: InputDecoration(

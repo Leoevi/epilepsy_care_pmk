@@ -20,7 +20,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:epilepsy_care_pmk/custom_widgets/home_drawer.dart';
 import 'package:epilepsy_care_pmk/screens/add_event/add_select.dart';
 import 'package:epilepsy_care_pmk/screens/calendar/calendar.dart';
@@ -31,55 +30,53 @@ import 'package:epilepsy_care_pmk/screens/wiki/wiki.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  final String? hn = await loadData();
-  runApp(MyApp(
-    hn: hn,
-  ));
-}
+/// A SharedPreference instance for the whole app.
+/// Will be init in main before the app opens so that every page
+/// that want to access it doesn't have to use async/await.
+/// Right now, this method causes cyclic dependency, but it doesn't
+/// seem to be a problem for now.
+///
+/// Inspiration from: https://stackoverflow.com/a/51228189
+///
+/// If cyclic dep were to became too much of a problem, then it might
+/// be worth it to look into dependency injection tools such as GetIt.
+late SharedPreferences prefs;
 
-Future<String?> loadData() async {
-  final SharedPreferences prefs = await SharedPreferences.getInstance();
-  String? hn = prefs.getString('hn') ?? null;
-  return hn;
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();  // Prevent errors from awaiting later
+  prefs = await SharedPreferences.getInstance();
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({
     super.key,
-    required this.hn,
   });
 
-  final String? hn;
   // This widget is the root of the application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-        // To change the app's name, you need to go into each platform's manifest file (https://stackoverflow.com/questions/49353199/how-can-i-change-the-app-display-name-build-with-flutter)
-        title: 'Epilepsy Care',
-        // https://docs.flutter.dev/cookbook/design/themes
-        theme: ThemeData(
-          useMaterial3: true,
-          // https://docs.flutter.dev/release/breaking-changes/material-3-default
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.purple),
-          // Was going to use textTheme to handle the whole app's font,
-          // but it seemed like it will impact other widgets too much, so we'll defined extra ones instead
-          // textTheme: TextTheme(
-          //   labelSmall: TextStyle(fontWeight: FontWeight.bold,)
-          // )
-        ),
-        
-        home: hn == null ? Register() : const MyHomePage(title: 'Epilepsy Care'),
-        
-        );
+      // To change the app's name, you need to go into each platform's manifest file (https://stackoverflow.com/questions/49353199/how-can-i-change-the-app-display-name-build-with-flutter)
+      title: 'Epilepsy Care',
+      // https://docs.flutter.dev/cookbook/design/themes
+      theme: ThemeData(
+        useMaterial3: true,
+        // https://docs.flutter.dev/release/breaking-changes/material-3-default
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.purple),
+        // Was going to use textTheme to handle the whole app's font,
+        // but it seemed like it will impact other widgets too much, so we'll defined extra ones instead
+        // textTheme: TextTheme(
+        //   labelSmall: TextStyle(fontWeight: FontWeight.bold,)
+        // )
+      ),
+      home: prefs.getString("hn") == null ? const Register() : const MyHomePage(),
+    );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  final String title;
+  const MyHomePage({super.key});
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();

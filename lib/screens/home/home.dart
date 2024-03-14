@@ -23,9 +23,11 @@
 import 'package:epilepsy_care_pmk/constants/styling.dart';
 import 'package:epilepsy_care_pmk/custom_widgets/event_list.dart';
 import 'package:epilepsy_care_pmk/custom_widgets/time_range_dropdown_button.dart';
-import 'package:epilepsy_care_pmk/helpers/utility.dart';
+import 'package:epilepsy_care_pmk/helpers/image_utility.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../main.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -45,25 +47,31 @@ class _HomeState extends State<Home> {
 
   @override
   void initState() {
-    loadData();
     super.initState();
+    // Load user data a bit
+    firstName = prefs.getString('firstName');
+    String? imgString = prefs.getString("IMG_KEY");
+    if (imgString != null) {
+      imageFromPreferences = ImageUtility.imageFromBase64String(imgString);
+    }
+
     range = timeRangeDropdownOption.dateTimeRange;
   }
 
-  void loadData() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-      setState(() {
-        firstName = prefs.getString('firstName') ?? null;
-
-      Utility.getImageFromPreferences().then((img) {
-        if (null == img) {
-          return;
-        }
-        imageFromPreferences = Utility.imageFromBase64String(img);
-    });
-      });
-      
-  }
+  // void loadData() async {
+  //   final SharedPreferences prefs = await SharedPreferences.getInstance();
+  //     setState(() {
+  //       firstName = prefs.getString('firstName') ?? null;
+  //
+  //     ImageUtility.getImageFromPreferences().then((img) {
+  //       if (null == img) {
+  //         return;
+  //       }
+  //       imageFromPreferences = ImageUtility.imageFromBase64String(img);
+  //   });
+  //     });
+  //
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -73,7 +81,6 @@ class _HomeState extends State<Home> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Expanded(
-            
             child: Row(
               children: [
                 Expanded(

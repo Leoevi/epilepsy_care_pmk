@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 /// DateTime object that is at the start of unix time
 DateTime beginEpoch = DateTime.fromMillisecondsSinceEpoch(0);
+DateTime endDate = DateTime(2101, 12, 31);  // largest number available for the DateTime.fromMillisecondsSinceEpoch method is 8640000000000000
 
 /// Convert from unix date time representation to [DateTime] object in Dart.
 /// Unix date time is counted as "seconds since epoch".

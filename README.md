@@ -1,11 +1,11 @@
 # epilepsy_care_pmk
 
-An epilepsy daily app written in Flutter for Phramongkutklao Hospital's Pediatric Epilepsy Center. Written primarily for iOS and Andriod operating systems.
+An epilepsy daily app written in Flutter for Phramongkutklao Hospital's Pediatric Epilepsy Center. Written primarily for iOS and Android operating systems.
 
 ## Features
 - Record seizure/medication allergy/medication intake events
 - Filtering by dates for seizure/medication allergy/medication intake events
-- Display graph of seizures occurence
+- Display graph of seizures occurrence
 - Display graph of medication intake
 - Read about medications that is related to epileptic seizures
 - Read about common seizure knowledge
@@ -22,4 +22,4 @@ flutter run
 ```
 
 ## License
-This project is licensed under the MIT License specified in the LICENSED file.
+This project is licensed under the MIT License specified in the LICENSE file.

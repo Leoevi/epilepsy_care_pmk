@@ -1,5 +1,5 @@
 import 'package:epilepsy_care_pmk/constants/styling.dart';
-import 'package:epilepsy_care_pmk/helpers/utility.dart';
+import 'package:epilepsy_care_pmk/helpers/image_utility.dart';
 import 'package:epilepsy_care_pmk/screens/home/graph_history/graph_history_with_ui.dart';
 import 'package:epilepsy_care_pmk/screens/home/profile/profile.dart';
 import 'package:epilepsy_care_pmk/screens/register.dart';
@@ -41,11 +41,11 @@ class _HomeDrawerState extends State<HomeDrawer> {
         firstName = prefs.getString('firstName') ?? null;
       lastName = prefs.getString('lastName') ?? null;
 
-      Utility.getImageFromPreferences().then((img) {
+      ImageUtility.getImageFromPreferences().then((img) {
         if (null == img) {
           return;
         }
-        imageFromPreferences = Utility.imageFromBase64String(img);
+        imageFromPreferences = ImageUtility.imageFromBase64String(img);
     });
       });
       
@@ -104,16 +104,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
           ),
           Divider(),
           ListTile(
-            leading: Icon(Icons.alarm),
-            title: const Text('test register page'),
-            onTap: () {
-              Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => const Register()));
-            },
-          ),
-          Divider(),
-          ListTile(
-            leading: Icon(Icons.alarm),
+            leading: Icon(Icons.refresh),
             title: const Text('generateDummyData'),
             onTap: () {
               DatabaseService.generateDummyData(100,3);

@@ -20,17 +20,14 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import 'dart:convert';
 import 'dart:io';
 import 'package:epilepsy_care_pmk/constants/styling.dart';
 import 'package:epilepsy_care_pmk/custom_widgets/label_text_form_field.dart';
-import 'package:epilepsy_care_pmk/helpers/utility.dart';
+import 'package:epilepsy_care_pmk/helpers/date_time_helpers.dart';
+import 'package:epilepsy_care_pmk/helpers/image_utility.dart';
 import 'package:epilepsy_care_pmk/main.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:intl/intl.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class Register extends StatefulWidget {
   const Register({super.key});
@@ -40,78 +37,93 @@ class Register extends StatefulWidget {
 }
 
 class _RegisterState extends State<Register> {
+  final _formKey = GlobalKey<FormState>(); // Validate
+  TextEditingController birthDateFieldController = TextEditingController();  // Use to fill the input with the selected date
+  /// This var will be used to determine whether to pushReplace,
+  /// or popUntil after the user has click on the register button.
+  late bool isFirstLaunch;
+
+  // 2 different var here that represents an image. (must be separated because a file must have a path, and an Image object will not have a path)
+  /// Image that is loaded from preference.
   Image? imageFromPreferences;
+  /// Image that is selected from the image picker. Also contains path to that file.
   XFile? selectedImage;
   String? hn;
   String? firstName;
   String? lastName;
   DateTime? birthDate;
-  String? birthDateTimeStamp;
-  String? gender; 
+  String? gender; // TODO: define type for gender
 
   @override
   void initState() {
-    loadData();
     super.initState();
-  }
 
-  void loadData() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    setState(() {
-      hn = prefs.getString('hn') ?? null;
-      firstName = prefs.getString('firstName') ?? null;
-      lastName = prefs.getString('lastName') ?? null;
-      gender = prefs.getString('gender') ?? null;
-      birthDateTimeStamp = prefs.getString('birthDate') ?? null;
+    hn = prefs.getString('hn');
+    firstName = prefs.getString('firstName');
+    lastName = prefs.getString('lastName');
+    gender = prefs.getString('gender');
 
-      //image avatar save
-      Utility.getImageFromPreferences().then((img) {
-        if (null == img) {
-          return;
-        }
-        imageFromPreferences = Utility.imageFromBase64String(img);
-      });
-    });
+    String? birthDateTimestamp = prefs.getString('birthDate');
+    if (birthDateTimestamp != null) {
+      birthDate = DateTime.parse(birthDateTimestamp);
+      birthDateFieldController.text = dateDateFormat.format(birthDate!);
+    }
+
+    String? imgString = prefs.getString("IMG_KEY");
+    if (imgString != null) {
+      imageFromPreferences = ImageUtility.imageFromBase64String(imgString);
+    }
+
+    isFirstLaunch = hn == null;  // If hn or any field is null for that matter, we know that the user haven't registered yet
+
+    // A way to use async functions in init state is to use then, I guess
+    // https://stackoverflow.com/questions/51901002/is-there-a-way-to-load-async-data-on-initstate-method
+    // image avatar save
+    // Utility.getImageFromPreferences().then((img) {
+    //   if (img == null) {
+    //     return;
+    //   }
+    //   imageFromPreferences = Utility.imageFromBase64String(img);
+    // });
   }
 
   Future<void> register() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-
     prefs.setString('hn', hn!);
     prefs.setString('firstName', firstName!);
     prefs.setString('lastName', lastName!);
     prefs.setString('gender', gender!);
+    prefs.setString('birthDate', birthDate!.toIso8601String());
 
-    //birthDate save
-    birthDateTimeStamp = birthDate!.toIso8601String();
-    print("BD val : $birthDateTimeStamp");
-    prefs.setString('birthDate', birthDateTimeStamp!);
+    if (selectedImage != null) {
+      ImageUtility.saveImageToPreferences(
+          ImageUtility.base64String(await selectedImage!.readAsBytes()));
+    } else {
+      prefs.remove("IMG_KEY");
+    }
   }
 
-  void printAll() {
-    print("hn: $hn");
-    print("firstName: $firstName");
-    print("lastName: $lastName");
-    print("birthDate: $birthDate");
-    print("gender: $gender");
-  }
-
-  final _formKey = GlobalKey<FormState>(); // Validate
-
-  Future _pickImageFromGallery() async {
+  Future<void> _pickImageFromGallery() async {
     final returnedImage =
-        await ImagePicker().pickImage(source: ImageSource.gallery);
+    await ImagePicker().pickImage(
+      source: ImageSource.gallery,
+      requestFullMetadata: false,
+    );
 
     if (returnedImage != null) {
       setState(() {
         selectedImage = returnedImage;
       });
-      Utility.saveImageToPreferences(
-          Utility.base64String(await returnedImage.readAsBytes() as Uint8List));
     }
   }
 
-  var birthDateFieldController = TextEditingController();
+  /// Clear any selectedImage and remove them from shared preference
+  void _deleteImage() {
+    setState(() {
+      selectedImage = null;
+      imageFromPreferences = null;
+    });
+    // prefs.remove("IMG_KEY");  // Do not remove here, since the user haven't saved the change yet.
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -141,18 +153,22 @@ class _RegisterState extends State<Register> {
                         SizedBox(
                           height: kLargePadding,
                         ),
-                        Center(
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
                             // For some reason, wrapping CircleAvatar with InkWell doesn't
                             // produce the ripple effect on tap.
                             // So we create a material child that will lay on top of the CircleAvatar
                             // which does have the ripple effect on tap
                             // https://github.com/flutter/flutter/issues/42901
-                            child: CircleAvatar(
+                            children: [
+                              CircleAvatar(
                                 radius: 2 * kCircleRadius,
-                                backgroundImage: selectedImage == null
-                                    ? profilePlaceholder
-                                    : Image.file(File(selectedImage!.path))
-                                        .image, // For some reason, Image can't be assigned to ImageProvider, so we append ".image" to the Image widget (https://stackoverflow.com/questions/66561177/the-argument-type-object-cant-be-assigned-to-the-parameter-type-imageprovide)
+                                // backgroundImage: selectedImage == null
+                                //     ? profilePlaceholder
+                                //     : Image.file(File(selectedImage!.path))
+                                //         .image, // For some reason, Image can't be assigned to ImageProvider, so we append ".image" to the Image widget (https://stackoverflow.com/questions/66561177/the-argument-type-object-cant-be-assigned-to-the-parameter-type-imageprovide)
+                                backgroundImage: ((selectedImage != null) ? Image.file(File(selectedImage!.path)).image : null)
+                                    ?? imageFromPreferences?.image ?? profilePlaceholder,
                                 child: Material(
                                   shape: const CircleBorder(),
                                   clipBehavior: Clip.hardEdge,
@@ -160,16 +176,24 @@ class _RegisterState extends State<Register> {
                                   child: InkWell(
                                     onTap: () => {_pickImageFromGallery()},
                                   ),
-                                ))),
+                                )
+                              ),
+                              SizedBox(width: kSmallPadding,),
+                              (selectedImage != null || imageFromPreferences != null)
+                                  ? ElevatedButton(onPressed: () => { _deleteImage() }, child: Text("ลบรูปภาพ"))
+                                  : SizedBox.shrink(),
+                            ]
+                        ),
                         SizedBox(height: kSmallPadding),
                         LabelTextFormField(
+                          label: "HN",
+                          initialValue: hn,
                           validator: (val) {
                             if (val == null || val.isEmpty) {
                               return 'กรุณาระบุเลขประจำตัวผู้ป่วย';
                             }
                             return null;
                           },
-                          label: "HN",
                           onChanged: (String hnValue) {
                             setState(() {
                               hn = hnValue; //retieve input value to hn
@@ -180,13 +204,14 @@ class _RegisterState extends State<Register> {
                           children: [
                             Expanded(
                                 child: LabelTextFormField(
+                                  label: "ชื่อ",
+                              initialValue: firstName,
                               validator: (val) {
                                 if (val == null || val.isEmpty) {
                                   return 'กรุณาระบุชื่อ';
                                 }
                                 return null;
                               },
-                              label: "ชื่อ",
                               onChanged: (String firstNameValue) {
                                 //async
                                 // final SharedPreferences prefs =
@@ -202,13 +227,14 @@ class _RegisterState extends State<Register> {
                             ),
                             Expanded(
                                 child: LabelTextFormField(
+                                  label: "นามสกุล",
+                              initialValue: lastName,
                               validator: (val) {
                                 if (val == null || val.isEmpty) {
                                   return 'กรุณาระบุนามสกุล';
                                 }
                                 return null;
                               },
-                              label: "นามสกุล",
                               onChanged: (String lastNameValue) {
                                 //async
                                 //  final SharedPreferences prefs =
@@ -234,7 +260,6 @@ class _RegisterState extends State<Register> {
                           readOnly: true,
                           controller: birthDateFieldController,
                           decoration: InputDecoration(
-                              // hintText: selectedTime.format(context),
                               border: OutlineInputBorder(),
                               suffixIcon: Icon(Icons.calendar_month_outlined)),
                           onTap: () async {
@@ -242,14 +267,14 @@ class _RegisterState extends State<Register> {
                                 context: context,
                                 initialDate: birthDate ?? DateTime.now(),
                                 //get today's date
-                                firstDate: DateTime(1980, 1, 1),
-                                lastDate: DateTime(2101, 12, 31));
-
+                                firstDate: beginEpoch,
+                                lastDate: endDate
+                            );  // TODO: decide on an end date
                             if (birthDate != null) {
                               birthDateFieldController.text =
                                   dateDateFormat.format(birthDate!);
 
-                              
+
                               // birthDateFieldController.text =
                               //     DateFormat.yMd(Localizations
                               //         .localeOf(context)
@@ -258,13 +283,14 @@ class _RegisterState extends State<Register> {
                           },
                         ),
                         LabelTextFormField(
+                          label: "เพศ",
+                          initialValue: gender,
                           validator: (val) {
                             if (val == null || val.isEmpty) {
                               return 'กรุณาระบุเพศสภาพ';
                             }
                             return null;
                           },
-                          label: "เพศ",
                           onChanged: (String genderValue) {
                             //async
                             // final SharedPreferences prefs =
@@ -286,10 +312,15 @@ class _RegisterState extends State<Register> {
                               //validate check
                               if (_formKey.currentState!.validate()) {
                                 register();
-                                Navigator.pushReplacement(context,
-                                    MaterialPageRoute(builder: (context)=> const MyHomePage(title: 'Epilepsy Care')));
-                                // Navigator.of(context)
-                                //     .popUntil((route) => route.isFirst);
+
+                                if (isFirstLaunch) {
+                                  Navigator.pushReplacement(context,
+                                      MaterialPageRoute(builder: (context) => const MyHomePage()));
+                                } else {
+                                  // TODO: Make the first page refresh with the new data
+                                  Navigator.of(context)
+                                      .popUntil((route) => route.isFirst);
+                                }
                               }
                             },
                             style: primaryButtonStyle,

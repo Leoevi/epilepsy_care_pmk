@@ -1,5 +1,5 @@
 import 'dart:io';
-import 'package:epilepsy_care_pmk/helpers/utility.dart';
+import 'package:epilepsy_care_pmk/helpers/image_utility.dart';
 import 'package:intl/intl.dart';
 import 'package:epilepsy_care_pmk/constants/styling.dart';
 import 'package:epilepsy_care_pmk/screens/commons/screen_with_app_bar.dart';
@@ -7,6 +7,8 @@ import 'package:epilepsy_care_pmk/screens/register.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../../main.dart';
 
 class Profile extends StatefulWidget {
   const Profile({super.key});
@@ -17,55 +19,55 @@ class Profile extends StatefulWidget {
 
 class _ProfileState extends State<Profile> {
   Image? imageFromPreferences;
-  XFile? selectedImage;
   String? hn;
   String? firstName;
   String? lastName;
-  //String? birthDate;
-  String? birthDateTimeStamp;
   String? gender;
   DateTime? birthDateTimeStampParse;
   String? timeString;
 
   @override
   void initState() {
-    loadData();
     super.initState();
-  }
+    hn = prefs.getString('hn');
+    firstName = prefs.getString('firstName');
+    lastName = prefs.getString('lastName');
+    gender = prefs.getString('gender');
 
-  void loadData() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? birthDateTimestamp = prefs.getString('birthDate');
+    if (birthDateTimestamp != null) {
+      DateTime birthDate = DateTime.parse(birthDateTimestamp);
+      timeString = dateDateFormat.format(birthDate);
+    }
 
-    setState(() {
-      hn = prefs.getString('hn') ?? null;
-      firstName = prefs.getString('firstName') ?? null;
-      lastName = prefs.getString('lastName') ?? null;
-      gender = prefs.getString('gender') ?? null;
-      //birthDate 
-      birthDateTimeStamp = prefs.getString('birthDate') ?? null; //birthDate from prefs.
-      birthDateTimeStampParse = DateTime.parse(birthDateTimeStamp!);//parse to DateTime
-      timeString = dateDateFormat.format(birthDateTimeStampParse!);//formating
-      //image
-      Utility.getImageFromPreferences().then((img) {
-        if (null == img) {
-          return;
-        }
-        imageFromPreferences = Utility.imageFromBase64String(img);
-      });
-      //selectedImage = prefs.get('selectedImage') as XFile;
-    });
-  }
-
-  Future _pickImageFromGallery() async {
-    final returnedImage =
-        await ImagePicker().pickImage(source: ImageSource.gallery);
-
-    if (returnedImage != null) {
-      setState(() {
-        selectedImage = returnedImage;
-      });
+    String? imgString = prefs.getString("IMG_KEY");
+    if (imgString != null) {
+      imageFromPreferences = ImageUtility.imageFromBase64String(imgString);
     }
   }
+
+  // void loadData() async {
+  //   final SharedPreferences prefs = await SharedPreferences.getInstance();
+  //
+  //   setState(() {
+  //     hn = prefs.getString('hn') ?? null;
+  //     firstName = prefs.getString('firstName') ?? null;
+  //     lastName = prefs.getString('lastName') ?? null;
+  //     gender = prefs.getString('gender') ?? null;
+  //     //birthDate
+  //     birthDateTimeStamp = prefs.getString('birthDate') ?? null; //birthDate from prefs.
+  //     birthDateTimeStampParse = DateTime.parse(birthDateTimeStamp!);//parse to DateTime
+  //     timeString = dateDateFormat.format(birthDateTimeStampParse!);//formating
+  //     //image
+  //     ImageUtility.getImageFromPreferences().then((img) {
+  //       if (null == img) {
+  //         return;
+  //       }
+  //       imageFromPreferences = ImageUtility.imageFromBase64String(img);
+  //     });
+  //     //selectedImage = prefs.get('selectedImage') as XFile;
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -85,9 +87,6 @@ class _ProfileState extends State<Profile> {
                       shape: const CircleBorder(),
                       clipBehavior: Clip.hardEdge,
                       color: Colors.transparent,
-                      child: InkWell(
-                        onTap: () => {_pickImageFromGallery()},
-                      ),
                     ))),
             SizedBox(
               height: 40,
@@ -121,7 +120,10 @@ class _ProfileState extends State<Profile> {
                           ),
                           IconButton(
                               visualDensity: VisualDensity.compact,
-                              onPressed: () {},
+                              onPressed: () {
+                                Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (context) => const Register()));
+                              },
                               icon: Icon(Icons.edit_outlined)),
                         ],
                       ),

@@ -5,8 +5,7 @@ import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'dart:async';
 
-class Utility {
-  //
+class ImageUtility {
   static const String IMG_KEY = 'IMG_KEY';
 
   static Future<bool> saveImageToPreferences(String value) async {

@@ -55,6 +55,29 @@ class _SeizureHistoryState extends State<SeizureHistory> {
                         return Text("Error: ${snapshot.error} $snapshot");
                       } else if (snapshot.hasData) {
                         List<SeizurePerDay> seizurePerDays = snapshot.data!;
+                        // total/max/min/avg calculation
+                        // int total = seizurePerDays.fold(0, (sum, element) => sum + element.seizureOccurrence);
+                        // fold is similar to reduce, but it can change type (reduce fixes the type to the same as the list)
+                        // Was going to use fold, but I think one for loop is better because otherwise, we'll have to do four sets of loops.
+
+                        // DateTime maxDate = seizurePerDays.first.date, minDate = seizurePerDays.first.date;
+                        int max = -1, min = -1 >>> 1;  // make max the lowest int, and min the highest int (I was going to make max == ~(-1 >>> 1), but scrapped that because it'd not work on the web (they convert all bitwise int to unsigned ints (https://dart.dev/guides/language/numbers#bitwise-operations))
+                        int total = 0;
+                        for (var s in seizurePerDays) {
+                          total += s.seizureOccurrence;
+
+                          if (max < s.seizureOccurrence) {
+                            max = s.seizureOccurrence;
+                            // maxDate = s.date;
+                          }
+
+                          if (min > s.seizureOccurrence) {
+                            min = s.seizureOccurrence;
+                            // minDate = s.date;
+                          }
+                        }
+                        double avg = total/seizurePerDays.length;
+
                         return Column(
                           children: [
                             // TODO: Aggregate stats and display them accordingly.
@@ -72,40 +95,48 @@ class _SeizureHistoryState extends State<SeizureHistory> {
                                     Row(children: [
                                       Text(
                                         "ข้อมูลของอาการชัก",
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold),
+                                        style: mediumLargeBoldText,
                                       )
                                     ]),
                                     SizedBox(
-                                      height: 15,
+                                      height: kLargePadding,
                                     ),
                                     Row(children: [
-                                      Text("จำนวนครั้งที่เกิดอาการ")
+                                      Expanded(child: Text("จำนวนครั้งที่เกิดอาการทั้งหมด")),
+                                      Text("$total ครั้ง"),
                                     ]),
                                     SizedBox(
-                                      height: 10,
+                                      height: kSmallPadding,
                                     ),
                                     Row(children: [
-                                      Text(
-                                          "จำนวนครั้งที่เกิดอาการมากที่สุด")
+                                      Expanded(
+                                        child: Text(
+                                            "จำนวนครั้งที่เกิดอาการมากที่สุด"),
+                                      ),
+                                      Text("$max ครั้ง")
                                     ]),
                                     SizedBox(
-                                      height: 10,
+                                      height: kSmallPadding,
                                     ),
                                     Row(children: [
-                                      Text(
-                                          "จำนวนครั้งที่เกิดอาการน้อยที่สุด")
+                                      Expanded(
+                                        child: Text(
+                                            "จำนวนครั้งที่เกิดอาการน้อยที่สุด"),
+                                      ),
+                                      Text("$min ครั้ง")
                                     ]),
                                     SizedBox(
-                                      height: 10,
+                                      height: kSmallPadding,
                                     ),
-                                    Row(children: [Text("ค่าเฉลี่ย")]),
+                                    Row(children: [
+                                      Expanded(
+                                        child: Text(
+                                            "ค่าเฉลี่ย"),
+                                      ),
+                                      Text("${avg.toStringAsFixed(2)} ครั้ง/วัน")
+                                    ]),
                                     SizedBox(
-                                      height: 10,
-                                    ),
-                                    Row(children: [Text("------")]),
-                                    SizedBox(
-                                      height: 20,
+                                      height: kSmallPadding,
                                     ),
                                   ],
                                 ),

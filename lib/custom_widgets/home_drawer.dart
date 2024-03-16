@@ -2,7 +2,7 @@ import 'package:epilepsy_care_pmk/constants/styling.dart';
 import 'package:epilepsy_care_pmk/helpers/image_utility.dart';
 import 'package:epilepsy_care_pmk/screens/home/graph_history/graph_history_with_ui.dart';
 import 'package:epilepsy_care_pmk/screens/home/profile/profile.dart';
-import 'package:epilepsy_care_pmk/screens/register.dart';
+import 'package:epilepsy_care_pmk/screens/notification_test.dart';
 import 'package:epilepsy_care_pmk/services/database_service.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -108,6 +108,15 @@ class _HomeDrawerState extends State<HomeDrawer> {
             title: const Text('generateDummyData'),
             onTap: () {
               DatabaseService.generateDummyData(100,3);
+            },
+          ),
+          Divider(),
+          ListTile(
+            leading: Icon(Icons.refresh),
+            title: const Text('Notification tests'),
+            onTap: () {
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => const NotificationTest()));
             },
           ),
         ],

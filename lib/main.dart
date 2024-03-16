@@ -27,6 +27,7 @@ import 'package:epilepsy_care_pmk/screens/contacts/contact.dart';
 import 'package:epilepsy_care_pmk/screens/home/home.dart';
 import 'package:epilepsy_care_pmk/screens/register.dart';
 import 'package:epilepsy_care_pmk/screens/wiki/wiki.dart';
+import 'package:epilepsy_care_pmk/services/notification_service.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -45,6 +46,8 @@ late SharedPreferences prefs;
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();  // Prevent errors from awaiting later
   prefs = await SharedPreferences.getInstance();
+  NotificationService().initNotification();
+
   runApp(const MyApp());
 }
 

@@ -24,10 +24,14 @@ if (flutterVersionName == null) {
 
 android {
     namespace "com.example.epilepsy_care_pmk"
-    compileSdkVersion flutter.compileSdkVersion
+//    compileSdkVersion flutter.compileSdkVersion
+    compileSdkVersion 34  // TODO: once we upgrade the flutter SDK from 3.16.9 version, we can change this to use flutter's default SDK version above
     ndkVersion flutter.ndkVersion
 
     compileOptions {
+//        coreLibraryDesugaringEnabled true  // Added for flutter_local_notification
+        // TODO: Despite the lib suggesting turning on desugaring, it has a side effect of requiring turning on multidexing,
+        // which is another can of worms I'm not willing to go through right now.
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
@@ -64,4 +68,9 @@ flutter {
     source '../..'
 }
 
-dependencies {}
+dependencies {
+    // These group of dependencies are added for flutter_local_notification
+//    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.2.2'
+    implementation 'androidx.window:window:1.0.0'
+    implementation 'androidx.window:window-java:1.0.0'
+}

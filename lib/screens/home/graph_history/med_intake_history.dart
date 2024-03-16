@@ -3,6 +3,9 @@ import 'package:epilepsy_care_pmk/screens/home/graph_history/graph_model.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import 'package:pdf/pdf.dart';
+import 'package:pdf/widgets.dart' as pw;
+
 import '../../../constants/styling.dart';
 import '../../../custom_widgets/time_range_dropdown_button.dart';
 import '../../../models/med_intake_per_day.dart';
@@ -29,15 +32,21 @@ class _MedIntakeHistoryState extends State<MedIntakeHistory> {
     range = timeRangeDropdownOption.dateTimeRange;
   }
 
+  // Future<void> printDoc() async {}
+
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(kSmallPadding),
       child: Column(
         children: [
-          Align(
-            alignment: Alignment.centerRight,
-            child: TimeRangeDropdownButton(
+          Row(mainAxisAlignment: MainAxisAlignment.start, children: [
+            IconButton(
+                onPressed: () {}, icon: Icon(Icons.local_print_shop_outlined)),
+            SizedBox(
+              width: 180,
+            ),
+            TimeRangeDropdownButton(
               initialChoice: timeRangeDropdownOption,
               onChanged: (selectedRange) {
                 setState(() {
@@ -45,8 +54,10 @@ class _MedIntakeHistoryState extends State<MedIntakeHistory> {
                 });
               },
             ),
+          ]),
+          SizedBox(
+            height: kSmallPadding,
           ),
-          SizedBox(height: kSmallPadding,),
           Flexible(
             // Never do "Column > Column > Expanded", that will throw the "RenderBox was not laid out" error
             // instead do "Column > Expanded/Flexible > Column > Expanded" instead
@@ -67,19 +78,29 @@ class _MedIntakeHistoryState extends State<MedIntakeHistory> {
                           // https://docs.flutter.dev/data-and-backend/state-mgmt/simple#changenotifierprovider
                           // Use state management so that the PageView can change the DosageGraph state/data
                           return ChangeNotifierProvider(
-                              create: (context) => GraphModel(snapshot.data![medKeys[0]]!),  // Init medIntakePerDay with content of first page
-                              builder: (context, child) {  // Use builder instead of child, otherwise may run into Provider not found
+                              create: (context) => GraphModel(snapshot.data![
+                                  medKeys[
+                                      0]]!), // Init medIntakePerDay with content of first page
+                              builder: (context, child) {
+                                // Use builder instead of child, otherwise may run into Provider not found
                                 return Column(
                                   children: [
                                     Flexible(
                                       // PageView must have constraint, so we wrap it in a flex widget
                                       child: PageView.builder(
-                                        controller: medIntakePerDayPageController,
+                                        controller:
+                                            medIntakePerDayPageController,
                                         itemCount: medKeys.length,
                                         itemBuilder: (context, index) {
-                                          List<MedIntakePerDay> thisMedIntakePerDays = snapshot.data![medKeys[index]]!;
-                                          double total = 0, avg = 0, max = double.negativeInfinity, min = double.infinity;
-                                          for (MedIntakePerDay m in thisMedIntakePerDays) {
+                                          List<MedIntakePerDay>
+                                              thisMedIntakePerDays =
+                                              snapshot.data![medKeys[index]]!;
+                                          double total = 0,
+                                              avg = 0,
+                                              max = double.negativeInfinity,
+                                              min = double.infinity;
+                                          for (MedIntakePerDay m
+                                              in thisMedIntakePerDays) {
                                             total += m.totalDose;
 
                                             if (max < m.totalDose) {
@@ -90,12 +111,22 @@ class _MedIntakeHistoryState extends State<MedIntakeHistory> {
                                               min = m.totalDose;
                                             }
                                           }
-                                          avg = total/thisMedIntakePerDays.length;
-                                          return MedIntakePerDayPage(medication: medKeys[index], total: total, max: max, min: min, avg: avg,);
+                                          avg = total /
+                                              thisMedIntakePerDays.length;
+                                          return MedIntakePerDayPage(
+                                            medication: medKeys[index],
+                                            total: total,
+                                            max: max,
+                                            min: min,
+                                            avg: avg,
+                                          );
                                         },
                                         onPageChanged: (index) {
                                           // Tell the graph that we have changed page
-                                          Provider.of<GraphModel>(context, listen: false).medIntakePerDays = snapshot.data![medKeys[index]]!;
+                                          Provider.of<GraphModel>(context,
+                                                      listen: false)
+                                                  .medIntakePerDays =
+                                              snapshot.data![medKeys[index]]!;
                                         },
                                       ),
                                       // Use PageView.builder instead because we can calculate statistic with each page's build
@@ -117,35 +148,46 @@ class _MedIntakeHistoryState extends State<MedIntakeHistory> {
                                         // https://stackoverflow.com/questions/58047009/flutter-how-to-flip-an-icon-to-get-mirror-effect
                                         IconButton(
                                           onPressed: () {
-                                            medIntakePerDayPageController.previousPage(duration: animationDuration, curve: Curves.easeInOut);
+                                            medIntakePerDayPageController
+                                                .previousPage(
+                                                    duration: animationDuration,
+                                                    curve: Curves.easeInOut);
                                           },
-                                          icon: Transform.flip(flipX: true, child: const Icon(Icons.play_arrow)),
+                                          icon: Transform.flip(
+                                              flipX: true,
+                                              child:
+                                                  const Icon(Icons.play_arrow)),
                                         ),
                                         Expanded(
-                                            child: Center(child: Text("Page Count"))
-                                        ),
+                                            child: Center(
+                                                child: Text("Page Count"))),
                                         IconButton(
                                           onPressed: () {
-                                            medIntakePerDayPageController.nextPage(duration: animationDuration, curve: Curves.easeInOut);
+                                            medIntakePerDayPageController
+                                                .nextPage(
+                                                    duration: animationDuration,
+                                                    curve: Curves.easeInOut);
                                           },
                                           icon: const Icon(Icons.play_arrow),
                                         ),
                                       ],
                                     ),
-                                    const SizedBox(height: kSmallPadding,),
+                                    const SizedBox(
+                                      height: kSmallPadding,
+                                    ),
 
                                     // Wrap the graph with a consumer so that we can get the value from GraphModel
                                     Consumer<GraphModel>(
                                         builder: (context, graph, child) {
-                                          return DosageGraph(medIntakes: graph.medIntakePerDays);
-                                        }
-                                    ),
+                                      return DosageGraph(
+                                          medIntakes: graph.medIntakePerDays);
+                                    }),
                                   ],
                                 );
-                              }
-                          );
+                              });
                         } else {
-                          return Text("ไม่มีการบันทึกประวัติการทานยาในช่วงที่เลือก");
+                          return Text(
+                              "ไม่มีการบันทึกประวัติการทานยาในช่วงที่เลือก");
                         }
                       } else {
                         return Column(
@@ -198,11 +240,16 @@ class MedIntakePerDayPage extends StatelessWidget {
             SizedBox(
               height: kLargePadding,
             ),
-            Row(children: [Expanded(child: Text("ชื่อยา: ${medication.name}"))]),
+            Row(children: [
+              Expanded(child: Text("ชื่อยา: ${medication.name}"))
+            ]),
             SizedBox(
               height: kSmallPadding,
             ),
-            Row(children: [Expanded(child: Text("ขนาด: ${medication.medicationIntakeMethod}"))]),
+            Row(children: [
+              Expanded(
+                  child: Text("ขนาด: ${medication.medicationIntakeMethod}"))
+            ]),
             SizedBox(
               height: kSmallPadding,
             ),

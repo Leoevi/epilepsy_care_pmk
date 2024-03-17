@@ -46,7 +46,7 @@ late SharedPreferences prefs;
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();  // Prevent errors from awaiting later
   prefs = await SharedPreferences.getInstance();
-  NotificationService().initNotification();
+  NotificationService.initNotification();
 
   runApp(const MyApp());
 }

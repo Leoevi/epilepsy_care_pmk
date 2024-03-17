@@ -9,13 +9,37 @@ class NotificationTest extends StatelessWidget {
   Widget build(BuildContext context) {
     return ScreenWithAppBar(
       title: "Notification Test",
-      body: Center(
-        child: ElevatedButton(
-          child: Text("Notification Test"),
-          onPressed: () {
-            NotificationService().showNotification(title: "title", body: "body");
-          },
-        ),
+      body: Column(
+        children: [
+          ElevatedButton(
+            onPressed: () {
+              NotificationService.showNotification(title: "title", body: "body");
+            },
+            child: Text("Test now"),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              NotificationService.scheduleNotification(
+                title: "scheduled noti",
+                body: "scheduled noti body",
+                scheduledDate: DateTime.now().add(Duration(seconds: 20)),
+              );
+            },
+            child: Text("Test Schedule"),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              NotificationService.scheduleDailyNotification(title: "daily noti", body: "daily noti body");
+            },
+            child: Text("Test Daily 8 AM"),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              NotificationService.cancelAll();
+            },
+            child: Text("Cancel All"),
+          ),
+        ]
       ),
     );
   }

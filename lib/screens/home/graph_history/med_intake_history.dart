@@ -1,6 +1,8 @@
 import 'package:epilepsy_care_pmk/custom_widgets/dosage_graph.dart';
 import 'package:epilepsy_care_pmk/screens/home/graph_history/graph_model.dart';
+import 'package:epilepsy_care_pmk/screens/home/graph_history/med_intake_history_print.dart';
 import 'package:flutter/material.dart';
+import 'package:printing/printing.dart';
 import 'package:provider/provider.dart';
 
 import 'package:pdf/pdf.dart';
@@ -31,8 +33,18 @@ class _MedIntakeHistoryState extends State<MedIntakeHistory> {
     super.initState();
     range = timeRangeDropdownOption.dateTimeRange;
   }
-
-  // Future<void> printDoc() async {}
+Future<void> printMedIntakeHistory(Map<Medication, List<MedIntakePerDay>> allMedIntakePerDays) async {
+  final doc = pw.Document();
+  for(Medication m in allMedIntakePerDays.keys){
+    doc.addPage(pw.Page(
+      pageFormat: PdfPageFormat.a4,
+      build: (pw.Context context) {
+        return buildPrintableMedIntakeHistory(m,allMedIntakePerDays[m]!,allMedIntakePerDays.keys.toList());
+      }));
+  }
+    await Printing.layoutPdf(
+      onLayout: (PdfPageFormat format) async => doc.save());
+}
 
   @override
   Widget build(BuildContext context) {
@@ -41,8 +53,13 @@ class _MedIntakeHistoryState extends State<MedIntakeHistory> {
       child: Column(
         children: [
           Row(mainAxisAlignment: MainAxisAlignment.start, children: [
-            IconButton(
-                onPressed: () {}, icon: Icon(Icons.local_print_shop_outlined)),
+            FutureBuilder(
+              future: DatabaseService.getAllMedIntakePerDayFrom(range),
+              builder: (context,snapshot) {
+                return IconButton(
+                  onPressed: () => printMedIntakeHistory(snapshot.data!),
+                  icon: Icon(Icons.local_print_shop_outlined));},
+            ),
             SizedBox(
               width: 180,
             ),

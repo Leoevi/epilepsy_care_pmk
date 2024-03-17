@@ -7,17 +7,14 @@ import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:collection/collection.dart';
 
-buildPrintableSeizureHistory(List<SeizurePerDay> seizurePerDays) {
-  const dataTable = [
-    ['Phone', 80, 95],
-    ['Internet', 250, 230],
-    ['Electricity', 300, 375],
-    ['Movies', 85, 80],
-    ['Food', 300, 350],
-    ['Fuel', 650, 550],
-    ['Insurance', 250, 310],
-  ];
+import 'package:epilepsy_care_pmk/main.dart';
 
+String? hn = prefs.getString('hn');
+// String? name = prefs.getString('firstName');
+// String? lastName = prefs.getString('lastName');
+
+buildPrintableSeizureHistory(List<SeizurePerDay> seizurePerDays) {
+  
   // total/max/min/avg calculation
   // int total = seizurePerDays.fold(0, (sum, element) => sum + element.seizureOccurrence);
   // fold is similar to reduce, but it can change type (reduce fixes the type to the same as the list)
@@ -59,6 +56,12 @@ buildPrintableSeizureHistory(List<SeizurePerDay> seizurePerDays) {
             child: pw.Column(
               crossAxisAlignment: pw.CrossAxisAlignment.start,
               children: [
+                pw.Align(
+                      alignment: pw.Alignment.topLeft,
+                      child: pw.Text("HN : $hn")),
+                       pw.SizedBox(
+                    height: kLargePadding,
+                  ),
                 pw.Row(children: [
                   pw.Text(
                     "Seizure Occurrence Statistics (${dateDateFormat.format(seizurePerDays.first.date)} - ${dateDateFormat.format(seizurePerDays.last.date)})",
@@ -110,7 +113,7 @@ buildPrintableSeizureHistory(List<SeizurePerDay> seizurePerDays) {
         // SeizureOccurrenceGraph(seizures: seizurePerDays),
 
         pw.SizedBox(
-          height: kLargePadding,
+          height: 30,
         ),
 
         pw.Chart(
@@ -137,7 +140,7 @@ buildPrintableSeizureHistory(List<SeizurePerDay> seizurePerDays) {
               },
             ),
             yAxis: pw.FixedAxis(
-              List.generate(max + 1, (index) => index),
+              List.generate(max + 2, (index) => index), // max +2
               divisions: true,
             ),
           ),

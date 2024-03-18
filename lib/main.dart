@@ -21,7 +21,9 @@
 // SOFTWARE.
 
 import 'package:epilepsy_care_pmk/custom_widgets/home_drawer.dart';
+import 'package:epilepsy_care_pmk/models/med_intake_event.dart';
 import 'package:epilepsy_care_pmk/screens/add_event/add_select.dart';
+import 'package:epilepsy_care_pmk/screens/add_event/med_intake/add_med_intake_input.dart';
 import 'package:epilepsy_care_pmk/screens/calendar/calendar.dart';
 import 'package:epilepsy_care_pmk/screens/contacts/contact.dart';
 import 'package:epilepsy_care_pmk/screens/home/home.dart';
@@ -114,7 +116,12 @@ class _MyHomePageState extends State<MyHomePage> {
   void listenNotification() => NotificationService.notificationTriggerStream.listen((payload) { onClickedNotification(payload); });
 
   void onClickedNotification(String? payload) {
-    showAboutDialog(context: context, children: [Text("A notification has benn clicked")]);
+    if (payload != null) {
+      MedIntakeEvent eventFromPayload = MedIntakeEvent.fromSerializedString("""{"medIntakeId":598,"time":1710620070,"med":"Clonazepam / Rivotril®","mgAmount":166.32128690503978}""");
+      // MedIntakeEvent eventFromPayload = MedIntakeEvent.fromSerializedString(payload);  // TODO: replace this later
+      Navigator.of(context).push(MaterialPageRoute(
+          builder: (context) => AddMedIntakeInput(initMedIntakeEvent: eventFromPayload,)));
+    }
   }
 
   @override

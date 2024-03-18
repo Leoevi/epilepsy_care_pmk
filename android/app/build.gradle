@@ -1,3 +1,5 @@
+// https://stackoverflow.com/questions/28174505/android-manifest-vs-gradle-script
+
 plugins {
     id "com.android.application"
     id "kotlin-android"
@@ -29,9 +31,8 @@ android {
     ndkVersion flutter.ndkVersion
 
     compileOptions {
-//        coreLibraryDesugaringEnabled true  // Added for flutter_local_notification
-        // TODO: Despite the lib suggesting turning on desugaring, it has a side effect of requiring turning on multidexing,
-        // which is another can of worms I'm not willing to go through right now.
+        coreLibraryDesugaringEnabled true  // Added for flutter_local_notification
+        // turns out, enabling multidex is easier than I thought, I just had to set min SDK version to >= 21 which I did below
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
@@ -47,9 +48,9 @@ android {
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId "com.example.epilepsy_care_pmk"
+        minSdkVersion 21  // Value more than 21 (Lollipop) to enable multidex by default (https://stackoverflow.com/questions/49886597/multidex-issue-with-flutter & https://docs.flutter.dev/deployment/android#enabling-multidex-support)
         // You can update the following values to match your application needs.
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
-        minSdkVersion flutter.minSdkVersion
         targetSdkVersion flutter.targetSdkVersion
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
@@ -70,7 +71,7 @@ flutter {
 
 dependencies {
     // These group of dependencies are added for flutter_local_notification
-//    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.2.2'
+    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.2.2'
     implementation 'androidx.window:window:1.0.0'
     implementation 'androidx.window:window-java:1.0.0'
 }

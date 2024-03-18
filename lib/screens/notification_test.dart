@@ -13,7 +13,7 @@ class NotificationTest extends StatelessWidget {
         children: [
           ElevatedButton(
             onPressed: () {
-              NotificationService.showNotification(title: "title", body: "body");
+              NotificationService.showNotification(title: "title", body: "body", payload: "payload test");
             },
             child: Text("Test now"),
           ),
@@ -29,7 +29,7 @@ class NotificationTest extends StatelessWidget {
           ),
           ElevatedButton(
             onPressed: () {
-              NotificationService.scheduleDailyNotification(title: "daily noti", body: "daily noti body");
+              NotificationService.scheduleDailyNotification(title: "daily noti", body: "daily noti body", timeOfDay: TimeOfDay(hour: 8, minute: 0));
             },
             child: Text("Test Daily 8 AM"),
           ),

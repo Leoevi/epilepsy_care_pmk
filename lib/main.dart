@@ -43,7 +43,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 /// be worth it to look into dependency injection tools such as GetIt.
 late SharedPreferences prefs;
 
-void main() async {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();  // Prevent errors from awaiting later
   prefs = await SharedPreferences.getInstance();
   NotificationService.initNotification();
@@ -104,6 +104,18 @@ class _MyHomePageState extends State<MyHomePage> {
     padding: const EdgeInsets.all(
         0), // To prevent overflow. This is still needed despite with Expanded/Flex
   );
+
+  @override
+  void initState() {
+    super.initState();
+    listenNotification();
+  }
+
+  void listenNotification() => NotificationService.notificationTriggerStream.listen((payload) { onClickedNotification(payload); });
+
+  void onClickedNotification(String? payload) {
+    showAboutDialog(context: context, children: [Text("A notification has benn clicked")]);
+  }
 
   @override
   Widget build(BuildContext context) {

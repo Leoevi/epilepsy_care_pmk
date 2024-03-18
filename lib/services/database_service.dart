@@ -22,16 +22,16 @@ class DatabaseService {
   // inspired from: https://github.com/alextekartik/flutter_app_example/blob/master/notepad_sqflite/lib/provider/note_provider.dart
   static final _updateTriggerController = StreamController<bool>.broadcast();
 
-  /// This will be called on every method that modified the database.
-  /// By calling it, the stream can send out an event to let the listener
-  /// know that they should reload data from the database
-  static void _triggerUpdate() {
-    _updateTriggerController.sink.add(true);
-  }
-
   /// A stream that sends out an event when there is a change to the database,
   /// can be used to indicate that new data is available to reload.
   static final updateTriggerStream = _updateTriggerController.stream;
+
+  /// This will be called on every method that modified the database.
+  /// By calling it, the stream can send out an event to let the listener
+  /// know that they should reload data from the database.
+  static void _triggerUpdate() {
+    _updateTriggerController.sink.add(true);
+  }
 
   // Table names for each of the tables in the db
   static const String seizureEventTableName = "SeizureEvent";
@@ -205,7 +205,10 @@ WITH Dates(dateRange) AS (
 -- Otherwise, it will count at least 1 from the dateRange column.
 SELECT d.dateRange AS date, COUNT(s.seizureId) AS seizureOccurrence
    FROM Dates d LEFT JOIN SeizureEvent s
-      ON DATE(s.time, 'unixepoch', 'localtime') = d.dateRange  -- by default, sqlite's DATE function will assume that the given time value is local time and will try to correct that to GMT time. But since we want the local time, we'll use the 'localtime' modifier.
+      ON DATE(s.time, 'unixepoch', 'localtime') = d.dateRange 
+      -- by default, sqlite's DATE function will assume that the given time
+      -- value is already in local time, however, since we stored time in UTC, we
+      -- will tell it to convert the UTC time to local time with the modifier.
       AND s.time >= STRFTIME('%s', DATE(?, ?))
       AND s.time < STRFTIME('%s', DATE(?, '+1 day'))
    GROUP BY d."dateRange"
@@ -400,7 +403,10 @@ WITH Dates(dateRange) AS (
 -- In this case, we want a double 0, not an int 0, so we do 0.0
 SELECT d.dateRange AS date, COALESCE(SUM(m.mgAmount), 0.0) AS totalDose
    FROM Dates d LEFT JOIN MedIntakeEvent m
-      ON DATE(m.time, 'unixepoch', 'localtime') = d.dateRange  -- by default, sqlite's DATE function will assume that the given time value is local time and will try to correct that to GMT time. But since we want the local time, we'll use the 'localtime' modifier.
+      ON DATE(m.time, 'unixepoch', 'localtime') = d.dateRange
+      -- by default, sqlite's DATE function will assume that the given time
+      -- value is already in local time, however, since we stored time in UTC, we
+      -- will tell it to convert the UTC time to local time with the modifier.
       AND med = ?
       AND TIME >= STRFTIME('%s', DATE(?, ?))
       AND TIME < STRFTIME('%s', DATE(?, '+1 day'))  -- Add 1 day (except the last second) so that data of the end day is also counted

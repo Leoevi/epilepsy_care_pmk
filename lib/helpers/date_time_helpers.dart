@@ -4,7 +4,8 @@ import 'package:flutter/material.dart';
 DateTime beginEpoch = DateTime.fromMillisecondsSinceEpoch(0);
 DateTime endDate = DateTime(2101, 12, 31);  // largest number available for the DateTime.fromMillisecondsSinceEpoch method is 8640000000000000
 
-/// Convert from unix date time representation to [DateTime] object in Dart.
+/// Convert from unix date time representation to [DateTime] object in Dart
+/// with the current device timezone.
 /// Unix date time is counted as "seconds since epoch".
 DateTime unixTimeToDateTime(int unixTime) {
   return DateTime.fromMillisecondsSinceEpoch(unixTime * 1000);
@@ -24,6 +25,7 @@ int dateTimeToUnixTime(DateTime dateTime) {
 DateTime combineDateTimeWithTimeOfDay(DateTime dateTime, TimeOfDay timeOfDay) {
   return DateTime(dateTime.year, dateTime.month, dateTime.day, timeOfDay.hour,
       timeOfDay.minute);
+  // No need to convert to UTC, dateTimeToUnixTime will output UTC time by default.
 }
 
 /// Separate a [DateTime] object that contains both date and time information
@@ -34,12 +36,4 @@ DateTime combineDateTimeWithTimeOfDay(DateTime dateTime, TimeOfDay timeOfDay) {
     DateTime(dateTime.year, dateTime.month, dateTime.day),
     TimeOfDay(hour: dateTime.hour, minute: dateTime.minute)
   );
-}
-
-/// Return an integer that is the difference between 2 days
-/// From https://stackoverflow.com/a/67679455
-int daysBetween(DateTime from, DateTime to) {
-  from = DateTime(from.year, from.month, from.day);
-  to = DateTime(to.year, to.month, to.day);
-  return (to.difference(from).inHours / 24).round();
 }

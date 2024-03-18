@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:epilepsy_care_pmk/models/event.dart';
 
 class MedIntakeEvent extends Event {
@@ -31,4 +33,13 @@ class MedIntakeEvent extends Event {
     "med": med,
     "mgAmount": mgAmount,
   };
+
+  // https://www.freecodecamp.org/news/serialize-object-flutter
+  // jsonDecode only returns a map, which we will to our object with "fromJson" method
+  /// Factory for creating MedIntakeEvent objects from serialized string,
+  /// intend to be used for notifications payload.
+  factory MedIntakeEvent.fromSerializedString(String payload) => MedIntakeEvent.fromJson(jsonDecode(payload));
+
+  /// Serialize the current object to json string which can then be decoded later.
+  String toSerializedString() => jsonEncode(this);
 }

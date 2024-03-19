@@ -1,6 +1,7 @@
 import 'package:epilepsy_care_pmk/custom_widgets/dosage_graph.dart';
 import 'package:epilepsy_care_pmk/screens/home/graph_history/graph_model.dart';
 import 'package:epilepsy_care_pmk/screens/home/graph_history/med_intake_history_print.dart';
+import 'package:epilepsy_care_pmk/screens/home/graph_history/page_number_model.dart';
 import 'package:flutter/material.dart';
 import 'package:printing/printing.dart';
 import 'package:provider/provider.dart';
@@ -26,25 +27,27 @@ class _MedIntakeHistoryState extends State<MedIntakeHistory> {
       TimeRangeDropdownOption.sevenDays;
   PageController medIntakePerDayPageController = PageController();
   late DateTimeRange range;
-  int currentPageIndex = 0;
 
   @override
   void initState() {
     super.initState();
     range = timeRangeDropdownOption.dateTimeRange;
   }
-Future<void> printMedIntakeHistory(Map<Medication, List<MedIntakePerDay>> allMedIntakePerDays) async {
-  final doc = pw.Document();
-  for(Medication m in allMedIntakePerDays.keys){
-    doc.addPage(pw.Page(
-      pageFormat: PdfPageFormat.a4,
-      build: (pw.Context context) {
-        return buildPrintableMedIntakeHistory(m,allMedIntakePerDays[m]!,allMedIntakePerDays.keys.toList());
-      }));
-  }
+
+  Future<void> printMedIntakeHistory(
+      Map<Medication, List<MedIntakePerDay>> allMedIntakePerDays) async {
+    final doc = pw.Document();
+    for (Medication m in allMedIntakePerDays.keys) {
+      doc.addPage(pw.Page(
+          pageFormat: PdfPageFormat.a4,
+          build: (pw.Context context) {
+            return buildPrintableMedIntakeHistory(
+                m, allMedIntakePerDays[m]!, allMedIntakePerDays.keys.toList());
+          }));
+    }
     await Printing.layoutPdf(
-      onLayout: (PdfPageFormat format) async => doc.save());
-}
+        onLayout: (PdfPageFormat format) async => doc.save());
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -52,17 +55,12 @@ Future<void> printMedIntakeHistory(Map<Medication, List<MedIntakePerDay>> allMed
       padding: const EdgeInsets.all(kSmallPadding),
       child: Column(
         children: [
-          Row(mainAxisAlignment: MainAxisAlignment.start, children: [
-            FutureBuilder(
-              future: DatabaseService.getAllMedIntakePerDayFrom(range),
-              builder: (context,snapshot) {
-                return IconButton(
-                  onPressed: () => printMedIntakeHistory(snapshot.data!),
-                  icon: Icon(Icons.local_print_shop_outlined));},
-            ),
-            SizedBox(
-              width: 180,
-            ),
+          Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+            IconButton(
+                // This can be optimized to not re-fetch the data from DB, but it requires using change notifier which I'm not going to bother right now.
+                onPressed: () async => printMedIntakeHistory(
+                    await DatabaseService.getAllMedIntakePerDayFrom(range)),
+                icon: Icon(Icons.local_print_shop_outlined)),
             TimeRangeDropdownButton(
               initialChoice: timeRangeDropdownOption,
               onChanged: (selectedRange) {
@@ -94,10 +92,12 @@ Future<void> printMedIntakeHistory(Map<Medication, List<MedIntakePerDay>> allMed
                           // For more info on ChangeNotifierProvider:
                           // https://docs.flutter.dev/data-and-backend/state-mgmt/simple#changenotifierprovider
                           // Use state management so that the PageView can change the DosageGraph state/data
-                          return ChangeNotifierProvider(
-                              create: (context) => GraphModel(snapshot.data![
-                                  medKeys[
-                                      0]]!), // Init medIntakePerDay with content of first page
+                          return MultiProvider(
+                            providers: [
+                              ChangeNotifierProvider(create: (context) => GraphModel(snapshot.data![medKeys[0]]!)),
+                              ChangeNotifierProvider(create: (context) => PageNumberModel(1))
+                            ],
+                              // Init medIntakePerDay with content of first page
                               builder: (context, child) {
                                 // Use builder instead of child, otherwise may run into Provider not found
                                 return Column(
@@ -144,6 +144,8 @@ Future<void> printMedIntakeHistory(Map<Medication, List<MedIntakePerDay>> allMed
                                                       listen: false)
                                                   .medIntakePerDays =
                                               snapshot.data![medKeys[index]]!;
+                                          // Tell the page indicator the new page number
+                                          Provider.of<PageNumberModel>(context, listen: false).currentPageNumber = index+1;  // +1 to correct zero-index
                                         },
                                       ),
                                       // Use PageView.builder instead because we can calculate statistic with each page's build
@@ -175,9 +177,13 @@ Future<void> printMedIntakeHistory(Map<Medication, List<MedIntakePerDay>> allMed
                                               child:
                                                   const Icon(Icons.play_arrow)),
                                         ),
-                                        Expanded(
-                                            child: Center(
-                                                child: Text("Page Count"))),
+                                        Consumer<PageNumberModel>(
+                                          builder: (context, model, child) {
+                                            return Expanded(
+                                                child: Center(
+                                                    child: Text("${model.currentPageNumber}/${medKeys.length}")));
+                                          }
+                                        ),
                                         IconButton(
                                           onPressed: () {
                                             medIntakePerDayPageController
@@ -195,9 +201,9 @@ Future<void> printMedIntakeHistory(Map<Medication, List<MedIntakePerDay>> allMed
 
                                     // Wrap the graph with a consumer so that we can get the value from GraphModel
                                     Consumer<GraphModel>(
-                                        builder: (context, graph, child) {
+                                        builder: (context, model, child) {
                                       return DosageGraph(
-                                          medIntakes: graph.medIntakePerDays);
+                                          medIntakes: model.medIntakePerDays);
                                     }),
                                   ],
                                 );

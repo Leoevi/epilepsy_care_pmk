@@ -11,16 +11,6 @@ import '../../../constants/styling.dart';
 import '../../../custom_widgets/time_range_dropdown_button.dart';
 import '../../../models/seizure_per_day.dart';
 
-Future<void> printSeizureHistory(List<SeizurePerDay> seizurePerDays) async {
-  final doc = pw.Document();
-  doc.addPage(pw.Page(
-      pageFormat: PdfPageFormat.a4,
-      build: (pw.Context context) {
-        return buildPrintableSeizureHistory(seizurePerDays);
-      }));
-  await Printing.layoutPdf(
-      onLayout: (PdfPageFormat format) async => doc.save());
-}
 
 class SeizureHistory extends StatefulWidget {
   const SeizureHistory({super.key});
@@ -40,23 +30,27 @@ class _SeizureHistoryState extends State<SeizureHistory> {
     range = timeRangeDropdownOption.dateTimeRange;
   }
 
+  Future<void> printSeizureHistory(List<SeizurePerDay> seizurePerDays) async {
+    final doc = pw.Document();
+    doc.addPage(pw.Page(
+        pageFormat: PdfPageFormat.a4,
+        build: (pw.Context context) {
+          return buildPrintableSeizureHistory(seizurePerDays);
+        }));
+    await Printing.layoutPdf(
+        onLayout: (PdfPageFormat format) async => doc.save());
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.all(kSmallPadding),
       child: Column(
         children: [
-          Row(mainAxisAlignment: MainAxisAlignment.start, children: [
-            FutureBuilder(
-              future: DatabaseService.getAllSeizurePerDayFrom(range),
-              builder: (context,snapshot) {
-                return IconButton(
-                  onPressed: () => printSeizureHistory(snapshot.data!),
-                  icon: Icon(Icons.local_print_shop_outlined));},
-            ),
-            SizedBox(
-              width: 180,
-            ),
+          Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+            IconButton(
+                onPressed: () async => printSeizureHistory(await DatabaseService.getAllSeizurePerDayFrom(range)),
+                icon: Icon(Icons.local_print_shop_outlined)),
             TimeRangeDropdownButton(
               initialChoice: timeRangeDropdownOption,
               onChanged: (selectedRange) {
@@ -109,9 +103,7 @@ class _SeizureHistoryState extends State<SeizureHistory> {
 
                         return Column(
                           children: [
-                            // TODO: Aggregate stats and display them accordingly.
                             Container(
-                              width: 340,
                               decoration: BoxDecoration(
                                   color: Color(0xFFF5F2FF),
                                   borderRadius: BorderRadius.circular(8)),

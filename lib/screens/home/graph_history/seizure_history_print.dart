@@ -9,12 +9,10 @@ import 'package:collection/collection.dart';
 
 import 'package:epilepsy_care_pmk/main.dart';
 
-String? hn = prefs.getString('hn');
-// String? name = prefs.getString('firstName');
-// String? lastName = prefs.getString('lastName');
-
 buildPrintableSeizureHistory(List<SeizurePerDay> seizurePerDays) {
-  
+  // String? name = prefs.getString('firstName');
+  // String? lastName = prefs.getString('lastName');
+  String? hn = prefs.getString('hn');
   // total/max/min/avg calculation
   // int total = seizurePerDays.fold(0, (sum, element) => sum + element.seizureOccurrence);
   // fold is similar to reduce, but it can change type (reduce fixes the type to the same as the list)
@@ -148,7 +146,7 @@ buildPrintableSeizureHistory(List<SeizurePerDay> seizurePerDays) {
             pw.LineDataSet(
                 legend: 'Times',
                 // drawSurface: true,
-                isCurved: true,
+                isCurved: false,
                 drawPoints: false,
                 color: PdfColors.red,
                 data: seizurePerDays

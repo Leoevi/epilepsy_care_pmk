@@ -13,12 +13,13 @@ import 'package:pdf/widgets.dart' as pw;
 import 'package:collection/collection.dart';
 import 'package:epilepsy_care_pmk/main.dart';
 
-String? hn = prefs.getString('hn');
-// String? name = prefs.getString('firstName');
-// String? lastName = prefs.getString('lastName');
-
 buildPrintableMedIntakeHistory(Medication m,
     List<MedIntakePerDay> medIntakePerDays, List<Medication> medKeys) {
+  // String? name = prefs.getString('firstName');
+  // String? lastName = prefs.getString('lastName');
+  String? hn = prefs.getString('hn');
+
+  // Aggregate basic stats
   if (medKeys.isNotEmpty) {
     double total = 0,
         avg = 0,
@@ -36,6 +37,13 @@ buildPrintableMedIntakeHistory(Medication m,
       }
     }
     avg = total / medIntakePerDays.length;
+
+    // These are used for graph rendering
+    final int maxScale = max.ceil();
+    const int scaleCount = 10;
+    final int interval = maxScale ~/ scaleCount;
+    List<int> scaleToDisplay = List.generate(scaleCount + 1, (index) => index*interval);
+
     return pw.Padding(
       padding: pw.EdgeInsets.all(kSmallPadding),
       child: pw.Flexible(
@@ -134,9 +142,9 @@ buildPrintableMedIntakeHistory(Medication m,
               ),
               yAxis: pw.FixedAxis(
                 List.generate(max.ceil() + 2, (index) => index),
-                buildLabel: (i) {
-                  if (i % 30 == 0) {
-                    return pw.Text(i.toString());
+                buildLabel: (index) {
+                  if (scaleToDisplay.contains(index)) {
+                    return pw.Text(index.toString());
                   } else {
                     return pw.Text("");
                   }
@@ -148,7 +156,7 @@ buildPrintableMedIntakeHistory(Medication m,
               pw.LineDataSet(
                   legend: 'Dosage(Mg.)',
                   // drawSurface: true,
-                  isCurved: true,
+                  isCurved: false,
                   drawPoints: false,
                   color: PdfColors.red,
                   data: medIntakePerDays

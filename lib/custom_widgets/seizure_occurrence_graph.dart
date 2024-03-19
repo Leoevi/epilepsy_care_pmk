@@ -144,26 +144,18 @@ class SeizureOccurrenceGraph extends StatelessWidget {
                   show: true,
                   drawHorizontalLine: true,
                   drawVerticalLine: true,
-                  horizontalInterval: 1.5,
-                  verticalInterval: 5,
-                  checkToShowHorizontalLine: (value) {
-                    return value.toInt() == 0;
-                  },
                   getDrawingHorizontalLine: (_) => FlLine(
-                    color: Colors.blue,
+                    color: Colors.black,
                     dashArray: [8, 2],
                     strokeWidth: 0.8,
                   ),
                   getDrawingVerticalLine: (_) => FlLine(
-                    color: Colors.yellow,
+                    color: Colors.black,
                     dashArray: [8, 2],
                     strokeWidth: 0.8,
                   ),
-                  checkToShowVerticalLine: (value) {
-                    return value.toInt() == 0;
-                  },
                 ),
-                borderData: FlBorderData(show: false),
+                borderData: FlBorderData(show: true),
               ),
             );
           },

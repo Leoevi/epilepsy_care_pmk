@@ -162,39 +162,45 @@ class _MedIntakeHistoryState extends State<MedIntakeHistory> {
                                       //   ],
                                       // ),
                                     ),
-                                    Row(
-                                      children: [
-                                        // https://stackoverflow.com/questions/58047009/flutter-how-to-flip-an-icon-to-get-mirror-effect
-                                        IconButton(
-                                          onPressed: () {
-                                            medIntakePerDayPageController
-                                                .previousPage(
-                                                    duration: animationDuration,
-                                                    curve: Curves.easeInOut);
-                                          },
-                                          icon: Transform.flip(
-                                              flipX: true,
-                                              child:
-                                                  const Icon(Icons.play_arrow)),
-                                        ),
-                                        Consumer<PageNumberModel>(
-                                          builder: (context, model, child) {
-                                            return Expanded(
-                                                child: Center(
-                                                    child: Text("${model.currentPageNumber}/${medKeys.length}")));
-                                          }
-                                        ),
-                                        IconButton(
-                                          onPressed: () {
-                                            medIntakePerDayPageController
-                                                .nextPage(
-                                                    duration: animationDuration,
-                                                    curve: Curves.easeInOut);
-                                          },
-                                          icon: const Icon(Icons.play_arrow),
-                                        ),
-                                      ],
+
+                                    Container(
+                                      decoration: BoxDecoration(
+                                          color: Color(0xFFF5F2FF), borderRadius: BorderRadius.vertical(bottom: Radius.circular(kSmallRoundedCornerRadius))),
+                                      child: Row(
+                                        children: [
+                                          // https://stackoverflow.com/questions/58047009/flutter-how-to-flip-an-icon-to-get-mirror-effect
+                                          IconButton(
+                                            onPressed: () {
+                                              medIntakePerDayPageController
+                                                  .previousPage(
+                                                      duration: animationDuration,
+                                                      curve: Curves.easeInOut);
+                                            },
+                                            icon: Transform.flip(
+                                                flipX: true,
+                                                child:
+                                                    const Icon(Icons.play_arrow)),
+                                          ),
+                                          Consumer<PageNumberModel>(
+                                            builder: (context, model, child) {
+                                              return Expanded(
+                                                  child: Center(
+                                                      child: Text("${model.currentPageNumber}/${medKeys.length}")));
+                                            }
+                                          ),
+                                          IconButton(
+                                            onPressed: () {
+                                              medIntakePerDayPageController
+                                                  .nextPage(
+                                                      duration: animationDuration,
+                                                      curve: Curves.easeInOut);
+                                            },
+                                            icon: const Icon(Icons.play_arrow),
+                                          ),
+                                        ],
+                                      ),
                                     ),
+
                                     const SizedBox(
                                       height: kSmallPadding,
                                     ),
@@ -246,7 +252,7 @@ class MedIntakePerDayPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-          color: Color(0xFFF5F2FF), borderRadius: BorderRadius.circular(8)),
+          color: Color(0xFFF5F2FF), borderRadius: BorderRadius.vertical(top: Radius.circular(kSmallRoundedCornerRadius))),
       child: Padding(
         padding: EdgeInsets.all(kLargePadding),
         child: Column(

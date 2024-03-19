@@ -52,11 +52,17 @@ class DosageGraph extends StatelessWidget {
       fontWeight: FontWeight.bold,
       fontSize: min(18, 18 * chartWidth / 300),
     );
-    return SideTitleWidget(
-      axisSide: meta.axisSide,
-      space: 16,
-      child: Text(meta.formattedValue, style: style),
-    );
+    // Omit the max since it'll be a decimal which will overflow to the next line
+    // which doesn't look nice.
+    if (value != meta.max) {
+      return SideTitleWidget(
+        axisSide: meta.axisSide,
+        space: 16,
+        child: Text(meta.formattedValue, style: style),
+      );
+    } else {
+      return const Text("");
+    }
   }
 
   @override
@@ -144,26 +150,24 @@ class DosageGraph extends StatelessWidget {
                   show: true,
                   drawHorizontalLine: true,
                   drawVerticalLine: true,
-                  horizontalInterval: 1.5,
-                  verticalInterval: 5,
-                  checkToShowHorizontalLine: (value) {
-                    return value.toInt() == 0;
-                  },
+                  // checkToShowHorizontalLine: (value) {
+                  //   return value.toInt() == 0;
+                  // },
                   getDrawingHorizontalLine: (_) => FlLine(
-                    color: Colors.blue,
+                    color: Colors.black,
                     dashArray: [8, 2],
                     strokeWidth: 0.8,
                   ),
+                  // checkToShowVerticalLine: (value) {
+                  //   return value.toInt() == 0;
+                  // },
                   getDrawingVerticalLine: (_) => FlLine(
-                    color: Colors.yellow,
+                    color: Colors.black,
                     dashArray: [8, 2],
                     strokeWidth: 0.8,
                   ),
-                  checkToShowVerticalLine: (value) {
-                    return value.toInt() == 0;
-                  },
                 ),
-                borderData: FlBorderData(show: false),
+                borderData: FlBorderData(show: true),
               ),
             );
           },

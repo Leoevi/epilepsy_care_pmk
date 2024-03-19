@@ -89,7 +89,7 @@ class _AddMedAllergyInputState extends State<AddMedAllergyInput> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     HorizontalDatePicker(
-                      startDate: _inputDate,
+                      selectedDate: _inputDate,
                       onDateChange: (date) {
                         setState(() {
                           _inputDate = date;

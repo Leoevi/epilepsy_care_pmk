@@ -89,7 +89,7 @@ class _AddSeizureInputState extends State<AddSeizureInput> {
                           //Start here
 
                           HorizontalDatePicker(
-                            startDate: _inputDate,
+                            selectedDate: _inputDate,
                             onDateChange: (date) {
                               setState(() {
                                 _inputDate = date;

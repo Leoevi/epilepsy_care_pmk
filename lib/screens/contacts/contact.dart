@@ -61,21 +61,20 @@ class Contact extends StatelessWidget {
                   ],
                 ),
 
-                // TODO: check if all of these contact address is up-to-date
-                ContactEntry(
-                  label: "เว็บไซต์",
-                  address: "https://www.pedpmk.org/",
-                  buttonLabel: "เข้าเว็บไซต์",
-                  onPressed: () async {
-                    final httpUri = Uri(
-                      scheme: "https",
-                      host: "www.pedpmk.org",
-                    );
-                    if (await canLaunchUrl(httpUri)) {
-                      launchUrl(httpUri);
-                    }
-                  },
-                ),
+                // ContactEntry(
+                //   label: "เว็บไซต์",
+                //   address: "https://www.pedpmk.org/",
+                //   buttonLabel: "เข้าเว็บไซต์",
+                //   onPressed: () async {
+                //     final httpUri = Uri(
+                //       scheme: "https",
+                //       host: "www.pedpmk.org",
+                //     );
+                //     if (await canLaunchUrl(httpUri)) {
+                //       launchUrl(httpUri);
+                //     }
+                //   },
+                // ),
                 ContactEntry(
                   label: "อีเมล์",
                   address: "pediatricneurologypmk@gmail.com",

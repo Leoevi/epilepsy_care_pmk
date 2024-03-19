@@ -21,6 +21,9 @@
 // SOFTWARE.
 
 import 'package:epilepsy_care_pmk/constants/styling.dart';
+import 'package:epilepsy_care_pmk/custom_widgets/event_list.dart';
+import 'package:epilepsy_care_pmk/helpers/date_time_helpers.dart';
+import 'package:epilepsy_care_pmk/services/database_service.dart';
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 
@@ -32,10 +35,11 @@ class Calendar extends StatefulWidget {
 }
 
 class _CalendarState extends State<Calendar> {
-  DateTime today = DateTime.now();
+  DateTime selectedDate = DateUtils.dateOnly(DateTime.now());
+
   void _onDaySelected(DateTime day, DateTime focusedDay) {
     setState(() {
-      today = day;
+      selectedDate = day;
     });
   }
 
@@ -48,34 +52,40 @@ class _CalendarState extends State<Calendar> {
   }
 
   Widget content() {
-    return Column(
-      children: [
-        Container(
-          decoration: BoxDecoration(
-              color: Colors.white,
-              border: Border.all(
-                color: Colors.black,
-                width: 2.0,
-              ),
-              borderRadius: BorderRadius.circular(10.0)),
-          padding: const EdgeInsets.all(kSmallPadding),
-          margin: const EdgeInsets.all(kLargePadding),
-          child: TableCalendar(
-            calendarStyle: CalendarStyle(),
-            calendarBuilders: CalendarBuilders(),
-            focusedDay: today,
-            rowHeight: 50,
-            headerStyle: const HeaderStyle(
-                formatButtonVisible: false, titleCentered: true),
-            availableGestures: AvailableGestures.all,
-            selectedDayPredicate: (day) => isSameDay(day, today),
-            firstDay: DateTime.utc(2020, 1, 14),
-            lastDay: DateTime.utc(2030, 3, 14),
-            onDaySelected: _onDaySelected,
-            locale: 'en_US', //TODO: change to TH lang.
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(
+        kLargePadding, kSmallPadding, kLargePadding, 0
+      ),
+      child: Column(
+        children: [
+          Container(
+            decoration: BoxDecoration(
+                color: Colors.white,
+                border: Border.all(
+                  color: Colors.black,
+                  width: 2.0,
+                ),
+                borderRadius: BorderRadius.circular(10.0)),
+            // padding: const EdgeInsets.all(kSmallPadding),
+            // margin: const EdgeInsets.all(kLargePadding),
+            child: TableCalendar(
+              calendarStyle: CalendarStyle(),
+              calendarBuilders: CalendarBuilders(),
+              focusedDay: selectedDate,
+              rowHeight: 40,
+              headerStyle: const HeaderStyle(
+                  formatButtonVisible: false, titleCentered: true),
+              availableGestures: AvailableGestures.all,
+              selectedDayPredicate: (day) => isSameDay(day, selectedDate),
+              firstDay: beginEpoch,
+              lastDay: endDate,
+              onDaySelected: _onDaySelected,
+              locale: 'en_US', //TODO: change to TH lang.
+            ),
           ),
-        ),
-      ],
+          Flexible(child: EventList(dateTimeRange: DateTimeRange(start: selectedDate, end: selectedDate),)),
+        ],
+      ),
     );
   }
 }

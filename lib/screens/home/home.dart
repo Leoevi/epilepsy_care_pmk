@@ -58,25 +58,11 @@ class _HomeState extends State<Home> {
     range = timeRangeDropdownOption.dateTimeRange;
   }
 
-  // void loadData() async {
-  //   final SharedPreferences prefs = await SharedPreferences.getInstance();
-  //     setState(() {
-  //       firstName = prefs.getString('firstName') ?? null;
-  //
-  //     ImageUtility.getImageFromPreferences().then((img) {
-  //       if (null == img) {
-  //         return;
-  //       }
-  //       imageFromPreferences = ImageUtility.imageFromBase64String(img);
-  //   });
-  //     });
-  //
-  // }
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(kLargePadding),
+      padding: const EdgeInsets.fromLTRB(kLargePadding, kLargePadding, kLargePadding, 0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -104,7 +90,7 @@ class _HomeState extends State<Home> {
                           //Image
                           CircleAvatar(
                             radius: 28,
-                            backgroundImage: imageFromPreferences?.image,
+                            backgroundImage: imageFromPreferences?.image ?? profilePlaceholder,
                           ),
                           SizedBox(
                             width: kSmallPadding,

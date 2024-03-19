@@ -102,7 +102,7 @@ class _AddMedIntakeInputState extends State<AddMedIntakeInput> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     HorizontalDatePicker(
-                      startDate: _inputDate,
+                      selectedDate: _inputDate,
                       onDateChange: (date) {
                         setState(() {
                           _inputDate = date;

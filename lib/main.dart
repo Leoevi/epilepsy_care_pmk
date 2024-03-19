@@ -145,7 +145,7 @@ class _MyHomePageState extends State<MyHomePage> {
           clipBehavior: Clip.antiAliasWithSaveLayer,
           height: 70,
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: Theme.of(context).colorScheme.surface,
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,

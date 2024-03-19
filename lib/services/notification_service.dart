@@ -12,11 +12,11 @@ import 'package:timezone/timezone.dart' as tz;
 class NotificationService {
   static final FlutterLocalNotificationsPlugin notificationsPlugin = FlutterLocalNotificationsPlugin();
 
-  // Stream for letting the app know when a notification is selected.
-  // Will be subscribed to when the app init the
   static final _notificationTriggerController = StreamController<String?>.broadcast();
+  /// Stream for letting the app know when a notification is selected.
+  /// Will be subscribed to when the app initializes.
   static final notificationTriggerStream = _notificationTriggerController.stream;
-
+  /// This method will be called to update the stream
   static void _addSelectedNotification(String? payload) {
     _notificationTriggerController.add(payload);
   }
@@ -26,12 +26,15 @@ class NotificationService {
     // Ask for permission
     notificationsPlugin.resolvePlatformSpecificImplementation<
         AndroidFlutterLocalNotificationsPlugin>()!.requestNotificationsPermission();
-    // The app_icon.png file with the middle white part cut out with extra padding to make the line more prominent
-    AndroidInitializationSettings initializationSettingsAndroid = const AndroidInitializationSettings("notification_icon");
-    var initializationSettings = InitializationSettings(
-      android: initializationSettingsAndroid,
-    );
 
+    // The app_icon.png file with the middle white part cut out with extra padding to make the line more prominent
+    AndroidInitializationSettings androidInitSettings = const AndroidInitializationSettings("notification_icon");
+    DarwinInitializationSettings iosInitSettings = const DarwinInitializationSettings();
+
+    var initializationSettings = InitializationSettings(
+      android: androidInitSettings,
+      iOS: iosInitSettings,
+    );
     await notificationsPlugin.initialize(
       initializationSettings,
       // This only works when the app is already running

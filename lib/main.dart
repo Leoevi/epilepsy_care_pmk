@@ -20,6 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+import 'package:epilepsy_care_pmk/constants/styling.dart';
 import 'package:epilepsy_care_pmk/custom_widgets/home_drawer.dart';
 import 'package:epilepsy_care_pmk/models/med_intake_event.dart';
 import 'package:epilepsy_care_pmk/screens/add_event/add_select.dart';
@@ -46,7 +47,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 late SharedPreferences prefs;
 
 Future<void> main() async {
-  WidgetsFlutterBinding.ensureInitialized();  // Prevent errors from awaiting later
+  WidgetsFlutterBinding
+      .ensureInitialized(); // Prevent errors from awaiting later
   prefs = await SharedPreferences.getInstance();
   NotificationService.initNotification();
 
@@ -75,7 +77,8 @@ class MyApp extends StatelessWidget {
         //   labelSmall: TextStyle(fontWeight: FontWeight.bold,)
         // )
       ),
-      home: prefs.getString("hn") == null ? const Register() : const MyHomePage(),
+      home:
+          prefs.getString("hn") == null ? const Register() : const MyHomePage(),
     );
   }
 }
@@ -113,14 +116,20 @@ class _MyHomePageState extends State<MyHomePage> {
     listenNotification();
   }
 
-  void listenNotification() => NotificationService.notificationTriggerStream.listen((payload) { onClickedNotification(payload); });
+  void listenNotification() =>
+      NotificationService.notificationTriggerStream.listen((payload) {
+        onClickedNotification(payload);
+      });
 
   void onClickedNotification(String? payload) {
     if (payload != null) {
-      MedIntakeEvent eventFromPayload = MedIntakeEvent.fromSerializedString("""{"medIntakeId":598,"time":1710620070,"med":"Clonazepam / Rivotril®","mgAmount":166.32128690503978}""");
+      MedIntakeEvent eventFromPayload = MedIntakeEvent.fromSerializedString(
+          """{"medIntakeId":598,"time":1710620070,"med":"Clonazepam / Rivotril®","mgAmount":166.32128690503978}""");
       // MedIntakeEvent eventFromPayload = MedIntakeEvent.fromSerializedString(payload);  // TODO: replace this later
       Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) => AddMedIntakeInput(initMedIntakeEvent: eventFromPayload,)));
+          builder: (context) => AddMedIntakeInput(
+                initMedIntakeEvent: eventFromPayload,
+              )));
     }
   }
 
@@ -128,15 +137,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Container(
       // To have a gradient background, need to wrap with container
-      decoration: const BoxDecoration(
-          gradient: LinearGradient(
-              begin: Alignment.topCenter,
-              end: Alignment.bottomCenter,
-              colors: [
-            Color(0xFFF6C0FF),
-            Color(0xFFF69AFF)
-          ] 
-              )),
+      decoration: baseBackgroundDecoration,
       child: Scaffold(
         endDrawer: SafeArea(child: HomeDrawer()),
         endDrawerEnableOpenDragGesture: false,
@@ -144,9 +145,7 @@ class _MyHomePageState extends State<MyHomePage> {
           clipBehavior: Clip.antiAliasWithSaveLayer,
           height: 70,
           decoration: BoxDecoration(
-            color: Theme.of(context)
-                .colorScheme
-                .inversePrimary, 
+            color: Colors.white,
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -187,7 +186,6 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
               ),
               Stack(
-          
                 // alignment: AlignmentDirectional.center,
                 // clipBehavior: Clip.none,
                 children: <Widget>[
@@ -200,7 +198,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             builder: (context) => const AddSelect()));
                       },
                       elevation: 2.0,
-                      fillColor: Colors.white,
+                      fillColor: Color(0xffD9ACF5),
                       child: const Icon(
                         Icons.add,
                         size: 35.0,

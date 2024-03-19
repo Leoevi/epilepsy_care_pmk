@@ -45,8 +45,9 @@ const baseBackgroundDecoration = BoxDecoration(
         begin: Alignment.topCenter,
         end: Alignment.bottomCenter,
         colors: [
-      Color(0xFFF6C0FF),
-      Color(0xFFF69AFF)
+      Color(0xFFFFCEFE),
+      Color(0xFFFDEBED),
+      Color(0xFFFFCEFE)
     ] // TODO: use colors from theme instead of hardcoding
         ));
 

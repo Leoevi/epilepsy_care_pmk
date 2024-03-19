@@ -14,8 +14,9 @@ class SymptomEntry {
 
   final String title;
   final Text content;
-  var icon;
-  var picture;
+  final ImageProvider<Object>? icon;
+  final Image picture;
+  
 }
 
 final List<SymptomEntry> symptomEntries = [
@@ -41,8 +42,8 @@ final List<SymptomEntry> symptomEntries = [
           ],
         ),
       ),
-      icon: null,
-      picture: null),
+      icon: AssetImage("image/seizure_wiki_info/seizure_wiki_1.jpeg"),
+      picture: Image.asset("image/seizure_wiki_info/seizure_wiki_1.jpeg"),),
   SymptomEntry(
       title: "สาเหตุของอาการลมชัก",
       content: Text.rich(
@@ -66,8 +67,8 @@ final List<SymptomEntry> symptomEntries = [
           ],
         ),
       ),
-      icon: null,
-      picture: null),
+      icon: AssetImage("image/seizure_wiki_info/seizure_wiki_2.jpg"),
+      picture: Image.asset("image/seizure_wiki_info/seizure_wiki_2.jpg"),),
   SymptomEntry(
       title: "ประเภทของการชัก",
       content: Text.rich(
@@ -94,8 +95,8 @@ final List<SymptomEntry> symptomEntries = [
           ],
         ),
       ),
-      icon: null,
-      picture: null),
+      icon: AssetImage("image/seizure_wiki_info/seizure_wiki_3.jpeg"),
+      picture: Image.asset("image/seizure_wiki_info/seizure_wiki_3.jpeg"),),
   SymptomEntry(
       title: "การรักษาโรคลมชัก",
       content: Text.rich(
@@ -124,6 +125,6 @@ final List<SymptomEntry> symptomEntries = [
           ],
         ),
       ),
-      icon: null,
-      picture: null),
+      icon: AssetImage("image/seizure_wiki_info/seizure_wiki_6.jpg"),
+      picture: Image.asset("image/seizure_wiki_info/seizure_wiki_6.jpg"),),
 ];

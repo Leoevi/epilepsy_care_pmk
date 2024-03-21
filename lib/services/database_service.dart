@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:epilepsy_care_pmk/helpers/date_time_helpers.dart';
+import 'package:epilepsy_care_pmk/models/alarm.dart';
 import 'package:epilepsy_care_pmk/models/event.dart';
 import 'package:epilepsy_care_pmk/models/med_allergy_event.dart';
 import 'package:epilepsy_care_pmk/models/med_intake_event.dart';
@@ -40,6 +41,8 @@ class DatabaseService {
   static const String medAllergyEventPrimaryKeyName = "medAllergyId";
   static const String medIntakeEventTableName = "MedIntakeEvent";
   static const String medIntakeEventTablePrimaryKeyName = "medIntakeId";
+  static const String alarmTableName = "Alarm";
+  static const String alarmTablePrimaryKeyName = "alarmId";
 
   /// Retrieve an instance of the database, will run onCreate once when
   /// there is no existing database.
@@ -75,6 +78,17 @@ class DatabaseService {
             "med" TEXT NOT NULL,
             "mgAmount" REAL NOT NULL, 
             PRIMARY KEY ("$medIntakeEventTablePrimaryKeyName"));
+        """);
+        await db.execute("""
+          CREATE TABLE IF NOT EXISTS "$alarmTableName" (
+	          "$alarmTablePrimaryKeyName" INTEGER NOT NULL,
+          	"hour" INTEGER NOT NULL,
+	          "minute" INTEGER NOT NULL,
+	          "med" TEXT NOT NULL,
+          	"quantity" REAL NOT NULL,
+	          "unit" TEXT NOT NULL,
+	          "enable" INTEGER NOT NULL,
+            PRIMARY KEY ("alarmID"));
         """);
       },
       version: _version,
@@ -512,5 +526,57 @@ SELECT d.dateRange AS date, COALESCE(SUM(m.mgAmount), 0.0) AS totalDose
     allEvents.sort((a, b) => b.compareTo(a));
 
     return allEvents;
+  }
+
+  /// Add an Alarm to the database.
+  static Future<int> addAlarm(Alarm alarm) async {
+    final db = await _getDB();
+    return await db
+        .insert(alarmTableName, alarm.toJson(),
+        conflictAlgorithm: ConflictAlgorithm.replace)
+        .then((value) {
+      _triggerUpdate();
+      return value; // return the original value from insert
+    });
+  }
+
+  /// Edit an Alarm in the database.
+  static Future<int> updateAlarm(Alarm alarm) async {
+    final db = await _getDB();
+    return await db
+        .update(alarmTableName, alarm.toJson(),
+        where: "$alarmTablePrimaryKeyName = ?",
+        // This where args is plugged into the ? symbol
+        whereArgs: [alarm.alarmId],
+        conflictAlgorithm: ConflictAlgorithm.replace)
+        .then((value) {
+      _triggerUpdate();
+      return value;
+    });
+  }
+
+  /// Delete an Alarm from the database.
+  static Future<int> deleteAlarm(Alarm alarm) async {
+    final db = await _getDB();
+    return await db.delete(alarmTableName,
+        where: "$alarmTablePrimaryKeyName = ?",
+        whereArgs: [alarm.alarmId]).then((value) {
+      _triggerUpdate();
+      return value;
+    });
+  }
+
+  /// Return all Alarms from the Database.
+  /// Sorted by creation from first to last.
+  static Future<List<Alarm>> getAllAlarm() async {
+    final db = await _getDB();
+    final List<Map<String, dynamic>> maps =
+    await db.query(alarmTableName, orderBy: alarmTablePrimaryKeyName);
+
+    if (maps.isEmpty) {
+      return List.empty();
+    }
+    return List.generate(
+        maps.length, (index) => Alarm.fromJson(maps[index]));
   }
 }

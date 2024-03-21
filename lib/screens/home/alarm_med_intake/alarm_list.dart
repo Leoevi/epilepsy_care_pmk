@@ -1,7 +1,7 @@
 import 'package:epilepsy_care_pmk/constants/styling.dart';
 import 'package:epilepsy_care_pmk/custom_widgets/event_card_with_toggle.dart';
 import 'package:epilepsy_care_pmk/screens/commons/screen_with_app_bar.dart';
-import 'package:epilepsy_care_pmk/screens/home/alarm_med_intake/add_alarm.dart';
+import 'package:epilepsy_care_pmk/screens/home/alarm_med_intake/add_alarm_input.dart';
 import 'package:flutter/material.dart';
 
 class AlarmMedIntake extends StatefulWidget {

@@ -67,14 +67,16 @@ class _HomeState extends State<Home> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Expanded(
+            flex: 1,
             child: Row(
               children: [
                 Expanded(
                     flex: 2,
-                    child: Image(
+                    child: Image.asset(
+                      "image/header_logo_eng.png",
                       alignment: Alignment.centerLeft,
-                      image: AssetImage("image/header_logo_eng.png"),
-                    )),
+                    )
+                ),
                 Expanded(
                   flex: 3,
                   child: Card(
@@ -115,37 +117,35 @@ class _HomeState extends State<Home> {
               ],
             ),
           ),
-          
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: kSmallPadding),
-            child: Row(children: [
-              Icon(
-                Icons.info_rounded,
-                color: Color.fromARGB(255, 0, 195, 0),
-              ),
-              SizedBox(
-                width: kSmallPadding,
-              ),
-              Expanded(
-                  child: Text(
-                "เหตุการณ์ที่เกิดขึ้น",
-                style: mediumLargeBoldText,
-              )),
-              SizedBox(
-                width: kLargePadding,
-              ),
-              TimeRangeDropdownButton(
-                initialChoice: timeRangeDropdownOption,
-                onChanged: (selectedRange) {
-                  setState(() {
-                    range = selectedRange;
-                  });
-                },
-              )
-            ]),
-          ),
+          SizedBox(height: kSmallPadding,),
+          Row(children: [
+            Icon(
+              Icons.info_rounded,
+              color: Color.fromARGB(255, 0, 195, 0),
+            ),
+            SizedBox(
+              width: kSmallPadding,
+            ),
+            Expanded(
+                child: Text(
+              "เหตุการณ์ที่เกิดขึ้น",
+              style: mediumLargeBoldText,
+            )),
+            SizedBox(
+              width: kLargePadding,
+            ),
+            TimeRangeDropdownButton(
+              initialChoice: timeRangeDropdownOption,
+              onChanged: (selectedRange) {
+                setState(() {
+                  range = selectedRange;
+                });
+              },
+            )
+          ]),
+          SizedBox(height: kSmallPadding,),
           Flexible(
-            flex: 5,
+            flex: 6,
             child: EventList(
               dateTimeRange: range,
             ),

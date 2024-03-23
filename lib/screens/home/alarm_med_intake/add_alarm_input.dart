@@ -81,7 +81,6 @@ class _AddAlarmState extends State<AddAlarm> {
     double quantity = double.parse(_inputMedicationQuantity!);
     Alarm alarm = Alarm(alarmId: widget.initAlarm!.alarmId, time: _inputTime!, med: _inputMedication!.name, quantity: quantity, unit: _inputMeasureUnit!.measureName, enable: widget.initAlarm!.enable);
     DatabaseService.updateAlarm(alarm);
-    // TODO: schedule noti accordingly
   }
 
   void _generateUnitDropdownList() {

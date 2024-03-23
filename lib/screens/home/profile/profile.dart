@@ -46,29 +46,6 @@ class _ProfileState extends State<Profile> {
     }
   }
 
-  // void loadData() async {
-  //   final SharedPreferences prefs = await SharedPreferences.getInstance();
-  //
-  //   setState(() {
-  //     hn = prefs.getString('hn') ?? null;
-  //     firstName = prefs.getString('firstName') ?? null;
-  //     lastName = prefs.getString('lastName') ?? null;
-  //     gender = prefs.getString('gender') ?? null;
-  //     //birthDate
-  //     birthDateTimeStamp = prefs.getString('birthDate') ?? null; //birthDate from prefs.
-  //     birthDateTimeStampParse = DateTime.parse(birthDateTimeStamp!);//parse to DateTime
-  //     timeString = dateDateFormat.format(birthDateTimeStampParse!);//formating
-  //     //image
-  //     ImageUtility.getImageFromPreferences().then((img) {
-  //       if (null == img) {
-  //         return;
-  //       }
-  //       imageFromPreferences = ImageUtility.imageFromBase64String(img);
-  //     });
-  //     //selectedImage = prefs.get('selectedImage') as XFile;
-  //   });
-  // }
-
   @override
   Widget build(BuildContext context) {
     return ScreenWithAppBar(
@@ -115,9 +92,7 @@ class _ProfileState extends State<Profile> {
                             Icons.info,
                             color: Color(0xff1C7D9C),
                           ),
-                          SizedBox(
-                            width: 200,
-                          ),
+                          Spacer(),
                           IconButton(
                               visualDensity: VisualDensity.compact,
                               onPressed: () {

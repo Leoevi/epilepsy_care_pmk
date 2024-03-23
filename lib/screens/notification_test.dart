@@ -22,10 +22,20 @@ class NotificationTest extends StatelessWidget {
               NotificationService.scheduleNotification(
                 title: "scheduled noti",
                 body: "scheduled noti body",
-                scheduledDate: DateTime.now().add(Duration(seconds: 20)),
+                scheduledDate: DateTime.now().add(Duration(seconds: 10)),
               );
             },
             child: Text("Test Schedule"),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              NotificationService.scheduleNotification(
+                title: "scheduled noti xxx",
+                body: "scheduled noti body xxx",
+                scheduledDate: DateTime.now().add(Duration(seconds: 20)),
+              );
+            },
+            child: Text("Test Schedule 2"),
           ),
           ElevatedButton(
             onPressed: () {

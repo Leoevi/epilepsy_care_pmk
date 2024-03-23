@@ -28,7 +28,7 @@ class _AlarmCardState extends State<AlarmCard> {
   Widget build(BuildContext context) {
     return Card(
       child: Padding(
-        padding: EdgeInsets.all(kMediumPadding),
+        padding: EdgeInsets.fromLTRB(kMediumPadding, kMediumPadding, kMediumPadding, 0),
         child: IntrinsicHeight(
           // Wrap with IntrinsicHeight so that we can see the VerticalDivider (https://stackoverflow.com/questions/49388281/flutter-vertical-divider-and-horizontal-divider)
           child: Row(children: [

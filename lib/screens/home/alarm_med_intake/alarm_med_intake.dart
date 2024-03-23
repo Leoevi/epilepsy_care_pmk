@@ -4,6 +4,7 @@ import 'package:epilepsy_care_pmk/custom_widgets/event_list.dart';
 import 'package:epilepsy_care_pmk/screens/commons/screen_with_app_bar.dart';
 import 'package:epilepsy_care_pmk/screens/home/alarm_med_intake/add_alarm_input.dart';
 import 'package:epilepsy_care_pmk/services/database_service.dart';
+import 'package:epilepsy_care_pmk/services/notification_service.dart';
 import 'package:flutter/material.dart';
 
 /// This page took most inspirations from the [EventList] widget.
@@ -17,6 +18,14 @@ class AlarmMedIntake extends StatefulWidget {
 }
 
 class _AlarmMedIntakeState extends State<AlarmMedIntake> {
+  late Future<bool?> notificationPermission;
+
+  @override
+  void initState() {
+    super.initState();
+    notificationPermission = NotificationService.getPermissionStatus();
+  }
+
   @override
   Widget build(BuildContext context) {
     return ScreenWithAppBar(
@@ -29,7 +38,29 @@ class _AlarmMedIntakeState extends State<AlarmMedIntake> {
             },
             icon: const Icon(Icons.add))
       ],
-      body: StreamBuilder<bool>(
+      body: FutureBuilder<bool?>(
+        future: notificationPermission,
+        builder: (context, snapshot) {
+          // TODO: use the acquired permission status to display appropriate page.
+          return AlarmList();
+        },
+      ),
+    );
+  }
+}
+
+/// List of [Alarm] (s) displayed with the [AlarmCard] widget.
+class AlarmList extends StatefulWidget {
+  const AlarmList({super.key});
+
+  @override
+  State<AlarmList> createState() => _AlarmListState();
+}
+
+class _AlarmListState extends State<AlarmList> {
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder<bool>(
         stream: DatabaseService.updateTriggerStream,
         builder: (_, __) {
           return FutureBuilder(
@@ -44,7 +75,6 @@ class _AlarmMedIntakeState extends State<AlarmMedIntake> {
                   if (snapshot.hasError) {
                     return Text("Error: ${snapshot.error}");
                   } else if (snapshot.hasData) {
-                    print(snapshot.data);
                     return ListView.builder(
                         itemCount: snapshot.data!.length,
                         itemBuilder: (context, index) {
@@ -65,50 +95,6 @@ class _AlarmMedIntakeState extends State<AlarmMedIntake> {
             },
           );
         }
-      ),
     );
-
-    // return ScreenWithAppBar(
-    //   title: 'ตั้งเวลากินยา',
-    //   actions: <Widget>[
-    //     IconButton(
-    //         onPressed: () {
-    //           Navigator.of(context).push(
-    //               MaterialPageRoute(builder: (context) => const AddAlarm()));
-    //         },
-    //         icon: Icon(Icons.add))
-    //   ],
-    //   body: Padding(
-    //       padding: EdgeInsets.all(kMediumPadding),
-    //       child: SingleChildScrollView(
-    //           child: Column(
-    //         children: [
-    //           EventCardWithToggleSwitch(
-    //             titleAlarm: 'Med Name',
-    //             timeAlarm: '9.00 น.',
-    //             detailAlarm:
-    //                 'detaildetaildetaildetaildetaildetaildetaildetaildetaildetail',
-    //           ),
-    //           EventCardWithToggleSwitch(
-    //             titleAlarm: 'Med Name',
-    //             timeAlarm: '9.00 น.',
-    //             detailAlarm:
-    //                 'detaildetaildetaildetaildetaildetaildetaildetaildetaildetail',
-    //           ),
-    //           EventCardWithToggleSwitch(
-    //             titleAlarm: 'Med Name',
-    //             timeAlarm: '9.00 น.',
-    //             detailAlarm:
-    //                 'detaildetaildetaildetaildetaildetaildetaildetaildetaildetail',
-    //           ),
-    //           EventCardWithToggleSwitch(
-    //             titleAlarm: 'Med Name',
-    //             timeAlarm: '9.00 น.',
-    //             detailAlarm:
-    //                 'detaildetaildetaildetaildetaildetaildetaildetaildetaildetail',
-    //           ),
-    //         ],
-    //       ))),
-    // );
   }
 }

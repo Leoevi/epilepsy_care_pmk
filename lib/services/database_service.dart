@@ -10,6 +10,7 @@ import 'package:epilepsy_care_pmk/models/med_intake_per_day.dart';
 import 'package:epilepsy_care_pmk/models/seizure_event.dart';
 import 'package:epilepsy_care_pmk/models/seizure_per_day.dart';
 import 'package:epilepsy_care_pmk/screens/wiki/medication/medication.dart';
+import 'package:epilepsy_care_pmk/services/notification_service.dart';
 import 'package:flutter/material.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
@@ -516,7 +517,7 @@ SELECT d.dateRange AS date, COALESCE(SUM(m.mgAmount), 0.0) AS totalDose
   }
 
   /// Return all Event(s) from the database with a specific date range.
-  /// Also sorts from newest to oldest event.
+  /// Sort from newest to oldest event.
   static Future<List<Event>> getAllSortedEventsFrom(DateTimeRange dateTimeRange) async {
     List<SeizureEvent> allSeizureEvents = await getAllSeizureEventsFrom(dateTimeRange);
     List<MedAllergyEvent> allMedAllergyEvent = await getAllMedAllergyEventsFrom(dateTimeRange);
@@ -528,7 +529,7 @@ SELECT d.dateRange AS date, COALESCE(SUM(m.mgAmount), 0.0) AS totalDose
     return allEvents;
   }
 
-  /// Add an Alarm to the database.
+  /// Add an Alarm to the database. Also sets notification of that alarm.
   static Future<int> addAlarm(Alarm alarm) async {
     final db = await _getDB();
     return await db
@@ -536,12 +537,16 @@ SELECT d.dateRange AS date, COALESCE(SUM(m.mgAmount), 0.0) AS totalDose
         conflictAlgorithm: ConflictAlgorithm.replace)
         .then((value) {
       _triggerUpdate();
+      alarm.newAlarmId = value;
+      alarm.setNotification();
       return value; // return the original value from insert
     });
   }
 
-  /// Edit an Alarm in the database.
+  /// Edit an Alarm in the database. Also sets notification of that alarm.
   static Future<int> updateAlarm(Alarm alarm) async {
+    alarm.setNotification();
+
     final db = await _getDB();
     return await db
         .update(alarmTableName, alarm.toJson(),
@@ -555,8 +560,12 @@ SELECT d.dateRange AS date, COALESCE(SUM(m.mgAmount), 0.0) AS totalDose
     });
   }
 
-  /// Delete an Alarm from the database.
+  /// Delete an Alarm from the database. But not before cancelling it's
+  /// corresponding notification.
   static Future<int> deleteAlarm(Alarm alarm) async {
+    // Be sure to cancel the notification before deletion.
+    NotificationService.cancel(alarm.alarmId!);
+
     final db = await _getDB();
     return await db.delete(alarmTableName,
         where: "$alarmTablePrimaryKeyName = ?",
@@ -567,10 +576,13 @@ SELECT d.dateRange AS date, COALESCE(SUM(m.mgAmount), 0.0) AS totalDose
   }
 
   /// Update the enable status of an alarm according to the passed in Alarm.
+  /// Also sets notification of that alarm.
   ///
   /// This method is similar to [updateAlarm], but doesn't sent out stream,
   /// so that lists that display alarms won't rebuild.
   static Future<int> updateAlarmEnable(Alarm alarm) async {
+    alarm.setNotification();
+
     final db = await _getDB();
     return await db.rawUpdate("""
       UPDATE $alarmTableName SET enable = ? WHERE $alarmTablePrimaryKeyName = ?

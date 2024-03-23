@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -8,7 +9,6 @@ import 'package:timezone/timezone.dart' as tz;
 
 // Inspired from here: https://www.youtube.com/watch?v=26TTYlwc6FM
 // and here: https://pub.dev/packages/flutter_local_notifications
-// TODO: Investigate why iOS not navigating to intended screen after launching with notification.
 class NotificationService {
   static final FlutterLocalNotificationsPlugin notificationsPlugin = FlutterLocalNotificationsPlugin();
 
@@ -22,7 +22,7 @@ class NotificationService {
   }
 
   static Future<void> initNotification() async {
-    // Ask for permission
+    // Ask for permission (Android)
     notificationsPlugin.resolvePlatformSpecificImplementation<
         AndroidFlutterLocalNotificationsPlugin>()?.requestNotificationsPermission();
 
@@ -68,16 +68,44 @@ class NotificationService {
     tz.setLocalLocation(tz.getLocation(currentLocation));  // set the default local time zone. Without this, all schedules are set at UTC time (+0)
   }
 
+  /// Returns whether or not the user have given notification permission to the
+  /// app. Works only on Android and iOS, otherwise, will return false.
+  ///
+  /// Now, you may observe that the return type is nullable. I personally have
+  /// no clue as to what scenario will null be even returned in the first place.
+  static Future<bool?> getPermissionStatus() async {
+    if (Platform.isAndroid) {
+      // This statement will also ask for permission if applicable (The app can ask for permission twice and after that the user will have to go to the settings to enable notification themselves).
+      AndroidFlutterLocalNotificationsPlugin? androidImplementation = notificationsPlugin.resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>();
+      final bool? isGranted = await androidImplementation?.requestNotificationsPermission();  // IDK why is this nullable tbh.
+      return isGranted ?? false;
+    } else if (Platform.isIOS) {
+      // TODO: test on iOS
+      // This statement will also ask for permission if applicable.
+      var iOSImplementation = notificationsPlugin.resolvePlatformSpecificImplementation<IOSFlutterLocalNotificationsPlugin>();
+      final bool? isGranted = await iOSImplementation?.requestPermissions(
+        alert: true,
+        badge: true,
+        sound: true,
+      );
+      return isGranted ?? false;
+    } else {
+      return false;
+    }
+  }
+
   static _notificationDetails() {
     return const NotificationDetails(
-        android: AndroidNotificationDetails("channelId", "channelName", importance: Importance.max)
+        android: AndroidNotificationDetails("0", "แจ้งเตือนการทานยา", importance: Importance.max),
     );
   }
 
+  /// Show a notification the soonest moment possible after the method has been called.
   static Future<void> showNotification({int id = 0, String? title, String? body, String? payload}) {
     return notificationsPlugin.show(id,title,body, _notificationDetails(), payload: payload);
   }
 
+  /// Schedule a notification to show on a specified DateTime.
   static Future<void> scheduleNotification(
       {int id = 1,
       String? title,
@@ -93,6 +121,7 @@ class NotificationService {
         );
   }
 
+  /// Schedule a daily notification on a given DateTime.
   static Future<void> scheduleDailyNotification(
       {int id = 2,
       String? title,
@@ -118,6 +147,12 @@ class NotificationService {
     return scheduledDate.isBefore(now)
         ? scheduledDate.add(const Duration(days: 1))
         : scheduledDate;
+  }
+
+  /// Cancel a notification with matching id, usually this id would be form the
+  /// alarmId column in the database.
+  static Future<void> cancel(int id) {
+    return notificationsPlugin.cancel(id);
   }
 
   static Future<void> cancelAll() {

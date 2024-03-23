@@ -7,7 +7,7 @@ import 'package:epilepsy_care_pmk/services/database_service.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../screens/home/alarm_med_intake/alarm_list.dart';
+import '../screens/home/alarm_med_intake/alarm_med_intake.dart';
 
 class HomeDrawer extends StatefulWidget {
   const HomeDrawer({

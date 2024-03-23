@@ -1,6 +1,9 @@
+import 'package:collection/collection.dart';
 import 'package:epilepsy_care_pmk/constants/styling.dart';
+import 'package:epilepsy_care_pmk/models/alarm.dart';
 import 'package:epilepsy_care_pmk/screens/commons/screen_with_app_bar.dart';
 import 'package:epilepsy_care_pmk/screens/wiki/medication/medication.dart';
+import 'package:epilepsy_care_pmk/services/database_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -12,31 +15,80 @@ const List<String> alarmModeList = <String>[
 ];
 
 class AddAlarm extends StatefulWidget {
-  const AddAlarm({super.key});
+  final Alarm? initAlarm;
+
+  const AddAlarm({
+    super.key,
+    this.initAlarm,
+  });
 
   @override
   State<AddAlarm> createState() => _AddAlarmState();
 }
 
 class _AddAlarmState extends State<AddAlarm> {
-  Medication? selectedMedication; // dropDown init value
-  String? medicationQuantity; // Input ปริมาณยา
-  MeasureUnit? selectedMeasureUnit;
-  String? alarmDetail; // Input รายละเอียด
-  String selectedRepetition = alarmModeList.first;
-  TimeOfDay selectedTime = TimeOfDay.now(); // default time
-
-  late final List<DropdownMenuItem<Medication>> medDropdownList;  // DropdownMenuItem is a generic, so we will assign it type that we need straight away.
-  List<DropdownMenuItem<MeasureUnit>>? unitDropdownList;
+  late final List<DropdownMenuItem<Medication>> _medDropdownList;  // DropdownMenuItem is a generic, so we will assign it type that we need straight away.
+  List<DropdownMenuItem<MeasureUnit>>? _unitDropdownList;
   final _formKey = GlobalKey<FormState>(); //Validate
+  TextEditingController medicationQuantityController = TextEditingController();
+  TextEditingController timeController = TextEditingController();
+
+  Medication? _inputMedication; // dropDown init value
+  String? _inputMedicationQuantity; // Input ปริมาณยา
+  MeasureUnit? _inputMeasureUnit;
+  TimeOfDay? _inputTime; // default time
 
   @override
   void initState() {
     super.initState();
-    medDropdownList = medicationEntries.map<DropdownMenuItem<Medication>>((entry) {
+    _medDropdownList = medicationEntries.map<DropdownMenuItem<Medication>>((entry) {
       return DropdownMenuItem<Medication>(
         value: entry,
         child: Text(entry.name),
+      );
+    }).toList();
+
+    if (widget.initAlarm != null) {
+      _inputMedication = medicationEntries.firstWhere((med) => med.name == widget.initAlarm?.med);
+      _inputMedicationQuantity = widget.initAlarm!.quantity.toString();
+      medicationQuantityController.text = _inputMedicationQuantity!;
+      _generateUnitDropdownList();
+      _inputMeasureUnit = _inputMedication!.medicationIntakeMethod.measureList.firstWhere((unit) => unit.measureName == widget.initAlarm!.unit);
+      _inputTime = widget.initAlarm!.time;
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        // format method requires initState to be finished first. So we added a post frame callback.
+        // (https://stackoverflow.com/questions/56395081/unhandled-exception-inheritfromwidgetofexacttype-localizationsscope-or-inheri)
+        timeController.text = _inputTime!.format(context);
+      });
+    }
+  }
+
+  /// TextEditingController requires disposing after use
+  @override
+  void dispose() {
+    medicationQuantityController.dispose();
+    timeController.dispose();
+    super.dispose();
+  }
+
+  void addToDb() {
+    double quantity = double.parse(_inputMedicationQuantity!);
+    Alarm alarm = Alarm(time: _inputTime!, med: _inputMedication!.name, quantity: quantity, unit: _inputMeasureUnit!.measureName, enable: true);
+    DatabaseService.addAlarm(alarm);
+  }
+
+  void updateToDb() {
+    double quantity = double.parse(_inputMedicationQuantity!);
+    Alarm alarm = Alarm(alarmId: widget.initAlarm!.alarmId, time: _inputTime!, med: _inputMedication!.name, quantity: quantity, unit: _inputMeasureUnit!.measureName, enable: widget.initAlarm!.enable);
+    DatabaseService.updateAlarm(alarm);
+    // TODO: schedule noti accordingly
+  }
+
+  void _generateUnitDropdownList() {
+    _unitDropdownList = _inputMedication?.medicationIntakeMethod.measureList.map<DropdownMenuItem<MeasureUnit>>((measure) {
+      return DropdownMenuItem<MeasureUnit>(
+        value: measure,
+        child: Text(measure.measureName),
       );
     }).toList();
   }
@@ -69,27 +121,24 @@ class _AddAlarmState extends State<AddAlarm> {
 
                           DropdownButtonFormField(
                             isExpanded: true,
-                            value: selectedMedication,
+                            value: _inputMedication,
                             icon: const Icon(Icons.keyboard_arrow_down),
                             decoration: const InputDecoration(border: OutlineInputBorder()),
                             onChanged: (Medication? val) {
-                              // 2 things that this onChange does
-                              // 1) set the selectedMedication
+                              // 3 things that this onChange does
                               setState(() {
-                                selectedMedication = val!;
-                                selectedMeasureUnit = null;  // For some reason, not setting this to null will cause an assertion error saying that there are 0 or 2 duplicate entries in the unit's drop down menu.
+                                // 1) set the selectedMedication
+                                _inputMedication = val!;
+                                // 2) Update and clear the measure drop down menu
+                                // use the ".?" operator to make the whole expr null if selectedMedication is null
+                                _inputMeasureUnit = null;  // For some reason, not setting this to null will cause an assertion error saying that there are 0 or 2 duplicate entries in the unit's drop down menu.
+                                _generateUnitDropdownList();
+                                // 3) Clear medication quantity text field
+                                _inputMedicationQuantity = null;
+                                medicationQuantityController.clear();
                               });
-
-                              // 2) Update the measure drop down menu
-                              // use the ".?" operator to make the whole expr null if selectedMedication is null
-                              unitDropdownList = selectedMedication?.medicationIntakeMethod.measureList.map<DropdownMenuItem<MeasureUnit>>((measure) {
-                                return DropdownMenuItem<MeasureUnit>(
-                                  value: measure,
-                                  child: Text(measure.measureName),
-                                );
-                              }).toList();
                             },
-                            items: medDropdownList,
+                            items: _medDropdownList,
                             validator: (val) {
                               if (val == null) {
                                 return "กรุณาเลือกยาที่จะบันทึก";
@@ -111,6 +160,7 @@ class _AddAlarmState extends State<AddAlarm> {
                               Expanded(
                                 flex: 2,
                                 child: TextFormField(
+                                  controller: medicationQuantityController,
                                   // https://stackoverflow.com/questions/49577781/how-to-create-number-input-field-in-flutter & https://stackoverflow.com/a/61215563
                                   keyboardType: const TextInputType.numberWithOptions(decimal: true),
                                   inputFormatters: [
@@ -128,7 +178,7 @@ class _AddAlarmState extends State<AddAlarm> {
                                   //Collect data by use update_text function
                                   onChanged: (val) {
                                     setState(() {
-                                      medicationQuantity = val;
+                                      _inputMedicationQuantity = val;
                                     });
                                   },
                                   decoration: InputDecoration(
@@ -139,7 +189,7 @@ class _AddAlarmState extends State<AddAlarm> {
                               SizedBox(width: kSmallPadding,),
                               Expanded(child: DropdownButtonFormField(
                                 isExpanded: true,
-                                value: selectedMeasureUnit,
+                                value: _inputMeasureUnit,
                                 icon: const Icon(Icons.keyboard_arrow_down),
                                 decoration: const InputDecoration(
                                   border: OutlineInputBorder(),
@@ -149,10 +199,10 @@ class _AddAlarmState extends State<AddAlarm> {
                                 ),
                                 onChanged: (MeasureUnit? val) {
                                   setState(() {
-                                    selectedMeasureUnit = val!;
+                                    _inputMeasureUnit = val!;
                                   });
                                 },
-                                items: unitDropdownList,
+                                items: _unitDropdownList,
                                 validator: (val) {
                                   if (val == null) {
                                     return "กรุณาเลือกหน่วยของปริมาณยา";
@@ -164,32 +214,6 @@ class _AddAlarmState extends State<AddAlarm> {
 
                           SizedBox(height: 20),
 
-                          //field รายละเอียด
-                          Text("โปรดระบุรายละเอียด",
-                              style: TextStyle(fontSize: 18)),
-                          SizedBox(height: 10),
-                          //spacing between label and TextInput
-                          TextFormField(
-                            //validate สถานที่
-                            // validator: (val) {
-                            //   if (val == null || val.isEmpty) {
-                            //     return 'กรุณาระบุรายละเอียด';
-                            //   }
-                            //   return null;
-                            // },
-                            //Collect data by use update_text function
-                            onChanged: (val) {
-                              setState(() {
-                                alarmDetail = val;
-                              });
-                            },
-                            decoration: InputDecoration(
-                                hintText: "ระบุรายละเอียด",
-                                border: OutlineInputBorder()),
-                          ),
-                          SizedBox(height: 20),
-                          // Text(
-                          //     "input 1 : $seizure_symtomp ---- input 2 : $seizure_place")   Input value check
                           //Time
                           Text("โปรดกรอกเวลา", style: TextStyle(fontSize: 18)),
 
@@ -200,10 +224,15 @@ class _AddAlarmState extends State<AddAlarm> {
                             children: [
                               Expanded(
                                 child: TextFormField(
-                                  //Collect data by use update_text function
-                                  enabled: false,
+                                  controller: timeController,
+                                  validator: (val) {
+                                    if (val == null || val.isEmpty) {
+                                      return 'กรุณาระบุเวลา';
+                                    }
+                                    return null;
+                                  },
+                                  readOnly: true,
                                   decoration: InputDecoration(
-                                      hintText: selectedTime.format(context),
                                       // TODO: Change PM to 12-hour
                                       border: OutlineInputBorder()),
                                 ),
@@ -217,44 +246,19 @@ class _AddAlarmState extends State<AddAlarm> {
                                   final TimeOfDay? timeOfDay =
                                       await showTimePicker(
                                     context: context,
-                                    initialTime: selectedTime,
+                                    initialTime: _inputTime ?? TimeOfDay.now(),
                                     initialEntryMode: TimePickerEntryMode.dial,
                                   );
                                   if (timeOfDay != null) {
                                     setState(() {
-                                      selectedTime = timeOfDay;
+                                      _inputTime = timeOfDay;
+                                      timeController.text = _inputTime!.format(context);
                                     });
                                   }
                                 },
                                 style: primaryButtonStyle,
                               )
                             ],
-                          ),
-
-                          SizedBox(height: 20),
-                          //spacing between input
-                          Text("แจ้งเตือนซ้ำ",
-                              style: TextStyle(fontSize: 18)),
-
-                          SizedBox(height: 10),
-
-                          DropdownButtonFormField(
-                            value: selectedRepetition,
-                            icon: const Icon(Icons.keyboard_arrow_down),
-                            decoration:
-                                InputDecoration(border: OutlineInputBorder()),
-                            onChanged: (String? val) {
-                              setState(() {
-                                selectedRepetition = val!;
-                              });
-                            },
-                            items: alarmModeList
-                                .map<DropdownMenuItem<String>>((String value) {
-                              return DropdownMenuItem<String>(
-                                value: value,
-                                child: Text(value),
-                              );
-                            }).toList(),
                           ),
 
                           SizedBox(height: 20),
@@ -287,7 +291,11 @@ class _AddAlarmState extends State<AddAlarm> {
                                                 onPressed: () {}),
                                             content: Text(
                                                 'บันทึกการเเจ้งเตือนสำเร็จ')));
-                                    //printAll();  // TODO: remove this if not needed
+                                    if (widget.initAlarm == null) {
+                                      addToDb();
+                                    } else {
+                                      updateToDb();
+                                    }
                                     Navigator.pop(
                                         context); //back to AlarmMedIntake when add success
                                   }

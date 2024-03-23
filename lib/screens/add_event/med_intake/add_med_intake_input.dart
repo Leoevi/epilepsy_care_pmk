@@ -26,6 +26,7 @@ class _AddMedIntakeInputState extends State<AddMedIntakeInput> {
   late final List<DropdownMenuItem<Medication>> _medDropdownList;  // DropdownMenuItem is a generic, so we will assign it type that we need straight away.
   List<DropdownMenuItem<MeasureUnit>>? _unitDropdownList;
   final _formKey = GlobalKey<FormState>(); //Validate
+  TextEditingController medicationQuantityController = TextEditingController();
 
   Medication? _inputMedication; // dropDown init value
   String? _inputMedicationQuantity; // Input ปริมาณ, will be parsed into double when OK is pressed
@@ -58,6 +59,13 @@ class _AddMedIntakeInputState extends State<AddMedIntakeInput> {
       _inputDate = DateTime.now();
       _inputTime = TimeOfDay.now();
     }
+  }
+
+  /// TextEditingController requires disposing after use
+  @override
+  void dispose() {
+    medicationQuantityController.dispose();
+    super.dispose();
   }
 
   void _addToDb() {
@@ -120,16 +128,18 @@ class _AddMedIntakeInputState extends State<AddMedIntakeInput> {
                       icon: const Icon(Icons.keyboard_arrow_down),
                       decoration: InputDecoration(border: OutlineInputBorder()),
                       onChanged: (Medication? val) {
-                        // 2 things that this onChange does
-                        // 1) set the selectedMedication
+                        // 3 things that this onChange does
                         setState(() {
+                          // 1) set the selectedMedication
                           _inputMedication = val!;
+                          // 2) Update and clear the measure drop down menu
+                          // use the ".?" operator to make the whole expr null if selectedMedication is null
                           _inputMeasureUnit = null;  // For some reason, not setting this to null will cause an assertion error saying that there are 0 or 2 duplicate entries in the unit's drop down menu.
+                          _generateUnitDropdownList();
+                          // 3) Clear medication quantity text field
+                          _inputMedicationQuantity = null;
+                          medicationQuantityController.clear();
                         });
-
-                        // 2) Update the measure drop down menu
-                        // use the ".?" operator to make the whole expr null if selectedMedication is null
-                        _generateUnitDropdownList();
                       },
                       items: _medDropdownList,
                       validator: (val) {
@@ -194,6 +204,7 @@ class _AddMedIntakeInputState extends State<AddMedIntakeInput> {
                           flex: 2,
                           child: TextFormField(
                             // https://stackoverflow.com/questions/49577781/how-to-create-number-input-field-in-flutter & https://stackoverflow.com/a/61215563
+                            controller: medicationQuantityController,
                             keyboardType: const TextInputType.numberWithOptions(decimal: true),
                             inputFormatters: [
                               FilteringTextInputFormatter.allow(RegExp(r'(^\d*\.?\d*)'))

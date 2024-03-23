@@ -33,6 +33,20 @@ class MeasureUnit {
   /// The ratio of that measurement compared to the base measurement
   /// e.g. teaspoon would have the ratio of 5, because 1 teaspoon == 5 ml, etc.
   final double measureRatio;
+
+  /// This needs overriding because otherwise the unit dropdown list will cause
+  /// an assertion error because it thinks that the selected item isn't the same
+  /// one as the one from the generated list.
+  /// (https://stackoverflow.com/a/61257286)
+  @override
+  bool operator ==(dynamic other) =>
+      other != null
+          && other is MeasureUnit
+          && measureName == other.measureName
+          && measureRatio == other.measureRatio;
+  /// Same reason as the [==] operator.
+  @override
+  int get hashCode => super.hashCode;
 }
 
 // Declaring properties in interfaces and their subclasses:

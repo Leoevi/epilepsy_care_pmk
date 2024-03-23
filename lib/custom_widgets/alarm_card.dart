@@ -1,28 +1,29 @@
 import 'package:epilepsy_care_pmk/constants/styling.dart';
+import 'package:epilepsy_care_pmk/screens/home/alarm_med_intake/add_alarm_input.dart';
+import 'package:epilepsy_care_pmk/services/database_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:toggle_switch/toggle_switch.dart';
 
-class EventCardWithToggleSwitch extends StatefulWidget {
-  const EventCardWithToggleSwitch({
+import '../models/alarm.dart';
+
+// Since there is only 1 type of object (Alarm) that is going to be represented
+// by this widget, we will just pass in the whole Alarm object then.
+
+class AlarmCard extends StatefulWidget {
+  const AlarmCard({
     super.key,
-    required this.timeAlarm,
-    required this.titleAlarm, // The button must have a header label
-    required this.detailAlarm,
+    required this.alarm
   });
 
-  final String timeAlarm;
-  final String titleAlarm;
-  final String detailAlarm;
+  final Alarm alarm;
 
   @override
-  State<EventCardWithToggleSwitch> createState() =>
-      _EventCardWithToggleSwitchState();
+  State<AlarmCard> createState() =>
+      _AlarmCardState();
 }
 
-class _EventCardWithToggleSwitchState extends State<EventCardWithToggleSwitch> {
-  bool isSwitched = true; //ควรประกาศตัวแปรไว้นอก widget
-
+class _AlarmCardState extends State<AlarmCard> {
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -36,7 +37,7 @@ class _EventCardWithToggleSwitchState extends State<EventCardWithToggleSwitch> {
                 flex: 1,
                 child: Center(
                     child: Text(
-                  widget.timeAlarm,
+                  widget.alarm.time.toString(),
                   style: mediumLargeBoldText,
                 ))),
             //Vertical Line
@@ -58,22 +59,29 @@ class _EventCardWithToggleSwitchState extends State<EventCardWithToggleSwitch> {
                       //Title
                       Expanded(
                         child: Text(
-                          widget.titleAlarm,
+                          "${widget.alarm.med}",
                           style: mediumLargeBoldText,
                         ),
                       ),
                       IconButton(
-                          onPressed: () {}, icon: Icon(Icons.edit_outlined)),
-                      //TODO: Make edit and delete works
+                          onPressed: () {
+                            Navigator.of(context).push(MaterialPageRoute(
+                                builder: (context) => AddAlarm(
+                                    initAlarm: widget.alarm)));
+                          },
+                          icon: Icon(Icons.edit_outlined)),
                       IconButton(
-                          onPressed: () {}, icon: Icon(Icons.delete_outline))
+                          onPressed: () {
+                            DatabaseService.deleteAlarm(widget.alarm);
+                          },
+                          icon: Icon(Icons.delete_outline))
                     ],
                   ),
                   SizedBox(
                     height: kSmallPadding,
                   ),
                   //Detail
-                  Text(widget.detailAlarm),
+                  Text("ทานยา ${widget.alarm.med} ${widget.alarm.quantity} ${widget.alarm.unit}"),
                   SizedBox(
                     height: kSmallPadding,
                   ),
@@ -82,11 +90,12 @@ class _EventCardWithToggleSwitchState extends State<EventCardWithToggleSwitch> {
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       Switch.adaptive(
-                          value: isSwitched,
-                          onChanged: (value) {
+                          value: widget.alarm.enable,
+                          onChanged: (_) {
                             setState(() {
-                              isSwitched = value;
+                              widget.alarm.toggleEnable();
                             });
+                            DatabaseService.updateAlarmEnable(widget.alarm);
                           })
                     ],
                   )

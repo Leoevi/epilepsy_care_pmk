@@ -566,6 +566,17 @@ SELECT d.dateRange AS date, COALESCE(SUM(m.mgAmount), 0.0) AS totalDose
     });
   }
 
+  /// Update the enable status of an alarm according to the passed in Alarm.
+  ///
+  /// This method is similar to [updateAlarm], but doesn't sent out stream,
+  /// so that lists that display alarms won't rebuild.
+  static Future<int> updateAlarmEnable(Alarm alarm) async {
+    final db = await _getDB();
+    return await db.rawUpdate("""
+      UPDATE $alarmTableName SET enable = ? WHERE $alarmTablePrimaryKeyName = ?
+    """, [alarm.enable ? 1 : 0, alarm.alarmId]);
+  }
+
   /// Return all Alarms from the Database.
   /// Sorted by creation from first to last.
   static Future<List<Alarm>> getAllAlarm() async {

@@ -80,7 +80,6 @@ class NotificationService {
       final bool? isGranted = await androidImplementation?.requestNotificationsPermission();  // IDK why is this nullable tbh.
       return isGranted ?? false;
     } else if (Platform.isIOS) {
-      // TODO: test on iOS
       // This statement will also ask for permission if applicable.
       var iOSImplementation = notificationsPlugin.resolvePlatformSpecificImplementation<IOSFlutterLocalNotificationsPlugin>();
       final bool? isGranted = await iOSImplementation?.requestPermissions(
@@ -94,9 +93,26 @@ class NotificationService {
     }
   }
 
+  /// Contains information related to how the notification will be displayed.
+  /// Mainly, we want the notifications to group together so that multiple
+  /// alarms that have the same time can display concurrently.
+  ///
+  /// Currently, we want notifications to be just a single group, so we'll just
+  /// hardcode Android's group key and iOS's threadIdentifier for now.
   static _notificationDetails() {
+    // For more info about grouping notifications
+    // https://pub.dev/packages/flutter_local_notifications#grouping-notifications
+    const AndroidNotificationDetails androidPlatformChannelSpecifics = AndroidNotificationDetails(
+      "0",
+      "แจ้งเตือนการทานยา",
+      importance: Importance.max,
+      groupKey: "0",
+    );
+    const DarwinNotificationDetails iOSPlatformChannelSpecifics = DarwinNotificationDetails(threadIdentifier: "0");
+
     return const NotificationDetails(
-        android: AndroidNotificationDetails("0", "แจ้งเตือนการทานยา", importance: Importance.max),
+      android: androidPlatformChannelSpecifics,
+      iOS: iOSPlatformChannelSpecifics,
     );
   }
 
@@ -137,6 +153,8 @@ class NotificationService {
         );
   }
 
+  /// Returns a special TZDateTime of the next occurrence
+  /// of that daily notification.
   static tz.TZDateTime _scheduleDate(TimeOfDay time) {
     final now = tz.TZDateTime.now(tz.local);
     final scheduledDate = tz.TZDateTime(

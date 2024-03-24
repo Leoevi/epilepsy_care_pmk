@@ -34,6 +34,8 @@ import 'package:epilepsy_care_pmk/services/notification_service.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'models/alarm.dart';
+
 /// A SharedPreference instance for the whole app.
 /// Will be init in main before the app opens so that every page
 /// that want to access it doesn't have to use async/await.
@@ -123,12 +125,10 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void onClickedNotification(String? payload) {
     if (payload != null) {
-      MedIntakeEvent eventFromPayload = MedIntakeEvent.fromSerializedString(
-          """{"medIntakeId":598,"time":1710620070,"med":"Clonazepam / Rivotril®","mgAmount":166.32128690503978}""");
-      // MedIntakeEvent eventFromPayload = MedIntakeEvent.fromSerializedString(payload);  // TODO: replace this later
+      Alarm alarmFromNotification = Alarm.fromSerializedString(payload);
       Navigator.of(context).push(MaterialPageRoute(
           builder: (context) => AddMedIntakeInput(
-                initMedIntakeEvent: eventFromPayload,
+                initAlarm: alarmFromNotification,
               )));
     }
   }

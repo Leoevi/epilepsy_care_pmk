@@ -50,10 +50,12 @@ class _AddAlarmState extends State<AddAlarm> {
 
     if (widget.initAlarm != null) {
       _inputMedication = medicationEntries.firstWhere((med) => med.name == widget.initAlarm?.med);
+      _generateUnitDropdownList();
+
       _inputMedicationQuantity = widget.initAlarm!.quantity.toString();
       medicationQuantityController.text = _inputMedicationQuantity!;
-      _generateUnitDropdownList();
       _inputMeasureUnit = _inputMedication!.medicationIntakeMethod.measureList.firstWhere((unit) => unit.measureName == widget.initAlarm!.unit);
+
       _inputTime = widget.initAlarm!.time;
       WidgetsBinding.instance.addPostFrameCallback((_) {
         // format method requires initState to be finished first. So we added a post frame callback.

@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:epilepsy_care_pmk/services/database_service.dart';
 import 'package:epilepsy_care_pmk/services/notification_service.dart';
 import 'package:flutter/material.dart';
@@ -45,9 +47,19 @@ class Alarm {
         "enable": enable ? 1 : 0, // from bool to int
       };
 
+  /// Serialize the current object to json string which can
+  /// then be decoded later. This is intend to be used as notifications payload.
+  String toSerializedString() => jsonEncode(this);
+
+  // https://www.freecodecamp.org/news/serialize-object-flutter
+  // jsonDecode only returns a map, which we will to our object with "fromJson" method
+  /// Factory for creating Alarm objects from serialized string,
+  /// intend to be used as notifications payload.
+  factory Alarm.fromSerializedString(String payload) => Alarm.fromJson(jsonDecode(payload));
+
   /// Toggle the status of the alarm to the opposite. Doesn't update the
-  /// database by itself (use [DatabaseService.updateAlarmEnable])
-  /// nor schedule any notifications (use [setNotification]).
+  /// database by itself nor schedule any notifications
+  /// (use [DatabaseService.updateAlarmEnable] for those).
   void toggleEnable() {
     enable = !enable;
   }
@@ -64,7 +76,6 @@ class Alarm {
   /// If ```enable == true```, this will schedule the notification. Otherwise,
   /// it will clear the notification.
   void setNotification() {
-    // TODO: currently, when there are >1 notification scheduled at the same time, only 1 of them will be displayed (not stack/group)
     // It seems like scheduling notification with the same id will override the
     // old one with the new one, and cancelling and already cancelled id doesn't
     // make any difference. Which is the behavior that we expected.
@@ -73,7 +84,9 @@ class Alarm {
           id: alarmId!,
           title: "แจ้งเตือนการทานยา",
           body: "แตะที่นี่เพื่อทำการบันทึกประวัติการทานยา $med จำนวน $quantity $unit",
-          timeOfDay: time);
+          timeOfDay: time,
+          payload: toSerializedString(),
+      );
     } else {
       NotificationService.cancel(alarmId!);
     }

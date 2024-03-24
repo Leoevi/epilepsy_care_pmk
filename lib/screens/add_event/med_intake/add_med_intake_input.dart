@@ -9,13 +9,16 @@ import 'package:flutter/services.dart';
 import 'package:collection/collection.dart';  // firstWhereOrNull
 
 import '../../../helpers/date_time_helpers.dart';
+import '../../../models/alarm.dart';
 
 class AddMedIntakeInput extends StatefulWidget {
   final MedIntakeEvent? initMedIntakeEvent;
+  final Alarm? initAlarm;
 
   const AddMedIntakeInput({
     super.key,
     this.initMedIntakeEvent,
+    this.initAlarm,
   });
 
   @override
@@ -45,16 +48,39 @@ class _AddMedIntakeInputState extends State<AddMedIntakeInput> {
       );
     }).toList();
 
-    _inputMedication = widget.initMedIntakeEvent == null ? null : medicationEntries.firstWhereOrNull((med) => med.name == widget.initMedIntakeEvent?.med);
-    _generateUnitDropdownList();  // Call this otherwise we'll need to reselect Medication to get unit drop down list
-    // TODO: May or may not implement loading _inputMedicationQuantity and _inputMeasureUnit, the user will have to select on their own.
+    // _inputMedication = widget.initMedIntakeEvent == null ? null : medicationEntries.firstWhereOrNull((med) => med.name == widget.initMedIntakeEvent?.med);
+    // _generateUnitDropdownList();  // Call this otherwise we'll need to reselect Medication to get unit drop down list
+    //
+    // // Date and time have their default values
+    // if (widget.initMedIntakeEvent != null) {
+    //   DateTime initTime = unixTimeToDateTime(widget.initMedIntakeEvent!.time);
+    //   var r = separateDateTimeAndTimeOfDay(initTime);
+    //   _inputDate = r.$1;
+    //   _inputTime = r.$2;
+    // } else {
+    //   _inputDate = DateTime.now();
+    //   _inputTime = TimeOfDay.now();
+    // }
 
-    // Date and time have their default values
     if (widget.initMedIntakeEvent != null) {
+      _inputMedication = medicationEntries.firstWhere((med) => med.name == widget.initMedIntakeEvent?.med);
+      _generateUnitDropdownList();
       DateTime initTime = unixTimeToDateTime(widget.initMedIntakeEvent!.time);
       var r = separateDateTimeAndTimeOfDay(initTime);
       _inputDate = r.$1;
       _inputTime = r.$2;
+    } else if (widget.initAlarm != null) {
+      // If an initAlarm is passed it, will load the med/quantity/unit of it
+      // But leave date and time to now.
+      _inputMedication = medicationEntries.firstWhere((med) => med.name == widget.initAlarm?.med);
+      _generateUnitDropdownList();
+
+      _inputMedicationQuantity = widget.initAlarm!.quantity.toString();
+      medicationQuantityController.text = _inputMedicationQuantity!;
+      _inputMeasureUnit = _inputMedication!.medicationIntakeMethod.measureList.firstWhere((unit) => unit.measureName == widget.initAlarm!.unit);
+
+      _inputDate = DateTime.now();
+      _inputTime = TimeOfDay.now();
     } else {
       _inputDate = DateTime.now();
       _inputTime = TimeOfDay.now();

@@ -7,9 +7,9 @@ import 'package:epilepsy_care_pmk/services/database_service.dart';
 import 'package:epilepsy_care_pmk/services/notification_service.dart';
 import 'package:flutter/material.dart';
 
-/// This page took most inspirations from the [EventList] widget.
-/// Where we used a StreamBuilder to force a rebuild when the database is
-/// modified.
+/// A page that is used to manage Alarms that sent out notifications at the
+/// specified time. These notifications can then be selected to redirect the
+/// user to [AddMedIntakeInput] with information already filled in.
 class AlarmMedIntake extends StatefulWidget {
   const AlarmMedIntake({super.key});
 
@@ -50,6 +50,9 @@ class _AlarmMedIntakeState extends State<AlarmMedIntake> {
 }
 
 /// List of [Alarm] (s) displayed with the [AlarmCard] widget.
+/// Took most inspirations from the [EventList] widget
+/// where we used a StreamBuilder to force a rebuild when the database is
+/// modified.
 class AlarmList extends StatefulWidget {
   const AlarmList({super.key});
 
@@ -75,14 +78,26 @@ class _AlarmListState extends State<AlarmList> {
                   if (snapshot.hasError) {
                     return Text("Error: ${snapshot.error}");
                   } else if (snapshot.hasData) {
-                    return ListView.builder(
-                        itemCount: snapshot.data!.length,
-                        itemBuilder: (context, index) {
-                          return AlarmCard(
-                            alarm: snapshot.data![index],
-                          );
-                        }
-                    );
+                    if (snapshot.data!.isNotEmpty) {
+                      return ListView.builder(
+                          itemCount: snapshot.data!.length,
+                          itemBuilder: (context, index) {
+                            return AlarmCard(
+                              alarm: snapshot.data![index],
+                            );
+                          }
+                      );
+                    } else {
+                      return Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text("ไม่มีการตั้งเวลาแจ้งเตือนทานยา", style: mediumLargeBoldText, textAlign: TextAlign.center,),
+                            Text("ตั้งเวลาแจ้งเตือนทานยาด้วยเครื่องหมาย +", textAlign: TextAlign.center,)
+                          ],
+                        ),
+                      );
+                    }
                   } else {
                     return Column(
                       children: [

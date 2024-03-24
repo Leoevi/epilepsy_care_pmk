@@ -95,7 +95,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
           Divider(),
           ListTile(
             leading: Icon(Icons.alarm),
-            title: const Text('ตั้งเวลากินยา'),
+            title: const Text('ตั้งเวลาแจ้งเตือนทานยา'),
             onTap: () {
               Navigator.of(context).push(MaterialPageRoute(
                   builder: (context) => const AlarmMedIntake()));
@@ -109,15 +109,16 @@ class _HomeDrawerState extends State<HomeDrawer> {
               DatabaseService.generateDummyData(100,3);
             },
           ),
-          Divider(),
-          ListTile(
-            leading: Icon(Icons.refresh),
-            title: const Text('Notification tests'),
-            onTap: () {
-              Navigator.of(context).push(MaterialPageRoute(
-                  builder: (context) => const NotificationTest()));
-            },
-          ),
+          // We won't use this in production, ofc
+          // Divider(),
+          // ListTile(
+          //   leading: Icon(Icons.refresh),
+          //   title: const Text('Notification tests'),
+          //   onTap: () {
+          //     Navigator.of(context).push(MaterialPageRoute(
+          //         builder: (context) => const NotificationTest()));
+          //   },
+          // ),
         ],
       ),
     );

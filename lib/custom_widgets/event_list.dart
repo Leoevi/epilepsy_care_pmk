@@ -1,3 +1,4 @@
+import 'package:epilepsy_care_pmk/constants/styling.dart';
 import 'package:epilepsy_care_pmk/models/med_allergy_event.dart';
 import 'package:epilepsy_care_pmk/models/med_intake_event.dart';
 import 'package:epilepsy_care_pmk/screens/add_event/med_allergy/add_med_allergy_input.dart';
@@ -56,75 +57,87 @@ class _EventListState extends State<EventList> {
                     return Text("Error: ${snapshot.error}");
                   } else if (snapshot.hasData) {
                     // TODO: keep scroll position after editing and deleting an entry
-                    return ListView.builder(
-                      itemCount: snapshot.data!.length,
-                      itemBuilder: (context, index) {
-                        // I wanted to make use of polymorphism and define methods
-                        // that returns an EventCard for each of the Event subclasses,
-                        // but it is not a good practice to define methods that
-                        // return Widgets. So I just resorted to define them here instead.
-                        if (snapshot.data![index] is SeizureEvent) {
-                          SeizureEvent entry =
-                              snapshot.data![index] as SeizureEvent;
-                          return EventCard(
-                            time: unixTimeToDateTime(entry.time),
-                            title: entry.seizureType,
-                            detail: entry.seizureSymptom,
-                            colorWarningIcon: Colors.red,
-                            place: entry.seizurePlace,
-                            type: "อาการชัก",
-                            onEdit: () {
-                              Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => AddSeizureInput(
-                                      initSeizureEvent: entry)));
-                            },
-                            onDelete: () {
-                              DatabaseService.deleteSeizureEvent(entry);
-                            },
-                          );
-                        } else if (snapshot.data![index] is MedAllergyEvent) {
-                          MedAllergyEvent entry =
-                              snapshot.data![index] as MedAllergyEvent;
-                          return EventCard(
-                            time: unixTimeToDateTime(entry.time),
-                            title: "แพ้ยา ${entry.med}",
-                            detail: entry.medAllergySymptom,
-                            colorWarningIcon: Colors.orange,
-                            // TODO: don't display place if the entry doesn't have it
-                            place: "none (remove this)",
-                            type: "อาการแพ้ยา",
-                            onEdit: () {
-                              Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => AddMedAllergyInput(
-                                      initMedAllergyEvent: entry)));
-                            },
-                            onDelete: () {
-                              DatabaseService.deleteMedAllergyEvent(entry);
-                            },
-                          );
-                        } else if (snapshot.data![index] is MedIntakeEvent) {
-                          MedIntakeEvent entry =
-                              snapshot.data![index] as MedIntakeEvent;
-                          return EventCard(
-                            time: unixTimeToDateTime(entry.time),
-                            title: "ทานยา ${entry.med}",
-                            detail: "ทานยา ${entry.med} ไป ${entry.mgAmount} มก.",
-                            colorWarningIcon: Colors.black,
-                            // TODO: don't display place if the entry doesn't have it
-                            place: "none (remove this)",
-                            type: "การทานยา",
-                            onEdit: () {
-                              Navigator.of(context).push(MaterialPageRoute(
-                                  builder: (context) => AddMedIntakeInput(
-                                      initMedIntakeEvent: entry)));
-                            },
-                            onDelete: () {
-                              DatabaseService.deleteMedIntakeEvent(entry);
-                            },
-                          );
-                        }
-                      },
-                    );
+                    if (snapshot.data!.isNotEmpty) {
+                      return ListView.builder(
+                        itemCount: snapshot.data!.length,
+                        itemBuilder: (context, index) {
+                          // I wanted to make use of polymorphism and define methods
+                          // that returns an EventCard for each of the Event subclasses,
+                          // but it is not a good practice to define methods that
+                          // return Widgets. So I just resorted to define them here instead.
+                          if (snapshot.data![index] is SeizureEvent) {
+                            SeizureEvent entry =
+                            snapshot.data![index] as SeizureEvent;
+                            return EventCard(
+                              time: unixTimeToDateTime(entry.time),
+                              title: entry.seizureType,
+                              detail: entry.seizureSymptom,
+                              colorWarningIcon: Colors.red,
+                              place: entry.seizurePlace,
+                              type: "อาการชัก",
+                              onEdit: () {
+                                Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (context) => AddSeizureInput(
+                                        initSeizureEvent: entry)));
+                              },
+                              onDelete: () {
+                                DatabaseService.deleteSeizureEvent(entry);
+                              },
+                            );
+                          } else if (snapshot.data![index] is MedAllergyEvent) {
+                            MedAllergyEvent entry =
+                            snapshot.data![index] as MedAllergyEvent;
+                            return EventCard(
+                              time: unixTimeToDateTime(entry.time),
+                              title: "แพ้ยา ${entry.med}",
+                              detail: entry.medAllergySymptom,
+                              colorWarningIcon: Colors.orange,
+                              // TODO: don't display place if the entry doesn't have it
+                              place: "none (remove this)",
+                              type: "อาการแพ้ยา",
+                              onEdit: () {
+                                Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (context) => AddMedAllergyInput(
+                                        initMedAllergyEvent: entry)));
+                              },
+                              onDelete: () {
+                                DatabaseService.deleteMedAllergyEvent(entry);
+                              },
+                            );
+                          } else if (snapshot.data![index] is MedIntakeEvent) {
+                            MedIntakeEvent entry =
+                            snapshot.data![index] as MedIntakeEvent;
+                            return EventCard(
+                              time: unixTimeToDateTime(entry.time),
+                              title: "ทานยา ${entry.med}",
+                              detail: "ทานยา ${entry.med} ไป ${entry.mgAmount} มก.",
+                              colorWarningIcon: Colors.black,
+                              // TODO: don't display place if the entry doesn't have it
+                              place: "none (remove this)",
+                              type: "การทานยา",
+                              onEdit: () {
+                                Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (context) => AddMedIntakeInput(
+                                        initMedIntakeEvent: entry)));
+                              },
+                              onDelete: () {
+                                DatabaseService.deleteMedIntakeEvent(entry);
+                              },
+                            );
+                          }
+                        },
+                      );
+                    } else {
+                      return Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text("ไม่มีเหตุการณ์ในช่วงเวลาที่กำหนด", style: mediumLargeBoldText, textAlign: TextAlign.center,),
+                            Text("บันทึกเหตุการณ์ใหม่ในช่วงเวลาดังกล่าวด้วยเครื่องหมาย + ด้านล่าง หรือเลือกช่วงเวลาใหม่", textAlign: TextAlign.center,)
+                          ],
+                        ),
+                      );
+                    }
                   } else {
                     return Column(
                       children: [

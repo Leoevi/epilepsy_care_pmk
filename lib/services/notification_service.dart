@@ -71,9 +71,10 @@ class NotificationService {
   /// Returns whether or not the user have given notification permission to the
   /// app. Works only on Android and iOS, otherwise, will return false.
   ///
-  /// Now, you may observe that the return type is nullable. I personally have
-  /// no clue as to what scenario will null be even returned in the first place.
-  static Future<bool?> getPermissionStatus() async {
+  /// Now, you may observe that the return type of requestNotificationsPermission
+  /// is nullable, and that we chose to override it to false if it's null.
+  /// So be aware of that.
+  static Future<bool> getPermissionStatus() async {
     if (Platform.isAndroid) {
       // This statement will also ask for permission if applicable (The app can ask for permission twice and after that the user will have to go to the settings to enable notification themselves).
       AndroidFlutterLocalNotificationsPlugin? androidImplementation = notificationsPlugin.resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>();

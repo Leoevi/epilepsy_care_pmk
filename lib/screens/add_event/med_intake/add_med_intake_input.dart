@@ -6,7 +6,6 @@ import 'package:epilepsy_care_pmk/screens/wiki/medication/medication.dart';
 import 'package:epilepsy_care_pmk/services/database_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:collection/collection.dart';  // firstWhereOrNull
 
 import '../../../helpers/date_time_helpers.dart';
 import '../../../models/alarm.dart';

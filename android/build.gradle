@@ -1,16 +1,5 @@
-buildscript {
-    ext.kotlin_version = '1.7.10'
-    repositories {
-        google()
-        mavenCentral()
-    }
-
-    dependencies {
-        // updated to 7.4.2 for flutter_local_notification
-        classpath 'com.android.tools.build:gradle:7.4.2'
-        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
-    }
-}
+// Changed to declarative plugins block
+// (https://docs.flutter.dev/release/breaking-changes/flutter-gradle-plugin-apply)
 
 allprojects {
     repositories {

@@ -16,7 +16,7 @@ class EventList extends StatefulWidget {
   /// [DateTimeRange] used to list the events within a specified range.
   /// if null, display all events in the database
   final DateTimeRange?
-      dateTimeRange; // TODO: decide to include or exclude the start and the end of range
+      dateTimeRange;
 
   const EventList({
     super.key,

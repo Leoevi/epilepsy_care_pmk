@@ -38,8 +38,11 @@ class _CalendarState extends State<Calendar> {
   DateTime selectedDate = DateUtils.dateOnly(DateTime.now());
 
   void _onDaySelected(DateTime day, DateTime focusedDay) {
+    // By default, this TableCalendar will return date that is in UTC,
+    // But dateOnly method will return change that to local time. Which is what
+    // the DatabaseService want.
     setState(() {
-      selectedDate = day;
+      selectedDate = DateUtils.dateOnly(day);
     });
   }
 
@@ -89,15 +92,3 @@ class _CalendarState extends State<Calendar> {
     );
   }
 }
-
-
-
-
-//  @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(title: Text("Calendar")),
-//       body: content(),
-//     );
-//   }
-

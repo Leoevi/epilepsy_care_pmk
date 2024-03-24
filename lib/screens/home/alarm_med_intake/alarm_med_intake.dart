@@ -18,18 +18,39 @@ class AlarmMedIntake extends StatefulWidget {
 }
 
 class _AlarmMedIntakeState extends State<AlarmMedIntake> {
-  late Future<bool?> notificationPermission;
+  late Future<bool> notificationPermission;
 
+  /// Aside from displaying [AlarmList], also detects notification permission
+  /// and show a notice if notification permission is not available.
   @override
   void initState() {
     super.initState();
     notificationPermission = NotificationService.getPermissionStatus();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      notificationPermission.then((isGranted) {
+        if (!isGranted) {
+          showDialog(context: context,
+              builder: (context) {
+                return AlertDialog(
+                  title: Text("ไม่มีสิทธิแสดงการแจ้งเตือน"),
+                  content: Text("คุณไม่ได้ให้สิทธิแสดงการแจ้งเตือนกับแอปพลิเคชัน ทำให้การตั้งเวลาแจ้งเตือนทานยานั้นไม่สามารถทำงานได้ กรุณาให้สิทธิกับแอปพลิเคชันเพื่อให้สามารถแสดงการแจ้งเตือนได้จากการตั้งค่าอุปกรณ์ของคุณ"),
+                  actions: [
+                    TextButton(onPressed: () {
+                      Navigator.pop(context);
+                    }, child: Text("รับทราบ"))
+                  ],
+                );
+              }
+          );
+        }
+      });
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return ScreenWithAppBar(
-      title: 'ตั้งเวลากินยา',
+      title: 'ตั้งเวลาแจ้งเตือนทานยา',
       actions: <Widget>[
         IconButton(
             onPressed: () {
@@ -38,13 +59,7 @@ class _AlarmMedIntakeState extends State<AlarmMedIntake> {
             },
             icon: const Icon(Icons.add))
       ],
-      body: FutureBuilder<bool?>(
-        future: notificationPermission,
-        builder: (context, snapshot) {
-          // TODO: use the acquired permission status to display appropriate page.
-          return AlarmList();
-        },
-      ),
+      body: AlarmList(),
     );
   }
 }

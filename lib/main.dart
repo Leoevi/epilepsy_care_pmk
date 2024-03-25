@@ -31,7 +31,9 @@ import 'package:epilepsy_care_pmk/screens/home/home.dart';
 import 'package:epilepsy_care_pmk/screens/register.dart';
 import 'package:epilepsy_care_pmk/screens/wiki/wiki.dart';
 import 'package:epilepsy_care_pmk/services/notification_service.dart';
+import 'package:epilepsy_care_pmk/services/user_profile_service.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'models/alarm.dart';
@@ -65,22 +67,28 @@ class MyApp extends StatelessWidget {
   // This widget is the root of the application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      // To change the app's name, you need to go into each platform's manifest file (https://stackoverflow.com/questions/49353199/how-can-i-change-the-app-display-name-build-with-flutter)
-      title: 'Epilepsy Care',
-      // https://docs.flutter.dev/cookbook/design/themes
-      theme: ThemeData(
-        useMaterial3: true,
-        // https://docs.flutter.dev/release/breaking-changes/material-3-default
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.purple),
-        // Was going to use textTheme to handle the whole app's font,
-        // but it seemed like it will impact other widgets too much, so we'll defined extra ones instead
-        // textTheme: TextTheme(
-        //   labelSmall: TextStyle(fontWeight: FontWeight.bold,)
-        // )
+    return ChangeNotifierProvider(
+      create: (context) => UserProfileService(),
+      builder: (context, _) => MaterialApp(
+        // To change the app's name, you need to go into each platform's manifest file (https://stackoverflow.com/questions/49353199/how-can-i-change-the-app-display-name-build-with-flutter)
+        title: 'Epilepsy Care',
+        // https://docs.flutter.dev/cookbook/design/themes
+        theme: ThemeData(
+          useMaterial3: true,
+          // https://docs.flutter.dev/release/breaking-changes/material-3-default
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.purple),
+          // Was going to use textTheme to handle the whole app's font,
+          // but it seemed like it will impact other widgets too much, so we'll defined extra ones instead
+          // textTheme: TextTheme(
+          //   labelSmall: TextStyle(fontWeight: FontWeight.bold,)
+          // )
+        ),
+        // home:
+        //     prefs.getString("hn") == null ? const Register() : const MyHomePage(),
+        home: Consumer<UserProfileService>(
+          builder: (context, model, child) => model.isRegistered ? const Register() : const MyHomePage(),
+        )
       ),
-      home:
-          prefs.getString("hn") == null ? const Register() : const MyHomePage(),
     );
   }
 }

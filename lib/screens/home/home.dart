@@ -25,9 +25,11 @@ import 'package:epilepsy_care_pmk/custom_widgets/event_list.dart';
 import 'package:epilepsy_care_pmk/custom_widgets/time_range_dropdown_button.dart';
 import 'package:epilepsy_care_pmk/helpers/image_utility.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../main.dart';
+import '../../services/user_profile_service.dart';
 
 class Home extends StatefulWidget {
   const Home({super.key});
@@ -77,42 +79,44 @@ class _HomeState extends State<Home> {
                       alignment: Alignment.centerLeft,
                     )
                 ),
-                Expanded(
-                  flex: 3,
-                  child: Card(
-                    shape: RoundedRectangleBorder(
-                      side: BorderSide(
-                          color: Color.fromARGB(255, 142, 15, 184), width: 3),
-                      borderRadius: BorderRadius.all(Radius.circular(50)),
-                    ),
-                    child: Padding(
-                      padding: EdgeInsets.all(kSmallPadding),
-                      child: Row(
-                        children: [
-                          //Image
-                          CircleAvatar(
-                            radius: 28,
-                            backgroundImage: imageFromPreferences?.image ?? profilePlaceholder,
-                          ),
-                          SizedBox(
-                            width: kSmallPadding,
-                          ),
-                          //Name
-                          Expanded(
-                              child: Text(
-                            "$firstName",
-                            textAlign: TextAlign.justify,
-                          )),
-                          //Button
+                Consumer<UserProfileService>(
+                    builder: (context, model, child) => Expanded(
+                      flex: 3,
+                      child: Card(
+                        shape: RoundedRectangleBorder(
+                          side: BorderSide(
+                              color: Color.fromARGB(255, 142, 15, 184), width: 3),
+                          borderRadius: BorderRadius.all(Radius.circular(50)),
+                        ),
+                        child: Padding(
+                          padding: EdgeInsets.all(kSmallPadding),
+                          child: Row(
+                            children: [
+                              //Image
+                              CircleAvatar(
+                                radius: 28,
+                                backgroundImage: imageFromPreferences?.image ?? profilePlaceholder,
+                              ),
+                              SizedBox(
+                                width: kSmallPadding,
+                              ),
+                              //Name
+                              Expanded(
+                                  child: Text(
+                                    "${model.firstName}",
+                                    textAlign: TextAlign.justify,
+                                  )),
+                              //Button
 
-                          IconButton(
-                              onPressed: () =>
-                                  Scaffold.of(context).openEndDrawer(),
-                              icon: Icon(Icons.menu))
-                        ],
+                              IconButton(
+                                  onPressed: () =>
+                                      Scaffold.of(context).openEndDrawer(),
+                                  icon: Icon(Icons.menu))
+                            ],
+                          ),
+                        ),
                       ),
                     ),
-                  ),
                 ),
               ],
             ),

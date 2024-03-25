@@ -28,7 +28,13 @@ import 'package:epilepsy_care_pmk/helpers/image_utility.dart';
 import 'package:epilepsy_care_pmk/main.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
 
+import '../services/user_profile_service.dart';
+
+/// Register page where it will launch if the user hasn't registered with their
+/// info yet. But can also be used to edit the user current information.
+/// Generally, this will be the only page to call [UserProfileService.saveToPref]
 class Register extends StatefulWidget {
   const Register({super.key});
 
@@ -41,8 +47,10 @@ class _RegisterState extends State<Register> {
   TextEditingController birthDateFieldController = TextEditingController();  // Use to fill the input with the selected date
   /// This var will be used to determine whether to pushReplace,
   /// or popUntil after the user has click on the register button.
-  late bool isFirstLaunch;
+  bool isRegistered = UserProfileService().isRegistered;
 
+  // These vars will mostly reflect each fields in UserProfileService, and they
+  // will be loaded from that same class.
   // 2 different var here that represents an image. (must be separated because a file must have a path, and an Image object will not have a path)
   /// Image that is loaded from preference.
   Image? imageFromPreferences;
@@ -58,55 +66,43 @@ class _RegisterState extends State<Register> {
   void initState() {
     super.initState();
 
-    hn = prefs.getString('hn');
-    firstName = prefs.getString('firstName');
-    lastName = prefs.getString('lastName');
-    gender = prefs.getString('gender');
-
-    String? birthDateTimestamp = prefs.getString('birthDate');
-    if (birthDateTimestamp != null) {
-      birthDate = DateTime.parse(birthDateTimestamp);
+    hn = UserProfileService().hn;
+    firstName = UserProfileService().firstName;
+    lastName = UserProfileService().lastName;
+    gender = UserProfileService().gender;
+    birthDate = UserProfileService().birthDate;
+    if (birthDate != null) {
       birthDateFieldController.text = dateDateFormat.format(birthDate!);
     }
 
-    String? imgString = prefs.getString("IMG_KEY");
-    if (imgString != null) {
-      imageFromPreferences = ImageUtility.imageFromBase64String(imgString);
-    }
 
-    isFirstLaunch = hn == null;  // If hn or any field is null for that matter, we know that the user haven't registered yet
-
-    // A way to use async functions in init state is to use then, I guess
-    // https://stackoverflow.com/questions/51901002/is-there-a-way-to-load-async-data-on-initstate-method
-    // image avatar save
-    // Utility.getImageFromPreferences().then((img) {
-    //   if (img == null) {
-    //     return;
-    //   }
-    //   imageFromPreferences = Utility.imageFromBase64String(img);
-    // });
+    // String? imgString = prefs.getString("IMG_KEY");
+    // if (imgString != null) {
+    //   imageFromPreferences = ImageUtility.imageFromBase64String(imgString);
+    // }
   }
 
-  Future<void> register() async {
-    prefs.setString('hn', hn!);
-    prefs.setString('firstName', firstName!);
-    prefs.setString('lastName', lastName!);
-    prefs.setString('gender', gender!);
-    prefs.setString('birthDate', birthDate!.toIso8601String());
-
-    if (selectedImage != null) {
-      ImageUtility.saveImageToPreferences(
-          ImageUtility.base64String(await selectedImage!.readAsBytes()));
-    } else {
-      prefs.remove("IMG_KEY");
-    }
-  }
+  // Future<void> register() async {
+  //   prefs.setString('hn', hn!);
+  //   prefs.setString('firstName', firstName!);
+  //   prefs.setString('lastName', lastName!);
+  //   prefs.setString('gender', gender!);
+  //   prefs.setString('birthDate', birthDate!.toIso8601String());
+  //
+  //   if (selectedImage != null) {  // A new image is selected
+  //     // Overwrite with new image
+  //     ImageUtility.saveImageToPreferences(
+  //         ImageUtility.base64String(await selectedImage!.readAsBytes()));
+  //   } else if (imageFromPreferences == null) {  // Old image was cleared
+  //     prefs.remove("IMG_KEY");
+  //   }
+  // }
 
   Future<void> _pickImageFromGallery() async {
     final returnedImage =
     await ImagePicker().pickImage(
       source: ImageSource.gallery,
-      requestFullMetadata: false,
+      requestFullMetadata: false,  // This somehow fixed iOS double image picker problem.
     );
 
     if (returnedImage != null) {
@@ -304,26 +300,26 @@ class _RegisterState extends State<Register> {
                         SizedBox(height: kMediumPadding),
                         Align(
                           alignment: Alignment.centerRight,
-                          child: ElevatedButton(
-                            child: Text("ลงทะเบียน",
-                                style: TextStyle(
-                                    fontSize: 16, color: Colors.white)),
-                            onPressed: () async {
-                              //validate check
-                              if (_formKey.currentState!.validate()) {
-                                register();
+                          child: Consumer<UserProfileService>(
+                              builder: (context, model, child) => ElevatedButton(
+                                child: Text("ลงทะเบียน",
+                                    style: TextStyle(
+                                        fontSize: 16, color: Colors.white)),
+                                onPressed: () async {
+                                  //validate check
+                                  if (_formKey.currentState!.validate()) {
+                                    model.saveToPref(null, hn!, firstName!, lastName!, birthDate!, gender!);
 
-                                if (isFirstLaunch) {
-                                  Navigator.pushReplacement(context,
-                                      MaterialPageRoute(builder: (context) => const MyHomePage()));
-                                } else {
-                                  // TODO: Make the first page refresh with the new data
-                                  Navigator.of(context)
-                                      .popUntil((route) => route.isFirst);
-                                }
-                              }
-                            },
-                            style: primaryButtonStyle,
+                                    if (isRegistered) {  // Note that we didn't use the value from the model since by calling saveToPref, model.isRegistered will always be true
+                                      Navigator.pushReplacement(context,
+                                          MaterialPageRoute(builder: (context) => const MyHomePage()));
+                                    } else {
+                                      Navigator.pop(context);
+                                    }
+                                  }
+                                },
+                                style: primaryButtonStyle,
+                              ),
                           ),
                         ),
                         //Prefs saved value check

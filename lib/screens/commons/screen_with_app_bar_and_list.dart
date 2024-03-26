@@ -1,3 +1,4 @@
+import 'package:epilepsy_care_pmk/constants/styling.dart';
 import 'package:epilepsy_care_pmk/screens/commons/screen_with_app_bar.dart';
 import 'package:flutter/material.dart';
 
@@ -17,9 +18,11 @@ class ScreenWithAppBarAndList extends StatelessWidget {
   Widget build(BuildContext context) {
     return ScreenWithAppBar(
       title: title,
-      body: SingleChildScrollView(
-        child: Column(
-          children: iconLabelDetailButtonList,
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: kSmallPadding),
+        child: ListView.builder(
+          itemCount: iconLabelDetailButtonList.length,
+            itemBuilder: (context, index) => iconLabelDetailButtonList[index]
         ),
       ),
     );

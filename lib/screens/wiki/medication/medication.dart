@@ -68,7 +68,7 @@ abstract class MedicationIntakeMethod {
 /// of medication that can be eaten whole.
 class PillMedication implements MedicationIntakeMethod {
   const PillMedication(this.mgPerPill);
-  final int mgPerPill;
+  final double mgPerPill;
 
   // Base unit of pills are, well, pills..., and ratio of base unit is always 1
   @override
@@ -81,7 +81,7 @@ class PillMedication implements MedicationIntakeMethod {
 
   @override
   String toString() {
-    return "${mgPerPill} มก. ต่อเม็ด";
+    return "${mgPerPill} mg/เม็ด";
   }
 }
 /// A class that describes medication that is in liquid form, which must be
@@ -89,7 +89,7 @@ class PillMedication implements MedicationIntakeMethod {
 /// the medications is taken, like a teaspoon, or a tablespoon.
 class LiquidMedication implements MedicationIntakeMethod {
   const LiquidMedication(this.mgPerMl);
-  final int mgPerMl;
+  final double mgPerMl;
   // This is according to metric standards
   // (US teaspoon is 4.92892159375, metric teaspoon is 5 ml)
   // https://en.wikipedia.org/wiki/Teaspoon#Unit_of_measure
@@ -111,7 +111,7 @@ class LiquidMedication implements MedicationIntakeMethod {
 
   @override
   String toString() {
-    return "${mgPerMl} มก./มล.";
+    return "${mgPerMl} mg/ml";
   }
 }
 
@@ -125,19 +125,40 @@ final List<Medication> medicationEntries = [
       allergySymptoms: "skin rash, Steven Johnson syndrome*"
   ),
   const Medication(
-      name: "Clonazepam / Rivotril®",
+    name: "Clonazepam / Rivotril® (0.5 mg)",
+    picture: AssetImage("image/medications/drug_2.png"),
+    medicationIntakeMethod: PillMedication(0.5),
+    sideEffects: "อ่อนเพลีย ง่วง พฤติกรรมเปลี่ยนแปลง น้ำลายและเสมหะมาก",
+    dangerSideEffects: "กดการหายใจ",
+  ),  // TODO: find picture
+  const Medication(
+      name: "Clonazepam / Rivotril® (2 mg)",
       picture: AssetImage("image/medications/drug_2.png"),
       medicationIntakeMethod: PillMedication(2),
       sideEffects: "อ่อนเพลีย ง่วง พฤติกรรมเปลี่ยนแปลง น้ำลายและเสมหะมาก",
       dangerSideEffects: "กดการหายใจ",
   ),
   const Medication(
-      name: "Lamotrigine / Lamictal®",
+      name: "Lamotrigine / Lamictal® (25 mg)",
       picture: AssetImage("image/medications/drug_3.png"),
       medicationIntakeMethod: PillMedication(25),
       sideEffects: "มึนงง เห็นภาพซ้อน เดินเซ",
       dangerSideEffects: "ผื่น Stevens-Johnson syndrome",
   ),
+  const Medication(
+    name: "Lamotrigine / Lamictal® (50 mg)",
+    picture: AssetImage("image/medications/drug_3.png"),
+    medicationIntakeMethod: PillMedication(50),
+    sideEffects: "มึนงง เห็นภาพซ้อน เดินเซ",
+    dangerSideEffects: "ผื่น Stevens-Johnson syndrome",
+  ),  // TODO: find picture
+  const Medication(
+    name: "Lamotrigine / Lamictal® (100 mg)",
+    picture: AssetImage("image/medications/drug_3.png"),
+    medicationIntakeMethod: PillMedication(100),
+    sideEffects: "มึนงง เห็นภาพซ้อน เดินเซ",
+    dangerSideEffects: "ผื่น Stevens-Johnson syndrome",
+  ),  // TODO: find picture
   const Medication(
     name: "Levetiracetam / Keppra®",
     picture: AssetImage("image/medications/drug_4.png"),
@@ -146,26 +167,54 @@ final List<Medication> medicationEntries = [
     dangerSideEffects: "อารมณ์หงุดหงิด ก้าวร้าว",
   ),
   const Medication(
-    name: "Oxcarbazepine / Trileptal®",
+    name: "Oxcarbazepine / Trileptal® (300 mg)",
     picture: AssetImage("image/medications/drug_5.png"),
     medicationIntakeMethod: PillMedication(300),
     sideEffects: "มึนงง ง่วงซึม เดินเซ",
     dangerSideEffects: "ภาวะโซเดียมต่ำ",
   ),
   const Medication(
-    name: "Phenobarbital",
+    name: "Oxcarbazepine / Trileptal® (600 mg)",
+    picture: AssetImage("image/medications/drug_5.png"),
+    medicationIntakeMethod: PillMedication(600),
+    sideEffects: "มึนงง ง่วงซึม เดินเซ",
+    dangerSideEffects: "ภาวะโซเดียมต่ำ",
+  ),  // TODO: find picture
+  const Medication(
+    name: "Phenobarbital (30 mg)",
     picture: AssetImage("image/medications/drug_6.png"),
     medicationIntakeMethod: PillMedication(30),
     sideEffects: "เด็ก: ซุกซนไม่อยู่สุข พฤติกรรมเปลี่ยนแปลง ก้าวร้าว ผู้ใหญ่: ง่วงซึม อ่อนเพลีย",
     dangerSideEffects: "ผื่น Stevens-Johnson syndrome",
   ),
   const Medication(
-    name: "Phenytoin / Dilantin® (125 มก./5 มล.)",
+    name: "Phenobarbital (60 mg)",
+    picture: AssetImage("image/medications/drug_6.png"),
+    medicationIntakeMethod: PillMedication(60),
+    sideEffects: "เด็ก: ซุกซนไม่อยู่สุข พฤติกรรมเปลี่ยนแปลง ก้าวร้าว ผู้ใหญ่: ง่วงซึม อ่อนเพลีย",
+    dangerSideEffects: "ผื่น Stevens-Johnson syndrome",
+  ),  // TODO: find picture
+  const Medication(
+    name: "Phenytoin / Dilantin® (125 mg/5 ml)",
     picture: AssetImage("image/medications/drug_7.png"),
     medicationIntakeMethod: LiquidMedication(25),
     sideEffects: "เวียนศีรษะ เห็นภาพซ้อน ซึม เดินเซ คลื่นไส้ อาเจียน เหงือกบวม หน้าหยาบ ขนเยอะ สิวเพิ่มขึ้น",
     dangerSideEffects: "ผื่น Stevens-Johnson syndrome ตับอักเสบ",
   ),
+  const Medication(
+    name: "Phenytoin / Dilantin® (50 mg)",
+    picture: AssetImage("image/medications/drug_7.png"),
+    medicationIntakeMethod: PillMedication(50),
+    sideEffects: "เวียนศีรษะ เห็นภาพซ้อน ซึม เดินเซ คลื่นไส้ อาเจียน เหงือกบวม หน้าหยาบ ขนเยอะ สิวเพิ่มขึ้น",
+    dangerSideEffects: "ผื่น Stevens-Johnson syndrome ตับอักเสบ",
+  ),  // TODO: find picture
+  const Medication(
+    name: "Phenytoin / Dilantin® (100 mg)",
+    picture: AssetImage("image/medications/drug_7.png"),
+    medicationIntakeMethod: PillMedication(100),
+    sideEffects: "เวียนศีรษะ เห็นภาพซ้อน ซึม เดินเซ คลื่นไส้ อาเจียน เหงือกบวม หน้าหยาบ ขนเยอะ สิวเพิ่มขึ้น",
+    dangerSideEffects: "ผื่น Stevens-Johnson syndrome ตับอักเสบ",
+  ),  // TODO: find picture
   const Medication(
     name: "Sodium valproate/ Depakin®",
     picture: AssetImage("image/medications/drug_8.png"),
@@ -174,12 +223,26 @@ final List<Medication> medicationEntries = [
     dangerSideEffects: "ตับอักเสบ ตับอ่อนอักเสบ",
   ),
   const Medication(
-    name: "Topiramate / Topamax®",
+    name: "Topiramate / Topamax® (25 mg)",
     picture: AssetImage("image/medications/drug_9.png"),
     medicationIntakeMethod: PillMedication(25),
     sideEffects: "มึนงง เดินเซ ความคิดเชื่องช้า การพูดผิดปกติ น้ำหนักลด",
     dangerSideEffects: "นิ่วในไต ต้อหิน เหงื่อออกน้อย",
   ),
+  const Medication(
+    name: "Topiramate / Topamax® (50 mg)",
+    picture: AssetImage("image/medications/drug_9.png"),
+    medicationIntakeMethod: PillMedication(50),
+    sideEffects: "มึนงง เดินเซ ความคิดเชื่องช้า การพูดผิดปกติ น้ำหนักลด",
+    dangerSideEffects: "นิ่วในไต ต้อหิน เหงื่อออกน้อย",
+  ),  // TODO: find picture
+  const Medication(
+    name: "Topiramate / Topamax® (100 mg)",
+    picture: AssetImage("image/medications/drug_9.png"),
+    medicationIntakeMethod: PillMedication(100),
+    sideEffects: "มึนงง เดินเซ ความคิดเชื่องช้า การพูดผิดปกติ น้ำหนักลด",
+    dangerSideEffects: "นิ่วในไต ต้อหิน เหงื่อออกน้อย",
+  ),  // TODO: find picture
   const Medication(
     name: "Vigabatrin / Sabril®",
     picture: AssetImage("image/medications/drug_10.png"),
@@ -188,28 +251,63 @@ final List<Medication> medicationEntries = [
     dangerSideEffects: "ความผิดปกติของลานสายตา",
   ),
   const Medication(
-    name: "Perampanel / Fycompa®",
+    name: "Perampanel / Fycompa® (0.5 mg/ml)",
+    picture: AssetImage("image/medications/drug_11.png"),
+    medicationIntakeMethod: LiquidMedication(0.5),
+    sideEffects: "มึนงง ง่วงซึม เดินเซ",
+    dangerSideEffects: "หงุดหงิด ก้าวร้าว อาการทางจิต",
+  ),   // TODO: find picture
+  const Medication(
+    name: "Perampanel / Fycompa® (2 mg)",
+    picture: AssetImage("image/medications/drug_11.png"),
+    medicationIntakeMethod: PillMedication(2),
+    sideEffects: "มึนงง ง่วงซึม เดินเซ",
+    dangerSideEffects: "หงุดหงิด ก้าวร้าว อาการทางจิต",
+  ),   // TODO: find picture
+  const Medication(
+    name: "Perampanel / Fycompa® (4 mg)",
     picture: AssetImage("image/medications/drug_11.png"),
     medicationIntakeMethod: PillMedication(4),
     sideEffects: "มึนงง ง่วงซึม เดินเซ",
     dangerSideEffects: "หงุดหงิด ก้าวร้าว อาการทางจิต",
   ),
   const Medication(
+    name: "Perampanel / Fycompa® (8 mg)",
+    picture: AssetImage("image/medications/drug_11.png"),
+    medicationIntakeMethod: PillMedication(8),
+    sideEffects: "มึนงง ง่วงซึม เดินเซ",
+    dangerSideEffects: "หงุดหงิด ก้าวร้าว อาการทางจิต",
+  ),  // TODO: find picture
+  const Medication(
     name: "Lacosamide / Vimpat®",
     picture: AssetImage("image/medications/drug_12.png"),
-    medicationIntakeMethod: PillMedication(50),
+    medicationIntakeMethod: PillMedication(100),
     sideEffects: "มึนงง ง่วงซึม ภาพซ้อน เดินเซ",
     dangerSideEffects: "Atrioventricular block, palpitation",
-  ),
+  ),  // TODO: find picture
   const Medication(
-    name: "Pregabalin / Lyrica® (25 มก.)",
+    name: "Pregabalin / Lyrica® (25 mg)",
     picture: AssetImage("image/medications/drug_13.png"),
     medicationIntakeMethod: PillMedication(25),
     sideEffects: "ง่วงนอน ซึม เวียนศีรษะ",
     dangerSideEffects: "มักไม่ค่อยพบ",
   ),
   const Medication(
-    name: "Gabapentin / Neurontin® / Berlontin®",
+    name: "Pregabalin / Lyrica® (75 mg)",
+    picture: AssetImage("image/medications/drug_13.png"),
+    medicationIntakeMethod: PillMedication(75),
+    sideEffects: "ง่วงนอน ซึม เวียนศีรษะ",
+    dangerSideEffects: "มักไม่ค่อยพบ",
+  ),
+  const Medication(
+    name: "Gabapentin / Neurontin® / Berlontin® (100 mg)",
+    picture: AssetImage("image/medications/drug_14.png"),
+    medicationIntakeMethod: PillMedication(100),
+    sideEffects: "ง่วงนอน ซึม เวียนศีรษะ",
+    dangerSideEffects: "มักไม่ค่อยพบ",
+  ),  // TODO: find picture
+  const Medication(
+    name: "Gabapentin / Neurontin® / Berlontin® (300 mg)",
     picture: AssetImage("image/medications/drug_14.png"),
     medicationIntakeMethod: PillMedication(300),
     sideEffects: "ง่วงนอน ซึม เวียนศีรษะ",

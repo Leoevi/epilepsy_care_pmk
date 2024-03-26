@@ -2,9 +2,12 @@
 
 import 'package:epilepsy_care_pmk/constants/styling.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/date_symbol_data_local.dart';
+import 'package:intl/intl.dart';
 
 class EventCard extends StatelessWidget {
-  const EventCard({super.key,
+  const EventCard({
+    super.key,
     required this.time,
     required this.title, // The button must have a header label
     this.detail,
@@ -26,6 +29,8 @@ class EventCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    initializeDateFormatting('th');
+    var formatter = DateFormat.yMMMEd('th').add_Hm();
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(kMediumPadding),
@@ -37,7 +42,7 @@ class EventCard extends StatelessWidget {
                 flex: 1,
                 child: Center(
                     child: Text(
-                  dateTimeDateFormat.format(time),
+                  '${formatter.format(time)}',
                   style: mediumLargeBoldText,
                 ))),
             //Vertical Line
@@ -60,16 +65,17 @@ class EventCard extends StatelessWidget {
                       Expanded(
                         child: Text(
                           title,
-                          style:
-                              mediumLargeBoldText,
+                          style: mediumLargeBoldText,
                         ),
                       ),
                       IconButton(
-                        visualDensity: VisualDensity.compact,
-                          onPressed: onEdit, icon: Icon(Icons.edit_outlined)),
+                          visualDensity: VisualDensity.compact,
+                          onPressed: onEdit,
+                          icon: Icon(Icons.edit_outlined)),
                       IconButton(
                           visualDensity: VisualDensity.compact,
-                          onPressed: onDelete, icon: Icon(Icons.delete_outline))
+                          onPressed: onDelete,
+                          icon: Icon(Icons.delete_outline))
                     ],
                   ),
                   SizedBox(
@@ -85,7 +91,9 @@ class EventCard extends StatelessWidget {
                     children: [
                       Icon(Icons.map_outlined),
                       Flexible(child: Text(place)),
-                      SizedBox(width: kSmallPadding,),
+                      SizedBox(
+                        width: kSmallPadding,
+                      ),
                       Icon(
                         Icons.warning_rounded,
                         color: colorWarningIcon,

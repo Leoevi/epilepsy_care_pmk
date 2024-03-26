@@ -4,6 +4,7 @@ import 'package:epilepsy_care_pmk/screens/home/alarm_med_intake/add_alarm_input.
 import 'package:epilepsy_care_pmk/services/database_service.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:toggle_switch/toggle_switch.dart';
 
 import '../models/alarm.dart';
@@ -12,24 +13,21 @@ import '../models/alarm.dart';
 // by this widget, we will just pass in the whole Alarm object then.
 
 class AlarmCard extends StatefulWidget {
-  const AlarmCard({
-    super.key,
-    required this.alarm
-  });
+  const AlarmCard({super.key, required this.alarm});
 
   final Alarm alarm;
-
   @override
-  State<AlarmCard> createState() =>
-      _AlarmCardState();
+  State<AlarmCard> createState() => _AlarmCardState();
 }
 
 class _AlarmCardState extends State<AlarmCard> {
+  var formatter = DateFormat.Hm('th');
   @override
   Widget build(BuildContext context) {
     return Card(
       child: Padding(
-        padding: EdgeInsets.fromLTRB(kMediumPadding, kMediumPadding, kMediumPadding, 0),
+        padding: EdgeInsets.fromLTRB(
+            kMediumPadding, kMediumPadding, kMediumPadding, 0),
         child: IntrinsicHeight(
           // Wrap with IntrinsicHeight so that we can see the VerticalDivider (https://stackoverflow.com/questions/49388281/flutter-vertical-divider-and-horizontal-divider)
           child: Row(children: [
@@ -37,8 +35,9 @@ class _AlarmCardState extends State<AlarmCard> {
             Expanded(
                 flex: 1,
                 child: Center(
+                    //alarm.time has only Hours/Mins Only so we need to fill a dummy parameter year/month/days to make it works.
                     child: Text(
-                  widget.alarm.time.toString(),
+                  '${formatter.format(DateTime(1970, 1, 1, widget.alarm.time.hour, widget.alarm.time.minute))}',
                   style: mediumLargeBoldText,
                 ))),
             //Vertical Line
@@ -67,8 +66,8 @@ class _AlarmCardState extends State<AlarmCard> {
                       IconButton(
                           onPressed: () {
                             Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) => AddAlarm(
-                                    initAlarm: widget.alarm)));
+                                builder: (context) =>
+                                    AddAlarm(initAlarm: widget.alarm)));
                           },
                           icon: Icon(Icons.edit_outlined)),
                       IconButton(
@@ -82,7 +81,8 @@ class _AlarmCardState extends State<AlarmCard> {
                     height: kSmallPadding,
                   ),
                   //Detail
-                  Text("ทานยา ${widget.alarm.med} ${widget.alarm.quantity} ${widget.alarm.unit}"),
+                  Text(
+                      "ทานยา ${widget.alarm.med} ${widget.alarm.quantity} ${widget.alarm.unit}"),
                   SizedBox(
                     height: kSmallPadding,
                   ),

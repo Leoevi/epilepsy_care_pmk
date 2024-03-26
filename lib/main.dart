@@ -35,6 +35,7 @@ import 'package:epilepsy_care_pmk/services/user_profile_service.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:intl/date_symbol_data_local.dart';
 
 import 'models/alarm.dart';
 
@@ -55,6 +56,7 @@ Future<void> main() async {
       .ensureInitialized(); // Prevent errors from awaiting later
   prefs = await SharedPreferences.getInstance();
   NotificationService.initNotification();
+  initializeDateFormatting('th');  // Prior to calling DateFormat.yMMMEd('th').add_Hm(), we need to init date formatting here first
 
   runApp(const MyApp());
 }
@@ -71,7 +73,7 @@ class MyApp extends StatelessWidget {
       create: (context) => UserProfileService(),
       builder: (context, _) => MaterialApp(
         // To change the app's name, you need to go into each platform's manifest file (https://stackoverflow.com/questions/49353199/how-can-i-change-the-app-display-name-build-with-flutter)
-        title: 'Epilepsy Care',
+        title: 'Epilepsy Care (ไทย)',
         // https://docs.flutter.dev/cookbook/design/themes
         theme: ThemeData(
           useMaterial3: true,

@@ -1,8 +1,5 @@
-// This file only serves as a example and will be deleted soon
-
 import 'package:epilepsy_care_pmk/constants/styling.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 
 class EventCard extends StatelessWidget {
@@ -12,14 +9,14 @@ class EventCard extends StatelessWidget {
     required this.title, // The button must have a header label
     this.detail,
     required this.colorWarningIcon,
-    required this.place,
+    this.place,
     required this.type,
     this.onEdit,
     this.onDelete,
   });
 
   final String type;
-  final String place;
+  final String? place;
   final DateTime time;
   final String title;
   final String? detail;
@@ -29,7 +26,6 @@ class EventCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    initializeDateFormatting('th');
     var formatter = DateFormat.yMMMEd('th').add_Hm();
     return Card(
       child: Padding(
@@ -89,16 +85,29 @@ class EventCard extends StatelessWidget {
                   //Icon Zone
                   Row(
                     children: [
-                      Icon(Icons.map_outlined),
-                      Flexible(child: Text(place)),
-                      SizedBox(
-                        width: kSmallPadding,
-                      ),
-                      Icon(
-                        Icons.warning_rounded,
-                        color: colorWarningIcon,
-                      ),
-                      Flexible(child: Text(type))
+                      place != null
+                          ? Flexible(
+                              child: Row(
+                                children: [
+                                  Icon(Icons.map_outlined),
+                                  Flexible(child: Text(place!)),
+                                  SizedBox(
+                                    width: kSmallPadding,
+                                  ),
+                                ],
+                              ),
+                            )
+                          : SizedBox.shrink(),
+                      Flexible(
+                          child: Row(
+                        children: [
+                          Icon(
+                            Icons.warning_rounded,
+                            color: colorWarningIcon,
+                          ),
+                          Flexible(child: Text(type))
+                        ],
+                      )),
                     ],
                   )
                 ],

@@ -92,8 +92,6 @@ class _EventListState extends State<EventList> {
                               title: "แพ้ยา ${entry.med}",
                               detail: entry.medAllergySymptom,
                               colorWarningIcon: Colors.orange,
-                              // TODO: don't display place if the entry doesn't have it
-                              place: "none (remove this)",
                               type: "อาการแพ้ยา",
                               onEdit: () {
                                 Navigator.of(context).push(MaterialPageRoute(
@@ -112,8 +110,6 @@ class _EventListState extends State<EventList> {
                               title: "ทานยา ${entry.med}",
                               detail: "ทานยา ${entry.med} ไป ${entry.mgAmount} มก.",
                               colorWarningIcon: Colors.black,
-                              // TODO: don't display place if the entry doesn't have it
-                              place: "none (remove this)",
                               type: "การทานยา",
                               onEdit: () {
                                 Navigator.of(context).push(MaterialPageRoute(

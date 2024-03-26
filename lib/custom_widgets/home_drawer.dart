@@ -16,8 +16,6 @@ class HomeDrawer extends StatefulWidget {
     super.key,
   });
 
-  
-
   @override
   State<HomeDrawer> createState() => _HomeDrawerState();
 }
@@ -31,25 +29,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
   @override
   void initState() {
     // TODO: implement initState
-    loadData();
     super.initState();
-    
-  }
-  
-  void loadData() async {
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-      setState(() {
-        firstName = prefs.getString('firstName') ?? null;
-      lastName = prefs.getString('lastName') ?? null;
-
-      ImageUtility.getImageFromPreferences().then((img) {
-        if (null == img) {
-          return;
-        }
-        imageFromPreferences = ImageUtility.imageFromBase64String(img);
-    });
-      });
-      
   }
 
   @override
@@ -90,8 +70,6 @@ class _HomeDrawerState extends State<HomeDrawer> {
             leading: Icon(Icons.data_thresholding_outlined),
             title: const Text('ประวัติการชักเเละการรับประทานยา'),
             onTap: () {
-              // Navigator.of(context).push(MaterialPageRoute(
-              //     builder: (context) => const GraphHistory()));
               Navigator.of(context).push(MaterialPageRoute(
                   builder: (context) => const GraphHistoryWithTab()));
             },
@@ -104,6 +82,15 @@ class _HomeDrawerState extends State<HomeDrawer> {
               Navigator.of(context).push(MaterialPageRoute(
                   builder: (context) => const AlarmMedIntake()));
             },
+          ),
+          Divider(),
+          // https://api.flutter.dev/flutter/material/AboutListTile-class.html
+          AboutListTile(
+            icon: Icon(Icons.info_outline),
+            // applicationIcon: ImageIcon(Image.asset("image/app_icon_android.png").image),
+            aboutBoxChildren: [
+              Text("An epilepsy daily app written in Flutter for Phramongkutklao Hospital's Pediatric Epilepsy Center.")
+            ],
           ),
           Divider(),
           ListTile(

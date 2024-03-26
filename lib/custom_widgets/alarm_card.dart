@@ -1,5 +1,4 @@
 import 'package:epilepsy_care_pmk/constants/styling.dart';
-import 'package:epilepsy_care_pmk/screens/add_event/med_intake/add_med_intake_input.dart';
 import 'package:epilepsy_care_pmk/screens/home/alarm_med_intake/add_alarm_input.dart';
 import 'package:epilepsy_care_pmk/services/database_service.dart';
 import 'package:flutter/cupertino.dart';
@@ -26,8 +25,7 @@ class _AlarmCardState extends State<AlarmCard> {
   Widget build(BuildContext context) {
     return Card(
       child: Padding(
-        padding: EdgeInsets.fromLTRB(
-            kMediumPadding, kMediumPadding, kMediumPadding, 0),
+        padding: const EdgeInsets.all(kLargePadding),
         child: IntrinsicHeight(
           // Wrap with IntrinsicHeight so that we can see the VerticalDivider (https://stackoverflow.com/questions/49388281/flutter-vertical-divider-and-horizontal-divider)
           child: Row(children: [

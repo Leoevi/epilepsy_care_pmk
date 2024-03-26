@@ -83,7 +83,7 @@ class _CalendarState extends State<Calendar> {
               firstDay: beginEpoch,
               lastDay: endDate,
               onDaySelected: _onDaySelected,
-              locale: 'en_US', //TODO: change to TH lang.
+              locale: 'th_TH',
             ),
           ),
           Flexible(child: EventList(dateTimeRange: DateTimeRange(start: selectedDate, end: selectedDate),)),

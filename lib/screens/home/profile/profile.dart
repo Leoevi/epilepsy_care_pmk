@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:epilepsy_care_pmk/helpers/image_utility.dart';
 import 'package:epilepsy_care_pmk/services/user_profile_service.dart';
 import 'package:intl/intl.dart';
@@ -6,9 +5,7 @@ import 'package:epilepsy_care_pmk/constants/styling.dart';
 import 'package:epilepsy_care_pmk/screens/commons/screen_with_app_bar.dart';
 import 'package:epilepsy_care_pmk/screens/register.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../main.dart';
 
@@ -62,7 +59,7 @@ class _ProfileState extends State<Profile> {
                   //from register.dart
                     child: CircleAvatar(
                         radius: 2 * kCircleRadius,
-                        backgroundImage: imageFromPreferences?.image ?? profilePlaceholder, //image from register
+                        backgroundImage: model.image?.image ?? profilePlaceholder, //image from register
                         child: Material(
                           shape: const CircleBorder(),
                           clipBehavior: Clip.hardEdge,

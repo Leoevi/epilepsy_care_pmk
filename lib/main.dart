@@ -83,10 +83,8 @@ class MyApp extends StatelessWidget {
           //   labelSmall: TextStyle(fontWeight: FontWeight.bold,)
           // )
         ),
-        // home:
-        //     prefs.getString("hn") == null ? const Register() : const MyHomePage(),
         home: Consumer<UserProfileService>(
-          builder: (context, model, child) => model.isRegistered ? const Register() : const MyHomePage(),
+          builder: (context, model, child) => !model.isRegistered ? const Register() : const MyHomePage(),
         )
       ),
     );

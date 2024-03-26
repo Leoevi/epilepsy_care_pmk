@@ -23,12 +23,9 @@
 import 'package:epilepsy_care_pmk/constants/styling.dart';
 import 'package:epilepsy_care_pmk/custom_widgets/event_list.dart';
 import 'package:epilepsy_care_pmk/custom_widgets/time_range_dropdown_button.dart';
-import 'package:epilepsy_care_pmk/helpers/image_utility.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../main.dart';
 import '../../services/user_profile_service.dart';
 
 class Home extends StatefulWidget {
@@ -39,27 +36,16 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
-
   TimeRangeDropdownOption timeRangeDropdownOption =
       TimeRangeDropdownOption.sevenDays;
   late DateTimeRange range;
 
-  String? firstName;
-  Image? imageFromPreferences;
-
   @override
   void initState() {
     super.initState();
-    // Load user data a bit
-    firstName = prefs.getString('firstName');
-    String? imgString = prefs.getString("IMG_KEY");
-    if (imgString != null) {
-      imageFromPreferences = ImageUtility.imageFromBase64String(imgString);
-    }
 
     range = timeRangeDropdownOption.dateTimeRange;
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -95,7 +81,7 @@ class _HomeState extends State<Home> {
                               //Image
                               CircleAvatar(
                                 radius: 28,
-                                backgroundImage: imageFromPreferences?.image ?? profilePlaceholder,
+                                backgroundImage: model.image?.image ?? profilePlaceholder,
                               ),
                               SizedBox(
                                 width: kSmallPadding,

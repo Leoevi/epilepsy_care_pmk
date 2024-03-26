@@ -1,5 +1,8 @@
+import 'dart:convert';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 import '../helpers/image_utility.dart';
 import '../main.dart';
@@ -19,10 +22,16 @@ class UserProfileService with ChangeNotifier {
     return _singleton;
   }
   UserProfileService._internal() {
-    _isRegistered = prefs.getString('hn') == null;
+    _isRegistered = prefs.getString('hn') != null;
 
-    if (!_isRegistered) {
-      // _image = ;
+    if (_isRegistered) {
+      String? imageString = prefs.getString("IMG_KEY");
+      if (imageString != null) {
+        _image = ImageUtility.imageFromBase64String(imageString);
+      } else {
+        _image = null;
+      }
+
       _hn = prefs.getString('hn')!;
       _firstName = prefs.getString('firstName')!;
       _lastName = prefs.getString('lastName')!;
@@ -44,33 +53,29 @@ class UserProfileService with ChangeNotifier {
   /// Returns whether or not the if user has registered. If ```false```,
   /// it means that all the other fields won't have been initialized.
   /// (And calling them will lead to a [LateInitializationError])
-  get isRegistered => _isRegistered;
+  bool get isRegistered => _isRegistered;
 
-  get image => _image;
+  Image? get image => _image;
 
-  get hn => _hn;
+  String get hn => _hn;
 
-  get firstName => _firstName;
+  String get firstName => _firstName;
 
-  get lastName => _lastName;
+  String get lastName => _lastName;
 
-  get birthDate => _birthDate;
+  DateTime get birthDate => _birthDate;
 
-  get gender => _gender;
+  String get gender => _gender;
 
-  /// Save the passed in data to shared preference and also notify other listeners.
-  /// If a newImage isn't passed in, then clear the old image
-  /// (So normal edits will have to pass in the image every time).
-  void saveToPref(Image? newImage, String newHn, String newFirstName,
+  /// Save the passed in data to shared preference and also notify other
+  /// listeners. Doesn't touch image, for that use the [saveImage]/[clearImage]
+  /// method instead.
+  ///
+  /// As much as I'd like to include the image logic here, it seems like
+  /// converting between base64 and Image object is not that straightforward.
+  /// And relegating those task to new methods is more convenient.
+  void saveToPref(String newHn, String newFirstName,
       String newLastName, DateTime newBirthDate, String newGender) async {
-    // if (newImage != null) {
-    //   List<int> imageBytes = ;
-    //   String imageString = ImageUtility.base64String(await newImage.readAsBytes());
-    //   _image = ImageUtility.imageFromBase64String(imageString);
-    //   ImageUtility.saveImageToPreferences(imageString);
-    // } else {
-    //   prefs.remove("IMG_KEY");
-    // }
     _hn = newHn;
     prefs.setString('hn', newHn);
     _firstName = newFirstName;
@@ -82,7 +87,24 @@ class UserProfileService with ChangeNotifier {
     _gender = newGender;
     prefs.setString('gender', newGender);
 
-    _isRegistered = false;  // If the user clicked on save, then we know for sure that they are registered.
+    _isRegistered = true;  // If the user clicked on save, then we know for sure that they are registered.
+
+    notifyListeners();
+  }
+
+  /// Save the given image to shared preference, and notify other listeners.
+  void saveImage(XFile newImage) async {
+    String newImageString = ImageUtility.base64String(await newImage.readAsBytes());
+    _image = ImageUtility.imageFromBase64String(newImageString);
+    prefs.setString("IMG_KEY", newImageString);
+
+    notifyListeners();
+  }
+
+  /// Clear saved image and notify other listeners.
+  void clearImage() {
+    _image = null;
+    prefs.remove("IMG_KEY");
 
     notifyListeners();
   }

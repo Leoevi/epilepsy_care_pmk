@@ -62,41 +62,34 @@ class _RegisterState extends State<Register> {
   DateTime? birthDate;
   String? gender; // TODO: define type for gender
 
+  /// Load data from shared preference if it exists.
   @override
   void initState() {
     super.initState();
 
-    hn = UserProfileService().hn;
-    firstName = UserProfileService().firstName;
-    lastName = UserProfileService().lastName;
-    gender = UserProfileService().gender;
-    birthDate = UserProfileService().birthDate;
-    if (birthDate != null) {
-      birthDateFieldController.text = dateDateFormat.format(birthDate!);
+    if (UserProfileService().isRegistered) {
+      imageFromPreferences = UserProfileService().image;
+      hn = UserProfileService().hn;
+      firstName = UserProfileService().firstName;
+      lastName = UserProfileService().lastName;
+      gender = UserProfileService().gender;
+      birthDate = UserProfileService().birthDate;
+      if (birthDate != null) {
+        birthDateFieldController.text = dateDateFormat.format(birthDate!);
+      }
     }
-
-
-    // String? imgString = prefs.getString("IMG_KEY");
-    // if (imgString != null) {
-    //   imageFromPreferences = ImageUtility.imageFromBase64String(imgString);
-    // }
   }
 
-  // Future<void> register() async {
-  //   prefs.setString('hn', hn!);
-  //   prefs.setString('firstName', firstName!);
-  //   prefs.setString('lastName', lastName!);
-  //   prefs.setString('gender', gender!);
-  //   prefs.setString('birthDate', birthDate!.toIso8601String());
-  //
-  //   if (selectedImage != null) {  // A new image is selected
-  //     // Overwrite with new image
-  //     ImageUtility.saveImageToPreferences(
-  //         ImageUtility.base64String(await selectedImage!.readAsBytes()));
-  //   } else if (imageFromPreferences == null) {  // Old image was cleared
-  //     prefs.remove("IMG_KEY");
-  //   }
-  // }
+  Future<void> register(UserProfileService model) async {
+    model.saveToPref(hn!, firstName!, lastName!, birthDate!, gender!);
+
+    if (selectedImage != null) {  // A new image is selected
+      // Overwrite with new image
+      model.saveImage(selectedImage!);
+    } else if (imageFromPreferences == null) {  // Old image was cleared
+      model.clearImage();
+    }
+  }
 
   Future<void> _pickImageFromGallery() async {
     final returnedImage =
@@ -112,7 +105,9 @@ class _RegisterState extends State<Register> {
     }
   }
 
-  /// Clear any selectedImage and remove them from shared preference
+  /// Clear any selectedImage and remove them from shared preference.
+  /// Not to be confused with [UserProfileService.clearImage]. This method only
+  /// clears the image "in this screen", but not from shared preference.
   void _deleteImage() {
     setState(() {
       selectedImage = null;
@@ -308,9 +303,9 @@ class _RegisterState extends State<Register> {
                                 onPressed: () async {
                                   //validate check
                                   if (_formKey.currentState!.validate()) {
-                                    model.saveToPref(null, hn!, firstName!, lastName!, birthDate!, gender!);
+                                    register(model);
 
-                                    if (isRegistered) {  // Note that we didn't use the value from the model since by calling saveToPref, model.isRegistered will always be true
+                                    if (!isRegistered) {  // Note that we didn't use the value from the model since by calling saveToPref, model.isRegistered will always be true
                                       Navigator.pushReplacement(context,
                                           MaterialPageRoute(builder: (context) => const MyHomePage()));
                                     } else {
@@ -322,12 +317,6 @@ class _RegisterState extends State<Register> {
                               ),
                           ),
                         ),
-                        //Prefs saved value check
-                        // Text("HN: $hn"),
-                        // Text("FirstName: $firstName"),
-                        // Text("LastName: $lastName"),
-                        // Text("gender: $gender"),
-                        // Text("Birth: $birthDateTimeStamp"),
                       ],
                     ),
                   ),

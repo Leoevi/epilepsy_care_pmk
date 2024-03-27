@@ -5,6 +5,7 @@ import 'package:epilepsy_care_pmk/screens/commons/screen_with_app_bar.dart';
 import 'package:epilepsy_care_pmk/screens/home/alarm_med_intake/add_alarm_input.dart';
 import 'package:epilepsy_care_pmk/services/database_service.dart';
 import 'package:epilepsy_care_pmk/services/notification_service.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 /// A page that is used to manage Alarms that sent out notifications at the
@@ -18,6 +19,8 @@ class AlarmMedIntake extends StatefulWidget {
 }
 
 class _AlarmMedIntakeState extends State<AlarmMedIntake> {
+  /// Determine if the app has notification permission. If not, the any
+  /// subsequent alarms created will always be disabled.
   late Future<bool> notificationPermission;
 
   /// Aside from displaying [AlarmList], also detects notification permission
@@ -29,19 +32,22 @@ class _AlarmMedIntakeState extends State<AlarmMedIntake> {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       notificationPermission.then((isGranted) {
         if (!isGranted) {
-          showDialog(context: context,
+          showDialog(
+              context: context,
               builder: (context) {
                 return AlertDialog(
                   title: Text("ไม่มีสิทธิแสดงการแจ้งเตือน"),
-                  content: Text("คุณไม่ได้ให้สิทธิแสดงการแจ้งเตือนกับแอปพลิเคชัน ทำให้การตั้งเวลาแจ้งเตือนทานยานั้นไม่สามารถทำงานได้ กรุณาให้สิทธิกับแอปพลิเคชันเพื่อให้สามารถแสดงการแจ้งเตือนได้จากการตั้งค่าอุปกรณ์ของคุณ"),
+                  content: Text(
+                      "คุณไม่ได้ให้สิทธิแสดงการแจ้งเตือนกับแอปพลิเคชัน ทำให้การตั้งเวลาแจ้งเตือนทานยานั้นไม่สามารถทำงานได้ กรุณาให้สิทธิกับแอปพลิเคชันเพื่อให้สามารถแสดงการแจ้งเตือนได้จากการตั้งค่าอุปกรณ์ของคุณ"),
                   actions: [
-                    TextButton(onPressed: () {
-                      Navigator.pop(context);
-                    }, child: Text("รับทราบ"))
+                    TextButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        child: Text("รับทราบ"))
                   ],
                 );
-              }
-          );
+              });
         }
       });
     });
@@ -52,14 +58,38 @@ class _AlarmMedIntakeState extends State<AlarmMedIntake> {
     return ScreenWithAppBar(
       title: 'ตั้งเวลาแจ้งเตือนทานยา',
       actions: <Widget>[
-        IconButton(
-            onPressed: () {
-              Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => const AddAlarm()));
-            },
-            icon: const Icon(Icons.add))
+        FutureBuilder(
+            future: notificationPermission,
+            builder: (context, snapshot) {
+              switch (snapshot.connectionState) {
+                case ConnectionState.waiting:
+                  return IconButton(
+                      onPressed: null,
+                      icon: const Icon(Icons.add));
+                case ConnectionState.done:
+                default:
+                  return IconButton(
+                      onPressed: () {
+                        Navigator.of(context).push(MaterialPageRoute(
+                            builder: (context) => AddAlarm(
+                                  isGranted: snapshot.data!,
+                                )));
+                      },
+                      icon: const Icon(Icons.add));
+              }
+            }),
       ],
-      body: AlarmList(),
+      body: FutureBuilder<bool>(
+          future: notificationPermission,
+          builder: (context, snapshot) {
+            switch (snapshot.connectionState) {
+              case ConnectionState.waiting:
+                return const CircularProgressIndicator();
+              case ConnectionState.done:
+              default:
+                return AlarmList(isGranted: snapshot.data!);
+            }
+          }),
     );
   }
 }
@@ -69,7 +99,15 @@ class _AlarmMedIntakeState extends State<AlarmMedIntake> {
 /// where we used a StreamBuilder to force a rebuild when the database is
 /// modified.
 class AlarmList extends StatefulWidget {
-  const AlarmList({super.key});
+  const AlarmList({
+    super.key,
+    required this.isGranted,
+  });
+
+  /// A variable that will determined whether or not the notification permission
+  /// has been granted, will be used to determined if the switch's onchange
+  /// callback is available or not.
+  final bool isGranted;
 
   @override
   State<AlarmList> createState() => _AlarmListState();
@@ -99,16 +137,23 @@ class _AlarmListState extends State<AlarmList> {
                           itemBuilder: (context, index) {
                             return AlarmCard(
                               alarm: snapshot.data![index],
+                              isGranted: widget.isGranted,
                             );
-                          }
-                      );
+                          });
                     } else {
                       return Center(
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Text("ไม่มีการตั้งเวลาแจ้งเตือนทานยา", style: mediumLargeBoldText, textAlign: TextAlign.center,),
-                            Text("ตั้งเวลาแจ้งเตือนทานยาด้วยเครื่องหมาย +", textAlign: TextAlign.center,)
+                            Text(
+                              "ไม่มีการตั้งเวลาแจ้งเตือนทานยา",
+                              style: mediumLargeBoldText,
+                              textAlign: TextAlign.center,
+                            ),
+                            Text(
+                              "ตั้งเวลาแจ้งเตือนทานยาด้วยเครื่องหมาย +",
+                              textAlign: TextAlign.center,
+                            )
                           ],
                         ),
                       );
@@ -124,7 +169,6 @@ class _AlarmListState extends State<AlarmList> {
               }
             },
           );
-        }
-    );
+        });
   }
 }

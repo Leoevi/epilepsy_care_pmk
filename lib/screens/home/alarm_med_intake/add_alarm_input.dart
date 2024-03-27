@@ -1,4 +1,3 @@
-import 'package:collection/collection.dart';
 import 'package:epilepsy_care_pmk/constants/styling.dart';
 import 'package:epilepsy_care_pmk/models/alarm.dart';
 import 'package:epilepsy_care_pmk/screens/commons/screen_with_app_bar.dart';
@@ -7,12 +6,6 @@ import 'package:epilepsy_care_pmk/services/database_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-const List<String> alarmModeList = <String>[
-  //DropDown Item List (All Alarm Mode)
-  'ทุกวัน',
-  'ทุก 2 วัน',
-  'ทุก 3 วัน',
-];
 
 class AddAlarm extends StatefulWidget {
   final Alarm? initAlarm;
@@ -20,7 +13,13 @@ class AddAlarm extends StatefulWidget {
   const AddAlarm({
     super.key,
     this.initAlarm,
+    required this.isGranted,
   });
+
+  /// A variable that will determined whether or not the notification permission
+  /// has been granted, will be used to determined the "enable" status of the
+  /// new created notification.
+  final bool isGranted;
 
   @override
   State<AddAlarm> createState() => _AddAlarmState();
@@ -75,13 +74,27 @@ class _AddAlarmState extends State<AddAlarm> {
 
   void addToDb() {
     double quantity = double.parse(_inputMedicationQuantity!);
-    Alarm alarm = Alarm(time: _inputTime!, med: _inputMedication!.name, quantity: quantity, unit: _inputMeasureUnit!.measureName, enable: true);
+    Alarm alarm = Alarm(
+        time: _inputTime!,
+        med: _inputMedication!.name,
+        quantity: quantity,
+        unit: _inputMeasureUnit!.measureName,
+        enable: widget.isGranted
+    );
     DatabaseService.addAlarm(alarm);
   }
 
   void updateToDb() {
     double quantity = double.parse(_inputMedicationQuantity!);
-    Alarm alarm = Alarm(alarmId: widget.initAlarm!.alarmId, time: _inputTime!, med: _inputMedication!.name, quantity: quantity, unit: _inputMeasureUnit!.measureName, enable: widget.initAlarm!.enable);
+    Alarm alarm = Alarm(
+        alarmId: widget.initAlarm!.alarmId,
+        time: _inputTime!,
+        med: _inputMedication!.name,
+        quantity: quantity,
+        unit: _inputMeasureUnit!.measureName,
+        // depend on isGranted
+        enable: widget.isGranted && widget.initAlarm!.enable
+    );
     DatabaseService.updateAlarm(alarm);
   }
 

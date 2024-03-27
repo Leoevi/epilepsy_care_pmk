@@ -12,15 +12,26 @@ import '../models/alarm.dart';
 // by this widget, we will just pass in the whole Alarm object then.
 
 class AlarmCard extends StatefulWidget {
-  const AlarmCard({super.key, required this.alarm});
+  const AlarmCard({
+    super.key,
+    required this.alarm,
+    required this.isGranted,
+  });
+
+  /// A variable that will determined whether or not the notification permission
+  /// has been granted, will be used to determined if the switch's onchange
+  /// callback is available or not.
+  final bool isGranted;
 
   final Alarm alarm;
+
   @override
   State<AlarmCard> createState() => _AlarmCardState();
 }
 
 class _AlarmCardState extends State<AlarmCard> {
   var formatter = DateFormat.Hm('th');
+
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -64,8 +75,10 @@ class _AlarmCardState extends State<AlarmCard> {
                       IconButton(
                           onPressed: () {
                             Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) =>
-                                    AddAlarm(initAlarm: widget.alarm)));
+                                builder: (context) => AddAlarm(
+                                      initAlarm: widget.alarm,
+                                      isGranted: widget.isGranted,
+                                    )));
                           },
                           icon: Icon(Icons.edit_outlined)),
                       IconButton(
@@ -88,14 +101,18 @@ class _AlarmCardState extends State<AlarmCard> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
+                      // If isGranted is false, then disable the switch.
                       Switch.adaptive(
-                          value: widget.alarm.enable,
-                          onChanged: (_) {
-                            setState(() {
-                              widget.alarm.toggleEnable();
-                            });
-                            DatabaseService.updateAlarmEnable(widget.alarm);
-                          })
+                          value: widget.isGranted && widget.alarm.enable,
+                          onChanged: widget.isGranted
+                              ? (_) {
+                                  setState(() {
+                                    widget.alarm.toggleEnable();
+                                  });
+                                  DatabaseService.updateAlarmEnable(
+                                      widget.alarm);
+                                }
+                              : null)
                     ],
                   )
                 ],

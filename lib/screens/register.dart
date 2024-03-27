@@ -60,7 +60,7 @@ class _RegisterState extends State<Register> {
   String? firstName;
   String? lastName;
   DateTime? birthDate;
-  String? gender; // TODO: define type for gender
+  String? gender;
 
   /// Load data from shared preference if it exists.
   @override
@@ -80,15 +80,16 @@ class _RegisterState extends State<Register> {
     }
   }
 
-  Future<void> register(UserProfileService model) async {
+  Future<int> register(UserProfileService model) async {
     model.saveToPref(hn!, firstName!, lastName!, birthDate!, gender!);
 
     if (selectedImage != null) {  // A new image is selected
       // Overwrite with new image
-      model.saveImage(selectedImage!);
+      await model.saveImage(selectedImage!);
     } else if (imageFromPreferences == null) {  // Old image was cleared
       model.clearImage();
     }
+    return 0;
   }
 
   Future<void> _pickImageFromGallery() async {
@@ -300,17 +301,17 @@ class _RegisterState extends State<Register> {
                                 child: Text("ลงทะเบียน",
                                     style: TextStyle(
                                         fontSize: 16, color: Colors.white)),
-                                onPressed: () async {
+                                onPressed: () {
                                   //validate check
                                   if (_formKey.currentState!.validate()) {
-                                    register(model);
-
-                                    if (!isRegistered) {  // Note that we didn't use the value from the model since by calling saveToPref, model.isRegistered will always be true
-                                      Navigator.pushReplacement(context,
-                                          MaterialPageRoute(builder: (context) => const MyHomePage()));
-                                    } else {
-                                      Navigator.pop(context);
-                                    }
+                                    register(model).then((_) {
+                                      if (!isRegistered) {  // Note that we didn't use the value from the model since by calling saveToPref, model.isRegistered will always be true
+                                        Navigator.pushReplacement(context,
+                                            MaterialPageRoute(builder: (context) => const MyHomePage()));
+                                      } else {
+                                        Navigator.pop(context);
+                                      }
+                                    });
                                   }
                                 },
                                 style: primaryButtonStyle,

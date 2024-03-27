@@ -43,7 +43,7 @@ class UserProfileService with ChangeNotifier {
 
   // These fields will be read-only, hence the getters.
   late bool _isRegistered;
-  late Image? _image;
+  Image? _image;  // This would also be late, but to "fix" late init err, I just chose to do this as my last resort.
   late String _hn;
   late String _firstName;
   late String _lastName;
@@ -75,7 +75,7 @@ class UserProfileService with ChangeNotifier {
   /// converting between base64 and Image object is not that straightforward.
   /// And relegating those task to new methods is more convenient.
   void saveToPref(String newHn, String newFirstName,
-      String newLastName, DateTime newBirthDate, String newGender) async {
+      String newLastName, DateTime newBirthDate, String newGender) {
     _hn = newHn;
     prefs.setString('hn', newHn);
     _firstName = newFirstName;
@@ -93,7 +93,7 @@ class UserProfileService with ChangeNotifier {
   }
 
   /// Save the given image to shared preference, and notify other listeners.
-  void saveImage(XFile newImage) async {
+  Future<void> saveImage(XFile newImage) async {
     String newImageString = ImageUtility.base64String(await newImage.readAsBytes());
     _image = ImageUtility.imageFromBase64String(newImageString);
     prefs.setString("IMG_KEY", newImageString);

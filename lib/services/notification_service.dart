@@ -71,7 +71,7 @@ class NotificationService {
   /// Returns whether or not the user have given notification permission to the
   /// app. Works only on Android and iOS, otherwise, will return false.
   ///
-  /// Now, you may observe that the return type of requestNotificationsPermission
+  /// Now, you may observe that the return type of [requestNotificationsPermission]
   /// is nullable, and that we chose to override it to false if it's null.
   /// So be aware of that.
   static Future<bool> getPermissionStatus() async {

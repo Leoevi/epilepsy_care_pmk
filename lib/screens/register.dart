@@ -80,7 +80,7 @@ class _RegisterState extends State<Register> {
     }
   }
 
-  Future<int> register(UserProfileService model) async {
+  Future<void> register(UserProfileService model) async {
     model.saveToPref(hn!, firstName!, lastName!, birthDate!, gender!);
 
     if (selectedImage != null) {  // A new image is selected
@@ -89,7 +89,6 @@ class _RegisterState extends State<Register> {
     } else if (imageFromPreferences == null) {  // Old image was cleared
       model.clearImage();
     }
-    return 0;
   }
 
   Future<void> _pickImageFromGallery() async {
@@ -305,11 +304,13 @@ class _RegisterState extends State<Register> {
                                   //validate check
                                   if (_formKey.currentState!.validate()) {
                                     register(model).then((_) {
-                                      if (!isRegistered) {  // Note that we didn't use the value from the model since by calling saveToPref, model.isRegistered will always be true
-                                        Navigator.pushReplacement(context,
-                                            MaterialPageRoute(builder: (context) => const MyHomePage()));
-                                      } else {
-                                        Navigator.pop(context);
+                                      if (mounted) {  // Avoid "Looking up a deactivated widget's ancestor is unsafe." (https://stackoverflow.com/a/74164820)
+                                        if (!isRegistered) {  // Note that we didn't use the value from the model since by calling saveToPref, model.isRegistered will always be true
+                                          Navigator.pushReplacement(context,
+                                              MaterialPageRoute(builder: (context) => const MyHomePage()));
+                                        } else {
+                                          Navigator.pop(context);
+                                        }
                                       }
                                     });
                                   }

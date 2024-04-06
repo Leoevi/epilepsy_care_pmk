@@ -117,7 +117,7 @@ class LiquidMedication implements MedicationIntakeMethod {
 
 final List<Medication> medicationEntries = [
   const Medication(
-      name: "Carbamazepin / Tegretal®",
+      name: "Carbamazepine / Tegretal®",
       picture: AssetImage("image/medications/drug_1.jpg"),
       medicationIntakeMethod: LiquidMedication(20),
       sideEffects: "คลื่นไส้ ซึม เดินเซ เห็นภาพซ้อน",
@@ -186,14 +186,14 @@ final List<Medication> medicationEntries = [
     medicationIntakeMethod: PillMedication(30),
     sideEffects: "เด็ก: ซุกซนไม่อยู่สุข พฤติกรรมเปลี่ยนแปลง ก้าวร้าว ผู้ใหญ่: ง่วงซึม อ่อนเพลีย",
     dangerSideEffects: "ผื่น Stevens-Johnson syndrome",
-  ),
+  ),  // TODO: find picture
   const Medication(
     name: "Phenobarbital (60 mg)",
-    picture: AssetImage("image/medications/drug_6.png"),
+    picture: AssetImage("image/medications/Phenobarbital60.png"),
     medicationIntakeMethod: PillMedication(60),
     sideEffects: "เด็ก: ซุกซนไม่อยู่สุข พฤติกรรมเปลี่ยนแปลง ก้าวร้าว ผู้ใหญ่: ง่วงซึม อ่อนเพลีย",
     dangerSideEffects: "ผื่น Stevens-Johnson syndrome",
-  ),  // TODO: find picture
+  ),
   const Medication(
     name: "Phenytoin / Dilantin® (125 mg/5 ml)",
     picture: AssetImage("image/medications/drug_7.png"),
@@ -231,18 +231,18 @@ final List<Medication> medicationEntries = [
   ),
   const Medication(
     name: "Topiramate / Topamax® (50 mg)",
-    picture: AssetImage("image/medications/drug_9.png"),
+    picture: AssetImage("image/medications/Topamax50.png"),
     medicationIntakeMethod: PillMedication(50),
     sideEffects: "มึนงง เดินเซ ความคิดเชื่องช้า การพูดผิดปกติ น้ำหนักลด",
     dangerSideEffects: "นิ่วในไต ต้อหิน เหงื่อออกน้อย",
-  ),  // TODO: find picture
+  ),
   const Medication(
     name: "Topiramate / Topamax® (100 mg)",
-    picture: AssetImage("image/medications/drug_9.png"),
+    picture: AssetImage("image/medications/Topamax100.png"),
     medicationIntakeMethod: PillMedication(100),
     sideEffects: "มึนงง เดินเซ ความคิดเชื่องช้า การพูดผิดปกติ น้ำหนักลด",
     dangerSideEffects: "นิ่วในไต ต้อหิน เหงื่อออกน้อย",
-  ),  // TODO: find picture
+  ),
   const Medication(
     name: "Vigabatrin / Sabril®",
     picture: AssetImage("image/medications/drug_10.png"),
@@ -279,7 +279,7 @@ final List<Medication> medicationEntries = [
     dangerSideEffects: "หงุดหงิด ก้าวร้าว อาการทางจิต",
   ),  // TODO: find picture
   const Medication(
-    name: "Lacosamide / Vimpat®",
+    name: "Lacosamide / Vimpat® (100 mg)",
     picture: AssetImage("image/medications/drug_12.png"),
     medicationIntakeMethod: PillMedication(100),
     sideEffects: "มึนงง ง่วงซึม ภาพซ้อน เดินเซ",
@@ -294,7 +294,7 @@ final List<Medication> medicationEntries = [
   ),
   const Medication(
     name: "Pregabalin / Lyrica® (75 mg)",
-    picture: AssetImage("image/medications/drug_13.png"),
+    picture: AssetImage("image/medications/Lyrica75.png"),
     medicationIntakeMethod: PillMedication(75),
     sideEffects: "ง่วงนอน ซึม เวียนศีรษะ",
     dangerSideEffects: "มักไม่ค่อยพบ",

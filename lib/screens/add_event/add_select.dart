@@ -76,7 +76,7 @@ class AddSelect extends StatelessWidget {
                         },
                       ),
                       IconLabelDetailButton(
-                        label: 'บันทึกชนิดเเละปริมาณยา',
+                        label: 'บันทึกการทานยา',
                         icon: AssetImage('image/add_event/add_med.png'),
                         onTap: () {
                           Navigator.of(context).push(MaterialPageRoute(

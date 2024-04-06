@@ -84,6 +84,9 @@ class _CalendarState extends State<Calendar> {
               lastDay: endDate,
               onDaySelected: _onDaySelected,
               locale: 'th_TH',
+              // This will add dots to each date
+              // Will be run for all dates on screen everytime we selected a date
+              // eventLoader: (date) { print(date); return [true, true]; },
             ),
           ),
           Flexible(child: EventList(dateTimeRange: DateTimeRange(start: selectedDate, end: selectedDate),)),

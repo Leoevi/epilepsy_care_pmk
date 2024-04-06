@@ -120,7 +120,8 @@ class _AddMedIntakeInputState extends State<AddMedIntakeInput> {
   @override
   Widget build(BuildContext context) {
     return ScreenWithAppBar(
-      title: "บันทึกปริมาณยา",
+      // If alarm is null then it doesn't matter, since we want it to say "บันทึก"
+      title: widget.initMedIntakeEvent == null ? "บันทึกการทานยา" : "แก้ไขการทานยา",
       body: Padding(
         padding: const EdgeInsets.all(kMediumPadding),
         child: Container(

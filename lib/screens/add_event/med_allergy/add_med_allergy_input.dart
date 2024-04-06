@@ -74,7 +74,7 @@ class _AddMedAllergyInputState extends State<AddMedAllergyInput> {
   @override
   Widget build(BuildContext context) {
     return ScreenWithAppBar(
-      title: "บันทึกอาการเเพ้ยา",
+      title: widget.initMedAllergyEvent == null ? "บันทึกอาการเเพ้ยา" : "แก้ไขอาการแพ้ยา",
       body: Padding(
         padding: const EdgeInsets.all(kMediumPadding),
         child: Container(

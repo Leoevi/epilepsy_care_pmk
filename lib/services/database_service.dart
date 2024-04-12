@@ -112,7 +112,7 @@ class DatabaseService {
         MedAllergyEvent medAllergyEvent = MedAllergyEvent(
             time: dateTimeToUnixTime(DateTime.now().subtract(Duration(days: setCount - i, hours: random.nextInt(24)))),
             med: medicationEntries[random.nextInt(medicationEntries.length)].name,
-            medAllergySymptom: "bruh this is a test"
+            medAllergySymptom: "this is a test"
         );
         DatabaseService.addMedAllergyEvent(medAllergyEvent);
 

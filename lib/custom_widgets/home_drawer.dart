@@ -92,14 +92,14 @@ class _HomeDrawerState extends State<HomeDrawer> {
               Text("An epilepsy daily app written in Flutter for Phramongkutklao Hospital's Pediatric Epilepsy Center.")
             ],
           ),
-          Divider(),
-          ListTile(
-            leading: Icon(Icons.refresh),
-            title: const Text('generateDummyData'),
-            onTap: () {
-              DatabaseService.generateDummyData(100,3);
-            },
-          ),
+          // Divider(),
+          // ListTile(
+          //   leading: Icon(Icons.refresh),
+          //   title: const Text('generateDummyData'),
+          //   onTap: () {
+          //     DatabaseService.generateDummyData(100,3);
+          //   },
+          // ),
           // We won't use this in production, ofc
           // Divider(),
           // ListTile(

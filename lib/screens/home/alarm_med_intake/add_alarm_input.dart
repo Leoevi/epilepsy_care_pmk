@@ -110,7 +110,7 @@ class _AddAlarmState extends State<AddAlarm> {
   @override
   Widget build(BuildContext context) {
     return ScreenWithAppBar(
-        title: "ตั้งเวลากินยา",
+        title: (widget.initAlarm == null) ? "การแจ้งเตือนใหม่" : "แก้ไขการแจ้งเตือน",
         body: Padding(
             padding: const EdgeInsets.all(kMediumPadding),
             child: Container(

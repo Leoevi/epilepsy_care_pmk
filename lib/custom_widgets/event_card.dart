@@ -53,6 +53,7 @@ class EventCard extends StatelessWidget {
               //Protect Overflow Context
               flex: 4,
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Row(
@@ -78,7 +79,7 @@ class EventCard extends StatelessWidget {
                     height: kSmallPadding,
                   ),
                   //Detail
-                  Text(detail ?? ""),
+                  Expanded(child: Text(detail ?? "")),
                   SizedBox(
                     height: kSmallPadding,
                   ),

@@ -6,6 +6,8 @@ import 'package:epilepsy_care_pmk/services/database_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../../../custom_widgets/time_of_day_dropdown.dart';
+
 
 class AddAlarm extends StatefulWidget {
   final Alarm? initAlarm;
@@ -233,46 +235,11 @@ class _AddAlarmState extends State<AddAlarm> {
 
                           SizedBox(height: 10),
 
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                              Expanded(
-                                child: TextFormField(
-                                  controller: timeController,
-                                  validator: (val) {
-                                    if (val == null || val.isEmpty) {
-                                      return 'กรุณาระบุเวลา';
-                                    }
-                                    return null;
-                                  },
-                                  readOnly: true,
-                                  decoration: InputDecoration(
-                                      // TODO: Change PM to 12-hour
-                                      border: OutlineInputBorder()),
-                                ),
-                              ),
-                              SizedBox(width: 80),
-                              ElevatedButton(
-                                child: Text("เลือกเวลา",
-                                    style: TextStyle(
-                                        fontSize: 16, color: Colors.white)),
-                                onPressed: () async {
-                                  final TimeOfDay? timeOfDay =
-                                      await showTimePicker(
-                                    context: context,
-                                    initialTime: _inputTime ?? TimeOfDay.now(),
-                                    initialEntryMode: TimePickerEntryMode.dial,
-                                  );
-                                  if (timeOfDay != null) {
-                                    setState(() {
-                                      _inputTime = timeOfDay;
-                                      timeController.text = _inputTime!.format(context);
-                                    });
-                                  }
-                                },
-                                style: primaryButtonStyle,
-                              )
-                            ],
+                          TimeOfDayDropdown(
+                            startingTime: _inputTime,
+                            onTimeChanged: (newTime) {
+                              _inputTime = newTime;
+                            },
                           ),
 
                           SizedBox(height: 20),

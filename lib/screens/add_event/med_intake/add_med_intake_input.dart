@@ -7,6 +7,7 @@ import 'package:epilepsy_care_pmk/services/database_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import '../../../custom_widgets/time_of_day_dropdown.dart';
 import '../../../helpers/date_time_helpers.dart';
 import '../../../models/alarm.dart';
 
@@ -181,39 +182,11 @@ class _AddMedIntakeInputState extends State<AddMedIntakeInput> {
 
                     SizedBox(height: 10),
 
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        Expanded(
-                          child: TextFormField(
-                            //Collect data by use update_text function
-                            enabled: false,
-                            decoration: InputDecoration(
-                                hintText: _inputTime.format(context),
-                                // TODO: Change PM to 12-hour
-                                border: OutlineInputBorder()),
-                          ),
-                        ),
-                        SizedBox(width: 80),
-                        ElevatedButton(
-                          child: Text("เลือกเวลา",
-                              style:
-                                  TextStyle(fontSize: 16, color: Colors.white)),
-                          onPressed: () async {
-                            final TimeOfDay? timeOfDay = await showTimePicker(
-                              context: context,
-                              initialTime: _inputTime,
-                              initialEntryMode: TimePickerEntryMode.dial,
-                            );
-                            if (timeOfDay != null) {
-                              setState(() {
-                                _inputTime = timeOfDay;
-                              });
-                            }
-                          },
-                          style: primaryButtonStyle
-                        )
-                      ],
+                    TimeOfDayDropdown(
+                      startingTime: _inputTime,
+                      onTimeChanged: (newTime) {
+                        _inputTime = newTime;
+                      },
                     ),
 
                     SizedBox(height: 20),

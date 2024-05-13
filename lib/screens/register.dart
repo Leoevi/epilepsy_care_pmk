@@ -32,6 +32,8 @@ import 'package:provider/provider.dart';
 
 import '../services/user_profile_service.dart';
 
+const List<String> genders = <String>['ชาย', 'หญิง', 'อื่น ๆ'];
+
 /// Register page where it will launch if the user hasn't registered with their
 /// info yet. But can also be used to edit the user current information.
 /// Generally, this will be the only page to call [UserProfileService.saveToPref]
@@ -273,24 +275,31 @@ class _RegisterState extends State<Register> {
                             }
                           },
                         ),
-                        LabelTextFormField(
-                          label: "เพศ",
-                          initialValue: gender,
+                        Text("เพศ", style: TextStyle(fontSize: 18),),
+                        SizedBox(height: kSmallPadding),
+                        DropdownButtonFormField<String>(
                           validator: (val) {
                             if (val == null || val.isEmpty) {
                               return 'กรุณาระบุเพศสภาพ';
                             }
                             return null;
                           },
-                          onChanged: (String genderValue) {
-                            //async
-                            // final SharedPreferences prefs =
-                            //     await SharedPreferences.getInstance();
+                          value: gender,
+                          icon: const Icon(Icons.keyboard_arrow_down),
+                          decoration:
+                          InputDecoration(border: OutlineInputBorder()),
+                          onChanged: (String? val) {
                             setState(() {
-                              gender = genderValue; //load input to hn
-                              // prefs.setString('gender', gender!);
+                              gender = val!;
                             });
                           },
+                          items: genders
+                              .map<DropdownMenuItem<String>>((String value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Text(value),
+                            );
+                          }).toList(),
                         ),
                         SizedBox(height: kMediumPadding),
                         Align(

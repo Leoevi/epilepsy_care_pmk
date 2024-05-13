@@ -1,3 +1,4 @@
+import 'package:epilepsy_care_pmk/constants/styling.dart';
 import 'package:flutter/material.dart';
 
 // This is an introduction to write a StatefulWidget class: https://stackoverflow.com/a/72322408
@@ -40,7 +41,7 @@ class _LabelTextFormFieldState extends State<LabelTextFormField> {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(widget.label, style: TextStyle(fontSize: 18)),
-        SizedBox(height: 10),
+        SizedBox(height: kSmallPadding),
         //spacing between label and TextInput
         TextFormField(
           initialValue: widget.initialValue,

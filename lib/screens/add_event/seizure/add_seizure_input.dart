@@ -102,7 +102,7 @@ class _AddSeizureInputState extends State<AddSeizureInput> {
 
                           SizedBox(height: 10),
 
-                          DropdownButtonFormField(
+                          DropdownButtonFormField<String>(
                             validator: (val) {
                               if (val == null || val.isEmpty) {
                                 return 'กรุณาระบุประเภทการชัก';

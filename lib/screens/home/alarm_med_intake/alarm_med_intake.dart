@@ -71,7 +71,7 @@ class _AlarmMedIntakeState extends State<AlarmMedIntake> {
                   return IconButton(
                       onPressed: () {
                         Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => AddAlarm(
+                            builder: (context) => AddAlarmInput(
                                   isGranted: snapshot.data!,
                                 )));
                       },

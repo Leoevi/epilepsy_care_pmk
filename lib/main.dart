@@ -136,7 +136,7 @@ class _MyHomePageState extends State<MyHomePage> {
       Alarm alarmFromNotification = Alarm.fromSerializedString(payload);
       Navigator.of(context).push(MaterialPageRoute(
           builder: (context) => AddMedIntakeInput(
-                initAlarm: alarmFromNotification,
+                initNotification: alarmFromNotification,
               )));
     }
   }

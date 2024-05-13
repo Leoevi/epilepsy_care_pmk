@@ -40,7 +40,7 @@ class Wiki extends StatelessWidget {
             Navigator.of(context).push(MaterialPageRoute(builder: (context) => const Symptom()));
           },),
           IconLabelDetailButton(icon: const AssetImage("image/medication_icon.png"), label: 'ข้อมูลชนิดของยา', detail: "ศึกษาข้อมูลของยาที่ใช้เกี่ยวกับโรคลมชักได้ที่นี่", onTap: () {
-            Navigator.of(context).push(MaterialPageRoute(builder: (context) => const MedicationList()));
+            Navigator.of(context).push(MaterialPageRoute(builder: (context) => const MedicationList(resultExpected: false,)));
           },),
         ],
       )

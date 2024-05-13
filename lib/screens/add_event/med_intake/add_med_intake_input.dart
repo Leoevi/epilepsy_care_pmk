@@ -1,8 +1,11 @@
 import 'package:epilepsy_care_pmk/constants/styling.dart';
 import 'package:epilepsy_care_pmk/custom_widgets/horizontal_date_picker.dart';
+import 'package:epilepsy_care_pmk/custom_widgets/icon_label_detail_button.dart';
+import 'package:epilepsy_care_pmk/custom_widgets/medication_selection_form.dart';
 import 'package:epilepsy_care_pmk/models/med_intake_event.dart';
 import 'package:epilepsy_care_pmk/screens/commons/screen_with_app_bar.dart';
 import 'package:epilepsy_care_pmk/screens/wiki/medication/medication.dart';
+import 'package:epilepsy_care_pmk/screens/wiki/medication/medication_list.dart';
 import 'package:epilepsy_care_pmk/services/database_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -12,13 +15,16 @@ import '../../../helpers/date_time_helpers.dart';
 import '../../../models/alarm.dart';
 
 class AddMedIntakeInput extends StatefulWidget {
+  /// For launching this page with a pre-existing med intake entry (for editing).
+  /// Should be passed as null if this is a new med intake event entry.
   final MedIntakeEvent? initMedIntakeEvent;
-  final Alarm? initAlarm;
+  /// If this page is launched from an alarm notification.
+  final Alarm? initNotification;
 
   const AddMedIntakeInput({
     super.key,
     this.initMedIntakeEvent,
-    this.initAlarm,
+    this.initNotification,
   });
 
   @override
@@ -41,26 +47,12 @@ class _AddMedIntakeInputState extends State<AddMedIntakeInput> {
   @override
   void initState() {
     super.initState();
-    _medDropdownList = medicationEntries.map<DropdownMenuItem<Medication>>((entry) {
-      return DropdownMenuItem<Medication>(
-        value: entry,
-        child: Text(entry.name),
-      );
-    }).toList();
-
-    // _inputMedication = widget.initMedIntakeEvent == null ? null : medicationEntries.firstWhereOrNull((med) => med.name == widget.initMedIntakeEvent?.med);
-    // _generateUnitDropdownList();  // Call this otherwise we'll need to reselect Medication to get unit drop down list
-    //
-    // // Date and time have their default values
-    // if (widget.initMedIntakeEvent != null) {
-    //   DateTime initTime = unixTimeToDateTime(widget.initMedIntakeEvent!.time);
-    //   var r = separateDateTimeAndTimeOfDay(initTime);
-    //   _inputDate = r.$1;
-    //   _inputTime = r.$2;
-    // } else {
-    //   _inputDate = DateTime.now();
-    //   _inputTime = TimeOfDay.now();
-    // }
+    // _medDropdownList = medicationEntries.map<DropdownMenuItem<Medication>>((entry) {
+    //   return DropdownMenuItem<Medication>(
+    //     value: entry,
+    //     child: Text(entry.name),
+    //   );
+    // }).toList();
 
     if (widget.initMedIntakeEvent != null) {
       _inputMedication = medicationEntries.firstWhere((med) => med.name == widget.initMedIntakeEvent?.med);
@@ -69,15 +61,15 @@ class _AddMedIntakeInputState extends State<AddMedIntakeInput> {
       var r = separateDateTimeAndTimeOfDay(initTime);
       _inputDate = r.$1;
       _inputTime = r.$2;
-    } else if (widget.initAlarm != null) {
+    } else if (widget.initNotification != null) {
       // If an initAlarm is passed it, will load the med/quantity/unit of it
       // But leave date and time to now.
-      _inputMedication = medicationEntries.firstWhere((med) => med.name == widget.initAlarm?.med);
+      _inputMedication = medicationEntries.firstWhere((med) => med.name == widget.initNotification?.med);
       _generateUnitDropdownList();
 
-      _inputMedicationQuantity = widget.initAlarm!.quantity.toString();
+      _inputMedicationQuantity = widget.initNotification!.quantity.toString();
       medicationQuantityController.text = _inputMedicationQuantity!;
-      _inputMeasureUnit = _inputMedication!.medicationIntakeMethod.measureList.firstWhere((unit) => unit.measureName == widget.initAlarm!.unit);
+      _inputMeasureUnit = _inputMedication!.medicationIntakeMethod.measureList.firstWhere((unit) => unit.measureName == widget.initNotification!.unit);
 
       _inputDate = DateTime.now();
       _inputTime = TimeOfDay.now();
@@ -149,32 +141,53 @@ class _AddMedIntakeInputState extends State<AddMedIntakeInput> {
 
                     SizedBox(height: 10),
 
-                    DropdownButtonFormField(
-                      isExpanded: true,
-                      value: _inputMedication,
-                      icon: const Icon(Icons.keyboard_arrow_down),
-                      decoration: InputDecoration(border: OutlineInputBorder()),
-                      onChanged: (Medication? val) {
-                        // 3 things that this onChange does
-                        setState(() {
-                          // 1) set the selectedMedication
-                          _inputMedication = val!;
-                          // 2) Update and clear the measure drop down menu
-                          // use the ".?" operator to make the whole expr null if selectedMedication is null
-                          _inputMeasureUnit = null;  // For some reason, not setting this to null will cause an assertion error saying that there are 0 or 2 duplicate entries in the unit's drop down menu.
-                          _generateUnitDropdownList();
-                          // 3) Clear medication quantity text field
-                          _inputMedicationQuantity = null;
-                          medicationQuantityController.clear();
-                        });
-                      },
-                      items: _medDropdownList,
-                      validator: (val) {
-                        if (val == null) {
+                    // We change from dropdown to a new custom menu, so this will be unused.
+                    // DropdownButtonFormField(
+                    //   isExpanded: true,
+                    //   value: _inputMedication,
+                    //   icon: const Icon(Icons.keyboard_arrow_down),
+                    //   decoration: InputDecoration(border: OutlineInputBorder()),
+                    //   onChanged: (Medication? val) {
+                    //     // 3 things that this onChange does
+                    //     setState(() {
+                    //       // 1) set the selectedMedication
+                    //       _inputMedication = val!;
+                    //       // 2) Update and clear the measure drop down menu
+                    //       // use the ".?" operator to make the whole expr null if selectedMedication is null
+                    //       _inputMeasureUnit = null;  // For some reason, not setting this to null will cause an assertion error saying that there are 0 or 2 duplicate entries in the unit's drop down menu.
+                    //       _generateUnitDropdownList();
+                    //       // 3) Clear medication quantity text field
+                    //       _inputMedicationQuantity = null;
+                    //       medicationQuantityController.clear();
+                    //     });
+                    //   },
+                    //   items: _medDropdownList,
+                    //   validator: (val) {
+                    //     if (val == null) {
+                    //       return "กรุณาเลือกยาที่จะบันทึก";
+                    //     }
+                    //   },
+                    // ),
+                    MedicationSelectionForm(
+                      validator: (selectedMed) {
+                        if (selectedMed == null) {
                           return "กรุณาเลือกยาที่จะบันทึก";
                         }
                       },
-                    ),
+                        medication: _inputMedication,
+                        onChanged: (newMed) {
+                          setState(() {
+                            // 1) set the selectedMedication
+                            _inputMedication = newMed;
+                            // 2) Update and clear the measure drop down menu
+                            _inputMeasureUnit = null;
+                            _generateUnitDropdownList();
+                            // 3) Clear medication quantity text field
+                            _inputMedicationQuantity = null;
+                            medicationQuantityController.clear();
+                          });
+                        }),
+
 
                     SizedBox(height: 20),
                     //Time

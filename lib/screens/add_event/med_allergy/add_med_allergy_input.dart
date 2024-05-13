@@ -8,6 +8,7 @@ import 'package:epilepsy_care_pmk/services/database_service.dart';
 import 'package:flutter/material.dart';
 import 'package:collection/collection.dart';
 
+import '../../../custom_widgets/medication_selection_form.dart';
 import '../../../custom_widgets/time_of_day_dropdown.dart';  // firstWhereOrNull
 
 class AddMedAllergyInput extends StatefulWidget {
@@ -25,7 +26,6 @@ class AddMedAllergyInput extends StatefulWidget {
 }
 
 class _AddMedAllergyInputState extends State<AddMedAllergyInput> {
-  late final List<DropdownMenuItem<Medication>> medDropdownList;
   final _formKey = GlobalKey<FormState>(); //Validate
 
   Medication? _inputMedication; // dropDown init value
@@ -37,12 +37,6 @@ class _AddMedAllergyInputState extends State<AddMedAllergyInput> {
   @override
   void initState() {
     super.initState();
-    medDropdownList = medicationEntries.map<DropdownMenuItem<Medication>>((entry) {
-      return DropdownMenuItem<Medication>(
-        value: entry,
-        child: Text(entry.name),
-      );
-    }).toList();
 
     // Since we store Medication in DB as String, we need to find the actual
     // Medication object that corresponds to that String.
@@ -104,19 +98,18 @@ class _AddMedAllergyInputState extends State<AddMedAllergyInput> {
 
                     SizedBox(height: 10),
 
-                    DropdownButtonFormField(
-                      isExpanded: true, //https://stackoverflow.com/a/55376107
-                      value: _inputMedication,
-                      icon: const Icon(Icons.keyboard_arrow_down),
-                      decoration: InputDecoration(border: OutlineInputBorder()),
-                      onChanged: (Medication? val) {
-                        setState(() {
-                          _inputMedication = val!;
-                          // print(dropDownValue);
-                        });
-                      },
-                      items: medDropdownList,
-                    ),
+                    MedicationSelectionForm(
+                        validator: (selectedMed) {
+                          if (selectedMed == null) {
+                            return "กรุณาเลือกยาที่จะบันทึก";
+                          }
+                        },
+                        medication: _inputMedication,
+                        onChanged: (newMed) {
+                          setState(() {
+                            _inputMedication = newMed;
+                          });
+                        }),
 
                     SizedBox(height: 20),
                     //Time

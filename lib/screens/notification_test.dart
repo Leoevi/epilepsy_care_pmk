@@ -2,6 +2,7 @@ import 'package:epilepsy_care_pmk/screens/commons/screen_with_app_bar.dart';
 import 'package:epilepsy_care_pmk/services/notification_service.dart';
 import 'package:flutter/material.dart';
 
+/// A page that has some notification tests. Is not used anymore.
 class NotificationTest extends StatelessWidget {
   const NotificationTest({super.key});
 

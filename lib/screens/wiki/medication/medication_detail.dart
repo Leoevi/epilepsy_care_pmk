@@ -1,16 +1,25 @@
 import 'package:epilepsy_care_pmk/screens/commons/screen_with_app_bar.dart';
 import 'package:epilepsy_care_pmk/screens/wiki/medication/medication.dart';
+import 'package:epilepsy_care_pmk/screens/wiki/medication/medication_list.dart';
 import 'package:flutter/material.dart';
 
 import '../../../constants/styling.dart';
 
 class MedicationDetail extends StatelessWidget {
-  const MedicationDetail({
-    super.key,
-    required this.medicationEntry,
-  });
-
   final Medication medicationEntry;
+
+  /// A continuation from the [MedicationList]
+  ///
+  /// Determine if this page is launched from the homepage or from a
+  /// [MedicationSelection] widget.
+  ///
+  /// If it was launched from the [MedicationSelection] widget, then it expects
+  /// to know what the selected medication is, and so this page will return that
+  /// medication.
+  final bool resultExpected;
+
+  const MedicationDetail(
+      {super.key, required this.medicationEntry, required this.resultExpected});
 
   @override
   Widget build(BuildContext context) {
@@ -43,6 +52,16 @@ class MedicationDetail extends StatelessWidget {
                         medicationEntry.name,
                         style: Theme.of(context).textTheme.headlineSmall,
                       )),
+                  Align(
+                    alignment: Alignment.center,
+                    child: resultExpected
+                        ? ElevatedButton(
+                            onPressed: () {
+                              // https://stackoverflow.com/questions/56725216/how-to-pop-two-screens-without-using-named-routing
+                              Navigator.of(context)..pop()..pop(medicationEntry);
+                            }, child: Text("เลือกยานี้"))
+                        : SizedBox.shrink(),
+                  ),
                   SizedBox(
                     height: 2 * kMediumPadding,
                   ),
@@ -57,7 +76,8 @@ class MedicationDetail extends StatelessWidget {
                   SizedBox(
                     height: kMediumPadding,
                   ),
-                  Text("ขนาด: ${medicationEntry.medicationIntakeMethod ?? "-"}"),
+                  Text(
+                      "ขนาด: ${medicationEntry.medicationIntakeMethod ?? "-"}"),
                   SizedBox(
                     height: kMediumPadding,
                   ),
@@ -65,7 +85,8 @@ class MedicationDetail extends StatelessWidget {
                   SizedBox(
                     height: kMediumPadding,
                   ),
-                  Text("ผลข้างเคียงที่ต้องระวัง: ${medicationEntry.dangerSideEffects ?? "-"}"),
+                  Text(
+                      "ผลข้างเคียงที่ต้องระวัง: ${medicationEntry.dangerSideEffects ?? "-"}"),
                   SizedBox(
                     height: kMediumPadding,
                   ),

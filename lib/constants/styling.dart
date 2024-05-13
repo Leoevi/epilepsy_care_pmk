@@ -36,6 +36,10 @@ const String indent = "\t\t\t\t";
 const TextStyle mediumLargeBoldText =
     TextStyle(fontWeight: FontWeight.bold, fontSize: 16);
 
+/// TextStyle that tries to mimic the usual error style, in case if
+/// [Theme.of(context).inputDecorationTheme.errorStyle] is null.
+TextStyle errorStyle = TextStyle(fontSize: 14, color: Colors.red[700]);
+
 const double kCircleRadius = 32;
 
 /// A decoration intend to be used by containers wrapping scaffolds

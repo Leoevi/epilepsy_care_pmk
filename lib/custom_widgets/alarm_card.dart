@@ -75,7 +75,7 @@ class _AlarmCardState extends State<AlarmCard> {
                       IconButton(
                           onPressed: () {
                             Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) => AddAlarm(
+                                builder: (context) => AddAlarmInput(
                                       initAlarm: widget.alarm,
                                       isGranted: widget.isGranted,
                                     )));

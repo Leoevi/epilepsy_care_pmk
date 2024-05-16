@@ -29,7 +29,12 @@ import 'package:provider/provider.dart';
 import '../../services/user_profile_service.dart';
 
 class Home extends StatefulWidget {
-  const Home({super.key});
+  final List<FocusNode> focusNodes;
+
+  const Home({
+    super.key,
+    required this.focusNodes
+  });
 
   @override
   State<Home> createState() => _HomeState();
@@ -94,10 +99,13 @@ class _HomeState extends State<Home> {
                                   )),
                               //Button
 
-                              IconButton(
-                                  onPressed: () =>
-                                      Scaffold.of(context).openEndDrawer(),
-                                  icon: Icon(Icons.menu))
+                              Focus(
+                                focusNode: widget.focusNodes[2],
+                                child: IconButton(
+                                    onPressed: () =>
+                                        Scaffold.of(context).openEndDrawer(),
+                                    icon: Icon(Icons.menu)),
+                              )
                             ],
                           ),
                         ),

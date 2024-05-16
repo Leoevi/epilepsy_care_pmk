@@ -9,7 +9,7 @@ import '../main.dart';
 
 // You know, if for some reason we want to implement a setting feature
 // (theme/language/etc) we could just conjure another service class like this,
-// and user that with change notifier like this.
+// and use that with change notifier like this.
 
 /// A singleton class that provides user information.
 class UserProfileService with ChangeNotifier {

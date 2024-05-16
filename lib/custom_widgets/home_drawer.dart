@@ -1,13 +1,10 @@
 import 'package:epilepsy_care_pmk/constants/styling.dart';
-import 'package:epilepsy_care_pmk/helpers/image_utility.dart';
 import 'package:epilepsy_care_pmk/screens/home/graph_history/graph_history_with_ui.dart';
 import 'package:epilepsy_care_pmk/screens/home/profile/profile.dart';
-import 'package:epilepsy_care_pmk/screens/notification_test.dart';
-import 'package:epilepsy_care_pmk/services/database_service.dart';
 import 'package:epilepsy_care_pmk/services/user_profile_service.dart';
 import 'package:flutter/material.dart';
+import 'package:onboarding_overlay/onboarding_overlay.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../screens/home/alarm_med_intake/alarm_med_intake.dart';
 
@@ -84,8 +81,24 @@ class _HomeDrawerState extends State<HomeDrawer> {
             },
           ),
           Divider(),
-          // https://api.flutter.dev/flutter/material/AboutListTile-class.html
+          ListTile(
+            leading: Icon(Icons.perm_device_info),
+            title: const Text('เข้าสู่การสอนใช้งานครั้งแรก'),
+            onTap: () {
+              Navigator.of(context).pop();
+              if (mounted) {
+                final onboarding = Onboarding.of(context);
+                if (onboarding != null) {
+                  onboarding.show();
+                } else {
+                  print("onboarding is null");
+                }
+              }
+            },
+          ),
+          Divider(),
           AboutListTile(
+            // https://api.flutter.dev/flutter/material/AboutListTile-class.html
             icon: Icon(Icons.info_outline),
             // applicationIcon: ImageIcon(Image.asset("image/app_icon_android.png").image),
             aboutBoxChildren: [

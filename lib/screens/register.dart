@@ -28,9 +28,11 @@ import 'package:epilepsy_care_pmk/helpers/image_utility.dart';
 import 'package:epilepsy_care_pmk/main.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:onboarding_overlay/onboarding_overlay.dart';
 import 'package:provider/provider.dart';
 
 import '../services/user_profile_service.dart';
+import 'homepage.dart';
 
 const List<String> genders = <String>['ชาย', 'หญิง', 'อื่น ๆ'];
 
@@ -206,9 +208,6 @@ class _RegisterState extends State<Register> {
                                 return null;
                               },
                               onChanged: (String firstNameValue) {
-                                //async
-                                // final SharedPreferences prefs =
-                                //     await SharedPreferences.getInstance();
                                 setState(() {
                                   firstName =
                                       firstNameValue; //retieve input value to firstName
@@ -229,9 +228,6 @@ class _RegisterState extends State<Register> {
                                 return null;
                               },
                               onChanged: (String lastNameValue) {
-                                //async
-                                //  final SharedPreferences prefs =
-                                //     await SharedPreferences.getInstance();
                                 setState(() {
                                   lastName =
                                       lastNameValue; //retieve input value to lastName
@@ -309,19 +305,27 @@ class _RegisterState extends State<Register> {
                                 child: Text("ลงทะเบียน",
                                     style: TextStyle(
                                         fontSize: 16, color: Colors.white)),
-                                onPressed: () {
+                                onPressed: () async {
                                   //validate check
                                   if (_formKey.currentState!.validate()) {
-                                    register(model).then((_) {
-                                      if (mounted) {  // Avoid "Looking up a deactivated widget's ancestor is unsafe." (https://stackoverflow.com/a/74164820)
-                                        if (!isRegistered) {  // Note that we didn't use the value from the model since by calling saveToPref, model.isRegistered will always be true
-                                          Navigator.pushReplacement(context,
-                                              MaterialPageRoute(builder: (context) => const MyHomePage()));
-                                        } else {
-                                          Navigator.pop(context);
-                                        }
-                                      }
-                                    });
+                                    final navigator = Navigator.of(context);
+                                    await register(model);
+
+                                    // If you are going to use context after awaiting, don't forget to check mounted property.
+                                    // https://dart.dev/tools/linter-rules/use_build_context_synchronously
+                                    // if (!context.mounted) return;
+                                    // However, this still caused onboarding to not show on some circumstances.
+                                    // Or alternatively, use context to create a navigator before awaiting
+                                    // (https://stackoverflow.com/a/69512692)
+
+                                    if (!isRegistered) {  // Note that we didn't use the value from the model since by calling saveToPref, model.isRegistered will always be true
+                                      navigator.pushReplacement(MaterialPageRoute(builder: (context) => const MainPage(doOnboarding: true,)));
+                                      // Navigator.pushReplacement(context,
+                                      //     MaterialPageRoute(builder: (context) => const MainPage(doOnboarding: true,)));
+                                    } else {
+                                      navigator.pop();
+                                      // Navigator.pop(context);
+                                    }
                                   }
                                 },
                                 style: primaryButtonStyle,

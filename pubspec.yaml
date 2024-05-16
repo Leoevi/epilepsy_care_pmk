@@ -51,6 +51,7 @@ dependencies:
   flutter_timezone: ^1.0.8
   collection: ^1.18.0
   intl: ^0.18.1
+  onboarding_overlay: ^3.2.2
 
 flutter_icons:
   ios: true

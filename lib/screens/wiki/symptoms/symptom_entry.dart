@@ -14,7 +14,7 @@ class SymptomEntry {
 
   final String title;
   final Text content;
-  final ImageProvider<Object>? icon;
+  final ImageProvider<Object> icon;
   final Image picture;
   
 }
@@ -37,13 +37,14 @@ final List<SymptomEntry> symptomEntries = [
               ${indent}2. อาการชักที่เกิดขึ้นเพียงครั้งเดียว โดยที่ไม่มีปัจจัยกระตุ้นในผู้ป่วยที่มีโอกาสเสี่ยงสูงที่จะมีอาการชักซ้ำโดยความเสี่ยงเท่ากับผู้ป่วยที่มีอาการชักโดยที่ไม่มีปัจจัยกระตุ้นตั้งแต่2ครั้งขึ้นไป
               ${indent}3. กลุ่มอาการโรคลมชัก (epileptic syndrome) ชนิดต่างๆเช่นภาวะชักชนิดเหม่อ (absence) เป็นต้น
               
+              
               อ้างอิงจาก http://www.pedceppmk.com""")
             ),
           ],
         ),
       ),
-      icon: AssetImage("image/seizure_wiki_info/seizure_wiki_1.jpeg"),
-      picture: Image.asset("image/seizure_wiki_info/seizure_wiki_1.jpeg"),),
+      icon: const AssetImage("image/seizure_wiki_info/icon/seizure_wiki_1.png"),
+      picture: Image.asset("image/seizure_wiki_info/background/seizure_wiki_1.png", fit: BoxFit.cover),),
   SymptomEntry(
       title: "สาเหตุของอาการลมชัก",
       content: Text.rich(
@@ -67,8 +68,8 @@ final List<SymptomEntry> symptomEntries = [
           ],
         ),
       ),
-      icon: AssetImage("image/seizure_wiki_info/seizure_wiki_2.jpg"),
-      picture: Image.asset("image/seizure_wiki_info/seizure_wiki_2.jpg"),),
+      icon: const AssetImage("image/seizure_wiki_info/icon/seizure_wiki_2.png"),
+      picture: Image.asset("image/seizure_wiki_info/background/seizure_wiki_2.png"),),
   SymptomEntry(
       title: "ประเภทของการชัก",
       content: Text.rich(
@@ -95,8 +96,8 @@ final List<SymptomEntry> symptomEntries = [
           ],
         ),
       ),
-      icon: AssetImage("image/seizure_wiki_info/seizure_wiki_3.jpeg"),
-      picture: Image.asset("image/seizure_wiki_info/seizure_wiki_3.jpeg"),),
+      icon: const AssetImage("image/seizure_wiki_info/icon/seizure_wiki_3.png"),
+      picture: Image.asset("image/seizure_wiki_info/background/seizure_wiki_3.png"),),
   SymptomEntry(
       title: "การรักษาโรคลมชัก",
       content: Text.rich(
@@ -125,6 +126,6 @@ final List<SymptomEntry> symptomEntries = [
           ],
         ),
       ),
-      icon: AssetImage("image/seizure_wiki_info/seizure_wiki_6.jpg"),
-      picture: Image.asset("image/seizure_wiki_info/seizure_wiki_6.jpg"),),
+      icon: const AssetImage("image/seizure_wiki_info/icon/seizure_wiki_6.png"),
+      picture: Image.asset("image/seizure_wiki_info/background/seizure_wiki_6.png"),),
 ];

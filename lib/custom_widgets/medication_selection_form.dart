@@ -58,7 +58,7 @@ class MedicationSelectionForm extends StatelessWidget {
                       },
                     )
                   : IconLabelDetailButton(
-                      icon: medication!.picture,
+                      icon: medication!.icon,
                       label: medication!.name,
                       onTap: () async {
                         final selectedMedication =

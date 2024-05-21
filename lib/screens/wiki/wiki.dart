@@ -29,7 +29,7 @@ import 'package:flutter/material.dart';
 import '../../custom_widgets/icon_label_detail_button.dart';
 
 class Wiki extends StatelessWidget {
-  const Wiki({Key? key}) : super(key: key);
+  const Wiki({super.key});
 
   @override
   Widget build(BuildContext context) {

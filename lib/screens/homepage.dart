@@ -1,3 +1,5 @@
+import 'package:epilepsy_care_pmk/screens/wiki/medication/medication.dart';
+import 'package:epilepsy_care_pmk/screens/wiki/symptoms/symptom_entry.dart';
 import 'package:epilepsy_care_pmk/screens/wiki/wiki.dart';
 import 'package:flutter/material.dart';
 import 'package:onboarding_overlay/onboarding_overlay.dart';
@@ -12,6 +14,8 @@ import 'calendar/calendar.dart';
 import 'contacts/contact.dart';
 import 'home/home.dart';
 
+/// The main page of the app. Has a bottom navigation bar that has access each
+/// pages of the app.
 class MainPage extends StatefulWidget {
   /// Whether or not to display onboarding process. Most of the time, this will
   /// be false, but for the first time after registering, this will be passed in
@@ -202,6 +206,26 @@ class _ActualMainPageState extends State<ActualMainPage> {
         }
       });
     }
+
+    // pre-cache some images that might load slowly otherwise.
+    // We can't use context during initState, so we do a postFrameCallback.
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      // add event
+      precacheImage(const AssetImage('image/add_event/add_seizure.png'), context);
+      precacheImage(const AssetImage('image/add_event/add_med_allergy.png'), context);
+      precacheImage(const AssetImage('image/add_event/add_med.png'), context);
+      // wiki
+      precacheImage(const AssetImage('image/symptom_icon.png'), context);
+      precacheImage(const AssetImage('image/medication_icon.png'), context);
+      // seizure info
+      for (SymptomEntry symptom in symptomEntries) {
+        precacheImage(symptom.icon, context);
+      }
+      // med
+      for (Medication med in medicationEntries) {
+        precacheImage(med.icon, context);
+      }
+    });
   }
 
   void listenNotification() =>

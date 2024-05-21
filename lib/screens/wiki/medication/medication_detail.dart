@@ -42,8 +42,12 @@ class MedicationDetail extends StatelessWidget {
                           BorderRadius.circular(kMediumRoundedCornerRadius),
                       child: Image(
                         image: medicationEntry.picture,
+                        // How to make image take full width
+                        // https://stackoverflow.com/a/60333765
+                        width: double.infinity,
+                        fit: BoxFit.fitWidth,
                       )),
-                  SizedBox(
+                  const SizedBox(
                     height: kMediumPadding,
                   ),
                   Align(

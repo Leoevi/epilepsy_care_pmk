@@ -27,7 +27,7 @@ class MedicationList extends StatelessWidget {
         iconLabelDetailButtonList: [
           for (Medication entry in medicationEntries)
             IconLabelDetailButton(
-              icon: entry.picture,
+              icon: entry.icon,
               label: entry.name,
               onTap: () {
                 Navigator.of(context).push(MaterialPageRoute(

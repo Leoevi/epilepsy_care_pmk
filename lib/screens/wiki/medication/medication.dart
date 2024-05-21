@@ -326,7 +326,7 @@ final List<Medication> medicationEntries = [
   const Medication(
     name: "Pregabalin / Lyrica® (75 mg)",
     icon: AssetImage("image/medications/icon/Lyrica_75mg_tbl.png"),
-    picture: AssetImage("image/medications/picture/Lyrica75.png"),
+    picture: AssetImage("image/medications/picture/Lyrica_75mg_tbl.png"),
     medicationIntakeMethod: PillMedication(75),
     sideEffects: "ง่วงนอน ซึม เวียนศีรษะ",
     dangerSideEffects: "มักไม่ค่อยพบ",

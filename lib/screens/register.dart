@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 import 'dart:io';
+import 'dart:ui';
 import 'package:epilepsy_care_pmk/constants/styling.dart';
 import 'package:epilepsy_care_pmk/custom_widgets/label_text_form_field.dart';
 import 'package:epilepsy_care_pmk/helpers/date_time_helpers.dart';
@@ -52,6 +53,9 @@ class _RegisterState extends State<Register> {
   /// This var will be used to determine whether to pushReplace,
   /// or popUntil after the user has click on the register button.
   bool isRegistered = UserProfileService().isRegistered;
+  /// Will be used to resize profile picture. (So that it will scale to the
+  /// screen resolution).
+  late double devicePixelRatio;
 
   // These vars will mostly reflect each fields in UserProfileService, and they
   // will be loaded from that same class.
@@ -82,6 +86,10 @@ class _RegisterState extends State<Register> {
         birthDateFieldController.text = dateDateFormat.format(birthDate!);
       }
     }
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      devicePixelRatio = View.of(context).devicePixelRatio;
+    });
   }
 
   Future<void> register(UserProfileService model) async {
@@ -95,11 +103,16 @@ class _RegisterState extends State<Register> {
     }
   }
 
+  /// Pick an image from the device and also resizing it to an appropriate size
+  /// according to the device's screen resolution.
   Future<void> _pickImageFromGallery() async {
     final returnedImage =
     await ImagePicker().pickImage(
       source: ImageSource.gallery,
       requestFullMetadata: false,  // This somehow fixed iOS double image picker problem.
+        // This will resize the image automatically.
+      maxHeight: 128*devicePixelRatio,
+      maxWidth: 128*devicePixelRatio
     );
 
     if (returnedImage != null) {

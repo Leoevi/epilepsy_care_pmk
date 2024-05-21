@@ -1,5 +1,5 @@
 import 'package:epilepsy_care_pmk/constants/styling.dart';
-import 'package:epilepsy_care_pmk/screens/wiki/symptoms/symptom_entry.dart';
+import 'package:epilepsy_care_pmk/screens/wiki/symptoms/symptom.dart';
 import 'package:flutter/material.dart';
 
 class SymptomDetail extends StatelessWidget {
@@ -8,7 +8,7 @@ class SymptomDetail extends StatelessWidget {
     required this.symptomEntry,
   });
 
-  final SymptomEntry symptomEntry;
+  final Symptom symptomEntry;
 
   @override
   Widget build(BuildContext context) {

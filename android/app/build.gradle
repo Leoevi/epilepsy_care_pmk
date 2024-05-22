@@ -46,8 +46,10 @@ android {
     }
 
     defaultConfig {
-        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId "com.example.epilepsy_care_pmk"
+        // There might be other places where "com.example.epilepsy_care_pmk" is being used, but it
+        // doesn't matter. We only need to change the package name here for android.
+        // https://stackoverflow.com/a/51550358
+        applicationId "com.pedpmk.epilepsycarepmk"
         minSdkVersion 21  // Value more than 21 (Lollipop) to enable multidex by default (https://stackoverflow.com/questions/49886597/multidex-issue-with-flutter & https://docs.flutter.dev/deployment/android#enabling-multidex-support)
         // You can update the following values to match your application needs.
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.

@@ -1,6 +1,6 @@
 # epilepsy_care_pmk
 
-An epilepsy daily app written in Flutter for Phramongkutklao Hospital's Pediatric Epilepsy Center. Written primarily for iOS and Android operating systems.
+An epilepsy diary app written in Flutter for Phramongkutklao Hospital's Pediatric Epilepsy Center. Written primarily for iOS and Android operating systems.
 
 ## Features
 - Record seizure/medication allergy/medication intake events

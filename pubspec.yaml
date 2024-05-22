@@ -1,5 +1,5 @@
 name: epilepsy_care_pmk
-description: A new Flutter project.
+description: An epilepsy diary app written in Flutter for Phramongkutklao Hospital's Pediatric Epilepsy Center.
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
@@ -60,7 +60,6 @@ flutter_icons:
   remove_alpha_ios: true
   background_color_ios: "#ffffff"
   image_path_android: "image/app_icon_android.png"
-  # image_path: "image/app_logo.png"
 
 dev_dependencies:
   flutter_test:

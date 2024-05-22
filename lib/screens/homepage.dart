@@ -1,6 +1,7 @@
 import 'package:epilepsy_care_pmk/screens/wiki/medication/medication.dart';
 import 'package:epilepsy_care_pmk/screens/wiki/symptoms/symptom.dart';
 import 'package:epilepsy_care_pmk/screens/wiki/wiki.dart';
+import 'package:epilepsy_care_pmk/services/lifecycle_watcher_state.dart';
 import 'package:flutter/material.dart';
 import 'package:onboarding_overlay/onboarding_overlay.dart';
 
@@ -170,7 +171,7 @@ class ActualMainPage extends StatefulWidget {
   State<ActualMainPage> createState() => _ActualMainPageState();
 }
 
-class _ActualMainPageState extends State<ActualMainPage> {
+class _ActualMainPageState extends LifecycleWatcherState<ActualMainPage> {
   int pageIndex = 0;
 
   late final List<Widget> pages;
@@ -184,6 +185,31 @@ class _ActualMainPageState extends State<ActualMainPage> {
     padding: const EdgeInsets.all(
         0), // To prevent overflow. This is still needed despite with Expanded/Flex
   );
+
+  /// Pre-cache most icons that might load slowly otherwise.
+  /// Tried caching during initState with postFrameCallback but it work only
+  /// sometimes. So we do it somewhere else.
+  ///
+  /// We chose to do it after this page loads ([didChangeDependencies]), and on
+  /// resume (Flutter clears image cache on every paused lifecycle by design:
+  /// https://github.com/flutter/flutter/issues/64558#issuecomment-850599243)
+  void _precacheIcons() {
+    // add event
+    precacheImage(const AssetImage('image/add_event/add_seizure.png'), context);
+    precacheImage(const AssetImage('image/add_event/add_med_allergy.png'), context);
+    precacheImage(const AssetImage('image/add_event/add_med.png'), context);
+    // wiki
+    precacheImage(const AssetImage('image/symptom_icon.png'), context);
+    precacheImage(const AssetImage('image/medication_icon.png'), context);
+    // seizure info
+    for (Symptom symptom in symptomEntries) {
+      precacheImage(symptom.icon, context);
+    }
+    // med
+    for (Medication med in medicationEntries) {
+      precacheImage(med.icon, context);
+    }
+  }
 
   @override
   void initState() {
@@ -210,27 +236,24 @@ class _ActualMainPageState extends State<ActualMainPage> {
 
   @override
   void didChangeDependencies() {
-    // pre-cache most icons that might load slowly otherwise.
-    // tried caching during initState with postFrameCallback but it work only
-    // sometimes. So we do it here instead.
-    // add event
-    precacheImage(const AssetImage('image/add_event/add_seizure.png'), context);
-    precacheImage(const AssetImage('image/add_event/add_med_allergy.png'), context);
-    precacheImage(const AssetImage('image/add_event/add_med.png'), context);
-    // wiki
-    precacheImage(const AssetImage('image/symptom_icon.png'), context);
-    precacheImage(const AssetImage('image/medication_icon.png'), context);
-    // seizure info
-    for (Symptom symptom in symptomEntries) {
-      precacheImage(symptom.icon, context);
-    }
-    // med
-    for (Medication med in medicationEntries) {
-      precacheImage(med.icon, context);
-    }
-
+    _precacheIcons();
     super.didChangeDependencies();
   }
+
+  @override
+  void onResumed() {
+    _precacheIcons();
+  }
+
+  @override
+  /// Do nothing.
+  void onDetached() {}
+  @override
+  /// Do nothing.
+  void onInactive() {}
+  @override
+  /// Do nothing.
+  void onPaused() {}
 
   void listenNotification() =>
       NotificationService.notificationTriggerStream.listen((payload) {

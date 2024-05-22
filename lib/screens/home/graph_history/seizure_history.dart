@@ -69,7 +69,7 @@ class _SeizureHistoryState extends State<SeizureHistory> {
                 builder: (context, snapshot) {
                   switch (snapshot.connectionState) {
                     case ConnectionState.waiting:
-                      return const CircularProgressIndicator();
+                      return const Center(child: CircularProgressIndicator());
                     case ConnectionState.done:
                     default:
                       if (snapshot.hasError) {

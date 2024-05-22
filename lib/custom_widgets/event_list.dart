@@ -50,7 +50,7 @@ class _EventListState extends State<EventList> {
             builder: (context, snapshot) {
               switch (snapshot.connectionState) {
                 case ConnectionState.waiting:
-                  return const CircularProgressIndicator();
+                  return const Center(child: CircularProgressIndicator());
                 case ConnectionState.done:
                 default:
                   if (snapshot.hasError) {

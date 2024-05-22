@@ -84,7 +84,7 @@ class _AlarmMedIntakeState extends State<AlarmMedIntake> {
           builder: (context, snapshot) {
             switch (snapshot.connectionState) {
               case ConnectionState.waiting:
-                return const CircularProgressIndicator();
+                return const Center(child: CircularProgressIndicator());
               case ConnectionState.done:
               default:
                 return AlarmList(isGranted: snapshot.data!);
@@ -125,7 +125,7 @@ class _AlarmListState extends State<AlarmList> {
             builder: (context, snapshot) {
               switch (snapshot.connectionState) {
                 case ConnectionState.waiting:
-                  return const CircularProgressIndicator();
+                  return const Center(child: CircularProgressIndicator());
                 case ConnectionState.done:
                 default:
                   if (snapshot.hasError) {

@@ -61,28 +61,28 @@ class Contact extends StatelessWidget {
                   ],
                 ),
 
-                // ContactEntry(
-                //   label: "เว็บไซต์",
-                //   address: "https://www.pedpmk.org/",
-                //   buttonLabel: "เข้าเว็บไซต์",
-                //   onPressed: () async {
-                //     final httpUri = Uri(
-                //       scheme: "https",
-                //       host: "www.pedpmk.org",
-                //     );
-                //     if (await canLaunchUrl(httpUri)) {
-                //       launchUrl(httpUri);
-                //     }
-                //   },
-                // ),
+                ContactEntry(
+                  label: "เว็บไซต์",
+                  address: "epilepsypedpmk.com",
+                  buttonLabel: "เข้าเว็บไซต์",
+                  onPressed: () async {
+                    final httpUri = Uri(
+                      scheme: "https",
+                      host: "epilepsypedpmk.com",
+                    );
+                    if (await canLaunchUrl(httpUri)) {
+                      launchUrl(httpUri);
+                    }
+                  },
+                ),
                 ContactEntry(
                   label: "อีเมล์",
-                  address: "pediatricneurologypmk@gmail.com",
+                  address: "pedneuropmk@gmail.com",
                   buttonLabel: "ส่งอีเมล์",
                   onPressed: () async {
                     final callUri = Uri(
                       scheme: "mailto",
-                      path: "pediatricneurologypmk@gmail.com",
+                      path: "pedneuropmk@gmail.com",
                     );
                     if (await canLaunchUrl(callUri)) {
                       launchUrl(callUri);
@@ -115,7 +115,7 @@ class Contact extends StatelessWidget {
                     if (await canLaunchUrl(callUri)) {
                       launchUrl(callUri);
                     }
-                  },  // TODO: make the button launch the LINE app
+                  },
                 ),
               ],
             ),

@@ -38,7 +38,17 @@ class SymptomDetail extends StatelessWidget {
                 style: TextStyle(
                   color: Theme.of(context).textTheme.displaySmall!.color,  // For some reason, the color doesn't follow the theme (https://stackoverflow.com/questions/66311991/cant-get-sliverappbar-title-color-to-follow-themedata)
                 ),),
-              background: symptomEntry.picture ?? FlutterLogo(),  // TODO: remove the flutter logo
+              // background: symptomEntry.picture
+              background: FadeInImage(
+                // by the time this page is launched, the icon will
+                // already in memory, so we will use that.
+                placeholder: symptomEntry.icon,
+                image: symptomEntry.picture,
+                width: double.infinity,
+                fit: BoxFit.fitWidth,
+                fadeInDuration: const Duration(milliseconds: 1),
+                fadeOutDuration: const Duration(milliseconds: 1),
+              ),
             ),
           ),
           SliverToBoxAdapter(

@@ -15,7 +15,7 @@ class Symptom {
   final String title;
   final Text content;
   final ImageProvider<Object> icon;
-  final Image picture;
+  final ImageProvider<Object> picture;
   
 }
 
@@ -44,7 +44,7 @@ final List<Symptom> symptomEntries = [
         ),
       ),
       icon: const AssetImage("image/seizure_wiki_info/icon/seizure_wiki_1.png"),
-      picture: Image.asset("image/seizure_wiki_info/background/seizure_wiki_1.png", fit: BoxFit.cover),),
+      picture: const AssetImage("image/seizure_wiki_info/background/seizure_wiki_1.png"),),
   Symptom(
       title: "สาเหตุของอาการลมชัก",
       content: Text.rich(
@@ -69,7 +69,7 @@ final List<Symptom> symptomEntries = [
         ),
       ),
       icon: const AssetImage("image/seizure_wiki_info/icon/seizure_wiki_2.png"),
-      picture: Image.asset("image/seizure_wiki_info/background/seizure_wiki_2.png"),),
+      picture: const AssetImage("image/seizure_wiki_info/background/seizure_wiki_2.png")),
   Symptom(
       title: "ประเภทของการชัก",
       content: Text.rich(
@@ -97,7 +97,7 @@ final List<Symptom> symptomEntries = [
         ),
       ),
       icon: const AssetImage("image/seizure_wiki_info/icon/seizure_wiki_3.png"),
-      picture: Image.asset("image/seizure_wiki_info/background/seizure_wiki_3.png"),),
+      picture: const AssetImage("image/seizure_wiki_info/background/seizure_wiki_3.png")),
   Symptom(
       title: "การรักษาโรคลมชัก",
       content: Text.rich(
@@ -127,5 +127,5 @@ final List<Symptom> symptomEntries = [
         ),
       ),
       icon: const AssetImage("image/seizure_wiki_info/icon/seizure_wiki_6.png"),
-      picture: Image.asset("image/seizure_wiki_info/background/seizure_wiki_6.png"),),
+      picture: const AssetImage("image/seizure_wiki_info/background/seizure_wiki_6.png")),
 ];

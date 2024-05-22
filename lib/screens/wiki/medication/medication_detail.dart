@@ -40,13 +40,17 @@ class MedicationDetail extends StatelessWidget {
                   ClipRRect(
                       borderRadius:
                           BorderRadius.circular(kMediumRoundedCornerRadius),
-                      child: Image(
+                      child: FadeInImage(
+                        // by the time this page is launched, the icon will
+                        // already in memory, so we will use that.
+                        placeholder: medicationEntry.icon,
                         image: medicationEntry.picture,
-                        // How to make image take full width
-                        // https://stackoverflow.com/a/60333765
                         width: double.infinity,
                         fit: BoxFit.fitWidth,
-                      )),
+                        fadeInDuration: const Duration(milliseconds: 1),
+                        fadeOutDuration: const Duration(milliseconds: 1),
+                      )
+                  ),
                   const SizedBox(
                     height: kMediumPadding,
                   ),

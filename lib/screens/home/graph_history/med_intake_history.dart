@@ -38,6 +38,12 @@ class _MedIntakeHistoryState extends State<MedIntakeHistory> with AutomaticKeepA
     range = timeRangeDropdownOption.dateTimeRange;
   }
 
+  @override
+  void dispose() {
+    medIntakePerDayPageController.dispose();
+    super.dispose();
+  }
+
   Future<void> printMedIntakeHistory(
       Map<Medication, List<MedIntakePerDay>> allMedIntakePerDays) async {
     final doc = pw.Document();

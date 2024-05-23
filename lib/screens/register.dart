@@ -92,6 +92,12 @@ class _RegisterState extends State<Register> {
     });
   }
 
+  @override
+  void dispose() {
+    birthDateFieldController.dispose();
+    super.dispose();
+  }
+
   Future<void> register(UserProfileService model) async {
     model.saveToPref(hn!, firstName!, lastName!, birthDate!, gender!);
 

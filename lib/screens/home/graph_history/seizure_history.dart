@@ -19,7 +19,10 @@ class SeizureHistory extends StatefulWidget {
   State<SeizureHistory> createState() => _SeizureHistoryState();
 }
 
-class _SeizureHistoryState extends State<SeizureHistory> {
+class _SeizureHistoryState extends State<SeizureHistory> with AutomaticKeepAliveClientMixin {
+  @override
+  bool get wantKeepAlive => true;
+
   TimeRangeDropdownOption timeRangeDropdownOption =
       TimeRangeDropdownOption.sevenDays;
   late DateTimeRange range;

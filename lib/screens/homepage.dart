@@ -2,6 +2,7 @@ import 'package:epilepsy_care_pmk/screens/wiki/medication/medication.dart';
 import 'package:epilepsy_care_pmk/screens/wiki/symptoms/symptom.dart';
 import 'package:epilepsy_care_pmk/screens/wiki/wiki.dart';
 import 'package:epilepsy_care_pmk/services/lifecycle_watcher_state.dart';
+import 'package:epilepsy_care_pmk/services/user_profile_service.dart';
 import 'package:flutter/material.dart';
 import 'package:onboarding_overlay/onboarding_overlay.dart';
 
@@ -186,14 +187,25 @@ class _ActualMainPageState extends LifecycleWatcherState<ActualMainPage> {
         0), // To prevent overflow. This is still needed despite with Expanded/Flex
   );
 
-  /// Pre-cache most icons that might load slowly otherwise.
-  /// Tried caching during initState with postFrameCallback but it work only
-  /// sometimes. So we do it somewhere else.
+  /// Pre-cache most icons that might load slowly and cause flickering otherwise.
   ///
-  /// We chose to do it after this page loads ([didChangeDependencies]), and on
-  /// resume (Flutter clears image cache on every paused lifecycle by design:
+  /// (Tried caching during [initState] with
+  /// [WidgetsBinding.instance.addPostFrameCallback] but it only work sometimes.
+  /// So we do it somewhere else.)
+  ///
+  /// We chose to do it after this page loads (via [didChangeDependencies]), and
+  /// on resume (Flutter clears image cache on every paused lifecycle by design:
   /// https://github.com/flutter/flutter/issues/64558#issuecomment-850599243)
   void _precacheIcons() {
+    // logo
+    precacheImage(const AssetImage("image/header_logo_eng.png"), context);
+    // profile pics
+    if (UserProfileService().image == null) {
+      precacheImage(profilePlaceholder, context);
+    } else {
+      precacheImage(UserProfileService().image!.image, context);
+    }
+
     // add event
     precacheImage(const AssetImage('image/add_event/add_seizure.png'), context);
     precacheImage(const AssetImage('image/add_event/add_med_allergy.png'), context);
@@ -260,6 +272,8 @@ class _ActualMainPageState extends LifecycleWatcherState<ActualMainPage> {
         onClickedNotification(payload);
       });
 
+  /// The only notification that this app sends out is the medication intake
+  /// alarm, which we'll handle here
   void onClickedNotification(String? payload) {
     if (payload != null) {
       Alarm alarmFromNotification = Alarm.fromSerializedString(payload);
@@ -300,9 +314,12 @@ class _ActualMainPageState extends LifecycleWatcherState<ActualMainPage> {
                       });
                     },
                     style: bottomNavButtonStyle,
-                    child: const Column(
+                    child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
-                      children: [Icon(Icons.home_outlined), Text("หน้าแรก")],
+                      children: [
+                        Icon(pageIndex == 0 ? Icons.home : Icons.home_outlined),
+                        Text("หน้าแรก", style: pageIndex == 0 ? const TextStyle(fontWeight: FontWeight.bold) : null)
+                      ],
                     ),
                   ),
                 ),
@@ -319,11 +336,11 @@ class _ActualMainPageState extends LifecycleWatcherState<ActualMainPage> {
                       });
                     },
                     style: bottomNavButtonStyle,
-                    child: const Column(
+                    child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(Icons.calendar_month_outlined),
-                        Text("ปฎิทิน")
+                        Icon(pageIndex == 1 ? Icons.calendar_month : Icons.calendar_month_outlined),
+                        Text("ปฎิทิน", style: pageIndex == 1 ? const TextStyle(fontWeight: FontWeight.bold) : null)
                       ],
                     ),
                   ),
@@ -368,9 +385,12 @@ class _ActualMainPageState extends LifecycleWatcherState<ActualMainPage> {
                       });
                     },
                     style: bottomNavButtonStyle,
-                    child: const Column(
+                    child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
-                      children: [Icon(Icons.book_outlined), Text("ข้อมูล")],
+                      children: [
+                        Icon(pageIndex == 2 ? Icons.book : Icons.book_outlined),
+                        Text("ข้อมูล", style: pageIndex == 2 ? const TextStyle(fontWeight: FontWeight.bold) : null)
+                      ],
                     ),
                   ),
                 ),
@@ -387,9 +407,12 @@ class _ActualMainPageState extends LifecycleWatcherState<ActualMainPage> {
                       });
                     },
                     style: bottomNavButtonStyle,
-                    child: const Column(
+                    child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
-                      children: [Icon(Icons.headset_outlined), Text("ติดต่อ")],
+                      children: [
+                        Icon(pageIndex == 3 ? Icons.headset : Icons.headset_outlined),
+                        Text("ติดต่อ", style: pageIndex == 3 ? const TextStyle(fontWeight: FontWeight.bold) : null)
+                      ],
                     ),
                   ),
                 ),

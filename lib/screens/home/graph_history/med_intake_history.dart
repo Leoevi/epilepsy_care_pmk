@@ -22,7 +22,11 @@ class MedIntakeHistory extends StatefulWidget {
   State<MedIntakeHistory> createState() => _MedIntakeHistoryState();
 }
 
-class _MedIntakeHistoryState extends State<MedIntakeHistory> {
+class _MedIntakeHistoryState extends State<MedIntakeHistory> with AutomaticKeepAliveClientMixin {
+  // Extend with AutomaticKeepAliveClientMixin so that the tab won't reload when swapped.
+  @override
+  bool get wantKeepAlive => true;
+
   TimeRangeDropdownOption timeRangeDropdownOption =
       TimeRangeDropdownOption.sevenDays;
   PageController medIntakePerDayPageController = PageController();

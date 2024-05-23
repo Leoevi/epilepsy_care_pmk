@@ -55,6 +55,8 @@ class _MedIntakeHistoryState extends State<MedIntakeHistory> with AutomaticKeepA
 
   @override
   Widget build(BuildContext context) {
+    // With AutomaticKeepAlive, super.build() must be called.
+    super.build(context);
     return Padding(
       padding: const EdgeInsets.all(kSmallPadding),
       child: Column(

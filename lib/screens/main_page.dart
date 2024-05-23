@@ -3,6 +3,7 @@ import 'package:epilepsy_care_pmk/screens/wiki/symptoms/symptom.dart';
 import 'package:epilepsy_care_pmk/screens/wiki/wiki.dart';
 import 'package:epilepsy_care_pmk/services/lifecycle_watcher_state.dart';
 import 'package:epilepsy_care_pmk/services/user_profile_service.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:onboarding_overlay/onboarding_overlay.dart';
 
@@ -173,9 +174,14 @@ class ActualMainPage extends StatefulWidget {
 }
 
 class _ActualMainPageState extends LifecycleWatcherState<ActualMainPage> {
-  int pageIndex = 0;
-
-  late final List<Widget> pages;
+  /// Originally, we didn't use [PageView] at all, but in order to keep alive
+  /// some pages, we need to use [AutomaticKeepAliveClientMixin] which in turn
+  /// require using [PageView].
+  ///
+  /// Adapted from: https://stackoverflow.com/a/64057210
+  late final PageController _pageController;
+  int _pageIndex = 0;
+  late final List<Widget> _pages;
 
   // Use ElevatedButton.styleFrom instead of ButtonStyle: https://stackoverflow.com/questions/66542199/what-is-materialstatepropertycolor
   final bottomNavButtonStyle = ElevatedButton.styleFrom(
@@ -227,7 +233,8 @@ class _ActualMainPageState extends LifecycleWatcherState<ActualMainPage> {
   void initState() {
     super.initState();
 
-    pages = [
+    _pageController = PageController(initialPage: _pageIndex);
+    _pages = [
       Home(focusNodes: widget.focusNodes,),
       const Calendar(),
       const Wiki(),
@@ -253,10 +260,15 @@ class _ActualMainPageState extends LifecycleWatcherState<ActualMainPage> {
   }
 
   @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
+
+  @override
   void onResumed() {
     _precacheIcons();
   }
-
   @override
   /// Do nothing.
   void onDetached() {}
@@ -273,7 +285,7 @@ class _ActualMainPageState extends LifecycleWatcherState<ActualMainPage> {
       });
 
   /// The only notification that this app sends out is the medication intake
-  /// alarm, which we'll handle here
+  /// alarm, which we'll handle here.
   void onClickedNotification(String? payload) {
     if (payload != null) {
       Alarm alarmFromNotification = Alarm.fromSerializedString(payload);
@@ -286,7 +298,6 @@ class _ActualMainPageState extends LifecycleWatcherState<ActualMainPage> {
 
   @override
   Widget build(BuildContext context) {
-    // Onboarding.of(context, rootOnboarding: true);
     return Container(
       // To have a gradient background, need to wrap with container
       decoration: baseBackgroundDecoration,
@@ -310,15 +321,16 @@ class _ActualMainPageState extends LifecycleWatcherState<ActualMainPage> {
                   child: ElevatedButton(
                     onPressed: () {
                       setState(() {
-                        pageIndex = 0;
+                        _pageIndex = 0;
+                        _pageController.jumpToPage(_pageIndex);
                       });
                     },
                     style: bottomNavButtonStyle,
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(pageIndex == 0 ? Icons.home : Icons.home_outlined),
-                        Text("หน้าแรก", style: pageIndex == 0 ? const TextStyle(fontWeight: FontWeight.bold) : null)
+                        Icon(_pageIndex == 0 ? Icons.home : Icons.home_outlined),
+                        Text("หน้าแรก", style: _pageIndex == 0 ? const TextStyle(fontWeight: FontWeight.bold) : null)
                       ],
                     ),
                   ),
@@ -332,15 +344,16 @@ class _ActualMainPageState extends LifecycleWatcherState<ActualMainPage> {
                   child: ElevatedButton(
                     onPressed: () {
                       setState(() {
-                        pageIndex = 1;
+                        _pageIndex = 1;
+                        _pageController.jumpToPage(_pageIndex);
                       });
                     },
                     style: bottomNavButtonStyle,
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(pageIndex == 1 ? Icons.calendar_month : Icons.calendar_month_outlined),
-                        Text("ปฎิทิน", style: pageIndex == 1 ? const TextStyle(fontWeight: FontWeight.bold) : null)
+                        Icon(_pageIndex == 1 ? Icons.calendar_month : Icons.calendar_month_outlined),
+                        Text("ปฎิทิน", style: _pageIndex == 1 ? const TextStyle(fontWeight: FontWeight.bold) : null)
                       ],
                     ),
                   ),
@@ -381,15 +394,16 @@ class _ActualMainPageState extends LifecycleWatcherState<ActualMainPage> {
                   child: ElevatedButton(
                     onPressed: () {
                       setState(() {
-                        pageIndex = 2;
+                        _pageIndex = 2;
+                        _pageController.jumpToPage(_pageIndex);
                       });
                     },
                     style: bottomNavButtonStyle,
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(pageIndex == 2 ? Icons.book : Icons.book_outlined),
-                        Text("ข้อมูล", style: pageIndex == 2 ? const TextStyle(fontWeight: FontWeight.bold) : null)
+                        Icon(_pageIndex == 2 ? Icons.book : Icons.book_outlined),
+                        Text("ข้อมูล", style: _pageIndex == 2 ? const TextStyle(fontWeight: FontWeight.bold) : null)
                       ],
                     ),
                   ),
@@ -403,15 +417,16 @@ class _ActualMainPageState extends LifecycleWatcherState<ActualMainPage> {
                   child: ElevatedButton(
                     onPressed: () {
                       setState(() {
-                        pageIndex = 3;
+                        _pageIndex = 3;
+                        _pageController.jumpToPage(_pageIndex);
                       });
                     },
                     style: bottomNavButtonStyle,
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Icon(pageIndex == 3 ? Icons.headset : Icons.headset_outlined),
-                        Text("ติดต่อ", style: pageIndex == 3 ? const TextStyle(fontWeight: FontWeight.bold) : null)
+                        Icon(_pageIndex == 3 ? Icons.headset : Icons.headset_outlined),
+                        Text("ติดต่อ", style: _pageIndex == 3 ? const TextStyle(fontWeight: FontWeight.bold) : null)
                       ],
                     ),
                   ),
@@ -422,7 +437,11 @@ class _ActualMainPageState extends LifecycleWatcherState<ActualMainPage> {
         ),
         backgroundColor: Colors.transparent,
         body: SafeArea(
-          child: pages[pageIndex],
+          child: PageView(
+            controller: _pageController,
+            physics: const NeverScrollableScrollPhysics(),
+            children: _pages,
+          ),
         ),
       ),
     );

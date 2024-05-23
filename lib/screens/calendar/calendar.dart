@@ -34,7 +34,10 @@ class Calendar extends StatefulWidget {
   State<Calendar> createState() => _CalendarState();
 }
 
-class _CalendarState extends State<Calendar> {
+class _CalendarState extends State<Calendar> with AutomaticKeepAliveClientMixin {
+  @override
+  bool get wantKeepAlive => true;
+
   DateTime selectedDate = DateUtils.dateOnly(DateTime.now());
 
   void _onDaySelected(DateTime day, DateTime focusedDay) {
@@ -48,6 +51,7 @@ class _CalendarState extends State<Calendar> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Scaffold(
       body: content(),
       backgroundColor: Colors.transparent,

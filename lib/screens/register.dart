@@ -33,7 +33,7 @@ import 'package:onboarding_overlay/onboarding_overlay.dart';
 import 'package:provider/provider.dart';
 
 import '../services/user_profile_service.dart';
-import 'homepage.dart';
+import 'main_page.dart';
 
 const List<String> genders = <String>['ชาย', 'หญิง', 'อื่น ๆ'];
 

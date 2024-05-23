@@ -46,6 +46,7 @@ class _SeizureHistoryState extends State<SeizureHistory> with AutomaticKeepAlive
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Padding(
       padding: const EdgeInsets.all(kSmallPadding),
       child: Column(

@@ -20,7 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-import 'package:epilepsy_care_pmk/screens/homepage.dart';
+import 'package:epilepsy_care_pmk/screens/main_page.dart';
 import 'package:epilepsy_care_pmk/screens/register.dart';
 import 'package:epilepsy_care_pmk/services/notification_service.dart';
 import 'package:epilepsy_care_pmk/services/user_profile_service.dart';

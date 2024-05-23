@@ -40,7 +40,10 @@ class Home extends StatefulWidget {
   State<Home> createState() => _HomeState();
 }
 
-class _HomeState extends State<Home> {
+class _HomeState extends State<Home> with AutomaticKeepAliveClientMixin {
+  @override
+  bool get wantKeepAlive => true;
+
   TimeRangeDropdownOption timeRangeDropdownOption =
       TimeRangeDropdownOption.sevenDays;
   late DateTimeRange range;
@@ -54,6 +57,7 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Padding(
       padding: const EdgeInsets.fromLTRB(kLargePadding, kLargePadding, kLargePadding, 0),
       child: Column(

@@ -23,7 +23,7 @@ class _ProfileState extends State<Profile> {
   String? lastName;
   String? gender;
   DateTime? birthDateTimeStampParse;
-  String? timeString;
+  String? birthDateString;
 
   @override
   void initState() {
@@ -36,7 +36,7 @@ class _ProfileState extends State<Profile> {
     String? birthDateTimestamp = prefs.getString('birthDate');
     if (birthDateTimestamp != null) {
       DateTime birthDate = DateTime.parse(birthDateTimestamp);
-      timeString = dateDateFormat.format(birthDate);
+      birthDateString = DateFormat.yMMMd(locale).format(birthDate);
     }
 
     String? imgString = prefs.getString("IMG_KEY");
@@ -115,7 +115,7 @@ class _ProfileState extends State<Profile> {
                             height: 10,
                           ),
                           // TODO: replace with model
-                          Text("วันเกิด : $timeString"), //DateTime? birthDate;
+                          Text("วันเกิด : $birthDateString"), //DateTime? birthDate;
                           SizedBox(
                             height: 10,
                           ),

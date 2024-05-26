@@ -59,7 +59,7 @@ class _HomeState extends State<Home> with AutomaticKeepAliveClientMixin {
   Widget build(BuildContext context) {
     super.build(context);
     return Padding(
-      padding: const EdgeInsets.fromLTRB(kLargePadding, kLargePadding, kLargePadding, 0),
+      padding: const EdgeInsets.fromLTRB(kLargePadding, kSmallPadding, kLargePadding, 0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

@@ -26,7 +26,7 @@ class EventCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var formatter = DateFormat.yMMMEd('th').add_Hm();
+    var formatter = DateFormat.yMMMEd(locale).add_Hm();
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(kMediumPadding),

@@ -29,6 +29,8 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'constants/styling.dart';
+
 /// A SharedPreference instance for the whole app.
 /// Will be init in main before the app opens so that every page
 /// that want to access it doesn't have to use async/await.
@@ -46,7 +48,7 @@ Future<void> main() async {
       .ensureInitialized(); // Prevent errors from awaiting later
   prefs = await SharedPreferences.getInstance();
   NotificationService.initNotification();
-  initializeDateFormatting('th');  // Prior to calling DateFormat.yMMMEd('th').add_Hm(), we need to init date formatting here first
+  initializeDateFormatting(locale);  // Prior to calling DateFormat.yMMMEd('th').add_Hm(), we need to init date formatting here first
 
   runApp(const MyApp());
 }

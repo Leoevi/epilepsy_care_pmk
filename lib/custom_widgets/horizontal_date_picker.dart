@@ -1,4 +1,5 @@
 import 'package:date_picker_timeline/date_picker_timeline.dart';
+import 'package:epilepsy_care_pmk/constants/styling.dart';
 import 'package:flutter/material.dart';
 
 class HorizontalDatePicker extends StatefulWidget {
@@ -54,7 +55,7 @@ class _HorizontalDatePickerState extends State<HorizontalDatePicker> {
       initialSelectedDate: widget.selectedDate,
       selectionColor: Color.fromARGB(255, 201, 128, 247),
       selectedTextColor: Colors.white,
-      locale: "th_TH",
+      locale: locale,
       onDateChange: widget.onDateChange,
     );
   }

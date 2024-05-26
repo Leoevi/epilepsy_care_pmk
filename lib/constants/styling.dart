@@ -68,9 +68,15 @@ const splashBackgroundDecoration = BoxDecoration(
     ] // TODO: use colors from theme instead of hardcoding
         ));
 
-/// Used for formatting DateTime objects to what we want instead of the usual "dd-MM-yyyy hh:mm:ssss" or whatever it is
+/// Used for formatting DateTime objects to what we want instead of the usual
+/// "dd-MM-yyyy hh:mm:ssss" default formatting.
+///
+/// Also used in pdf export since it had trouble display non-English characters.
 DateFormat dateDateFormat = DateFormat("yyyy-MM-dd");
 DateFormat dateTimeDateFormat = DateFormat("yyyy-MM-dd – kk:mm");
+
+/// Locale of the app, used for formatting DateTime objects (intl).
+const String locale = "th_TH";
 
 /// A picture that is used if the user doesn't set their profile picture
 const profilePlaceholder = AssetImage("image/profile_placeholder.png");

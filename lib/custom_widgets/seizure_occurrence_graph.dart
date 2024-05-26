@@ -4,6 +4,7 @@ import 'package:epilepsy_care_pmk/models/seizure_per_day.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:collection/collection.dart';
+import 'package:intl/intl.dart';
 
 import '../constants/styling.dart';
 
@@ -31,7 +32,7 @@ class SeizureOccurrenceGraph extends StatelessWidget {
       fitInside: SideTitleFitInsideData.fromTitleMeta(meta, distanceFromEdge: 0),  // make the SideTitle not overflow over the edges
       axisSide: meta.axisSide,
       space: 16,
-      child: Text(dateDateFormat.format(seizures[value.round()].date), style: style),
+      child: Text(DateFormat.yMMMd(locale).format(seizures[value.round()].date), style: style),
     );
 
     // Instead of doing logic here, we will use interval instead
@@ -48,7 +49,7 @@ class SeizureOccurrenceGraph extends StatelessWidget {
 
   Widget leftTitleWidgets(double value, TitleMeta meta, double chartWidth) {
     final style = TextStyle(
-      color: Colors.yellow,
+      color: Colors.purple,
       fontWeight: FontWeight.bold,
       fontSize: min(18, 18 * chartWidth / 300),
     );
@@ -77,6 +78,7 @@ class SeizureOccurrenceGraph extends StatelessWidget {
               LineChartData(
                 lineTouchData: LineTouchData(
                   touchTooltipData: LineTouchTooltipData(
+                    fitInsideHorizontally: true,
                     maxContentWidth: 100,
                     tooltipBgColor: Colors.black,
                     getTooltipItems: (touchedSpots) {
@@ -88,7 +90,7 @@ class SeizureOccurrenceGraph extends StatelessWidget {
                           fontSize: 14,
                         );
                         return LineTooltipItem(
-                          '${dateDateFormat.format(seizures[touchedSpot.x.round()].date)}, ${touchedSpot.y.toStringAsPrecision(1)}',
+                          '${DateFormat.yMMMd(locale).format(seizures[touchedSpot.x.round()].date)}, ${touchedSpot.y.toStringAsPrecision(1)} ครั้ง',
                           textStyle,
                         );
                       }).toList();
@@ -113,7 +115,7 @@ class SeizureOccurrenceGraph extends StatelessWidget {
                 minY: 0,
                 titlesData: FlTitlesData(
                   leftTitles: AxisTitles(
-                    // axisNameWidget: Text("ขนาดยา"),
+                    // axisNameWidget: Text("ครั้ง"),
                     sideTitles: SideTitles(
                       showTitles: true,
                       getTitlesWidget: (value, meta) =>
@@ -131,7 +133,7 @@ class SeizureOccurrenceGraph extends StatelessWidget {
                       showTitles: true,
                       getTitlesWidget: (value, meta) =>
                           bottomTitleWidgets(value, meta, constraints.maxWidth),
-                      reservedSize: 36,
+                      reservedSize: 38,
                       interval: seizureSpots.length.toDouble(),
                     ),
                     drawBelowEverything: true,

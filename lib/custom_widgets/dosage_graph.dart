@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:collection/collection.dart';
+import 'package:intl/intl.dart';
 
 import '../constants/styling.dart';
 import '../models/med_intake_per_day.dart';
@@ -31,7 +32,7 @@ class DosageGraph extends StatelessWidget {
       fitInside: SideTitleFitInsideData.fromTitleMeta(meta, distanceFromEdge: 0),  // make the SideTitle not overflow over the edges
       axisSide: meta.axisSide,
       space: 16,
-      child: Text(dateDateFormat.format(medIntakes[value.round()].date), style: style),
+      child: Text(DateFormat.yMMMd(locale).format(medIntakes[value.round()].date), style: style),
     );
 
     // Instead of doing logic here, we will use interval instead
@@ -48,7 +49,7 @@ class DosageGraph extends StatelessWidget {
 
   Widget leftTitleWidgets(double value, TitleMeta meta, double chartWidth) {
     final style = TextStyle(
-      color: Colors.yellow,
+      color: Colors.purple,
       fontWeight: FontWeight.bold,
       fontSize: min(18, 18 * chartWidth / 300),
     );
@@ -83,6 +84,7 @@ class DosageGraph extends StatelessWidget {
               LineChartData(
                 lineTouchData: LineTouchData(
                   touchTooltipData: LineTouchTooltipData(
+                    fitInsideHorizontally: true,  // The last point won't fall off the screen
                     maxContentWidth: 100,
                     tooltipBgColor: Colors.black,
                     getTooltipItems: (touchedSpots) {
@@ -94,7 +96,7 @@ class DosageGraph extends StatelessWidget {
                           fontSize: 14,
                         );
                         return LineTooltipItem(
-                          '${dateDateFormat.format(medIntakes[touchedSpot.x.round()].date)}, ${touchedSpot.y.toStringAsFixed(2)}',
+                          '${DateFormat.yMMMd(locale).format(medIntakes[touchedSpot.x.round()].date)}, ${touchedSpot.y.toStringAsFixed(2)} มก.',
                           textStyle,
                         );
                       }).toList();
@@ -119,7 +121,7 @@ class DosageGraph extends StatelessWidget {
                 minY: 0,
                 titlesData: FlTitlesData(
                   leftTitles: AxisTitles(
-                    // axisNameWidget: Text("ขนาดยา"),
+                    // axisNameWidget: Text("ขนาดยา (มก.)"),
                     sideTitles: SideTitles(
                       showTitles: true,
                       getTitlesWidget: (value, meta) =>
@@ -137,7 +139,7 @@ class DosageGraph extends StatelessWidget {
                       showTitles: true,
                       getTitlesWidget: (value, meta) =>
                           bottomTitleWidgets(value, meta, constraints.maxWidth),
-                      reservedSize: 36,
+                      reservedSize: 38,
                       interval: medIntakeSpots.length.toDouble(),
                     ),
                     drawBelowEverything: true,

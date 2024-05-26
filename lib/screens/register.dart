@@ -29,6 +29,7 @@ import 'package:epilepsy_care_pmk/helpers/image_utility.dart';
 import 'package:epilepsy_care_pmk/main.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 import 'package:onboarding_overlay/onboarding_overlay.dart';
 import 'package:provider/provider.dart';
 
@@ -83,7 +84,7 @@ class _RegisterState extends State<Register> {
       gender = UserProfileService().gender;
       birthDate = UserProfileService().birthDate;
       if (birthDate != null) {
-        birthDateFieldController.text = dateDateFormat.format(birthDate!);
+        birthDateFieldController.text = DateFormat.yMMMd(locale).format(birthDate!);
       }
     }
 
@@ -280,7 +281,7 @@ class _RegisterState extends State<Register> {
                             );  // TODO: decide on an end date
                             if (birthDate != null) {
                               birthDateFieldController.text =
-                                  dateDateFormat.format(birthDate!);
+                                  DateFormat.yMMMd(locale).format(birthDate!);
 
 
                               // birthDateFieldController.text =

@@ -90,8 +90,6 @@ class _HomeDrawerState extends State<HomeDrawer> {
                 final onboarding = Onboarding.of(context);
                 if (onboarding != null) {
                   onboarding.show();
-                } else {
-                  print("onboarding is null");
                 }
               }
             },

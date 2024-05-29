@@ -124,7 +124,7 @@ class LiquidMedication implements MedicationIntakeMethod {
 
 final List<Medication> medicationEntries = [
   const Medication(
-      name: "Carbamazepine / Tegretal®",
+      name: "Carbamazepine / Tegretol®",
       icon: AssetImage("image/medications/icon/Tegretal_20mg_lqd.png"),
       picture: AssetImage("image/medications/picture/Tegretal_20mg_lqd.png"),
       medicationIntakeMethod: LiquidMedication(20),

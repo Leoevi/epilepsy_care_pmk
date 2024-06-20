@@ -118,16 +118,17 @@ class _AddAlarmInputState extends State<AddAlarmInput> {
                         children: [
                           //Start here
 
-                          Text("ชื่อยาที่บันทึก",
+                          const Text("ชื่อยาที่บันทึก",
                               style: TextStyle(fontSize: 18)),
 
-                          SizedBox(height: 10),
+                          const SizedBox(height: 10),
 
                           MedicationSelectionForm(
                               validator: (selectedMed) {
                                 if (selectedMed == null) {
                                   return "กรุณาเลือกยาที่จะบันทึก";
                                 }
+                                return null;
                               },
                               medication: _inputMedication,
                               onChanged: (newMed) {
@@ -143,12 +144,12 @@ class _AddAlarmInputState extends State<AddAlarmInput> {
                                 });
                               }),
 
-                          SizedBox(height: 20),
+                          const SizedBox(height: 20),
 
                           //field ปริมาณยา
-                          Text("โปรดระบุปริมาณยา", style: TextStyle(fontSize: 18)),
+                          const Text("โปรดระบุปริมาณยา", style: TextStyle(fontSize: 18)),
 
-                          SizedBox(height: 10),
+                          const SizedBox(height: 10),
                           //spacing between label and TextInput
 
                           Row(
@@ -178,12 +179,12 @@ class _AddAlarmInputState extends State<AddAlarmInput> {
                                       _inputMedicationQuantity = val;
                                     });
                                   },
-                                  decoration: InputDecoration(
+                                  decoration: const InputDecoration(
                                       hintText: "ระบุปริมาณยา",
                                       border: OutlineInputBorder()),
                                 ),
                               ),
-                              SizedBox(width: kSmallPadding,),
+                              const SizedBox(width: kSmallPadding,),
                               Expanded(child: DropdownButtonFormField(
                                 isExpanded: true,
                                 value: _inputMeasureUnit,
@@ -204,17 +205,18 @@ class _AddAlarmInputState extends State<AddAlarmInput> {
                                   if (val == null) {
                                     return "กรุณาเลือกหน่วยของปริมาณยา";
                                   }
+                                  return null;
                                 },
                               ),)
                             ],
                           ),
 
-                          SizedBox(height: 20),
+                          const SizedBox(height: 20),
 
                           //Time
-                          Text("โปรดกรอกเวลา", style: TextStyle(fontSize: 18)),
+                          const Text("โปรดกรอกเวลา", style: TextStyle(fontSize: 18)),
 
-                          SizedBox(height: 10),
+                          const SizedBox(height: 10),
 
                           TimeOfDayDropdown(
                             startingTime: _inputTime,
@@ -223,23 +225,20 @@ class _AddAlarmInputState extends State<AddAlarmInput> {
                             },
                           ),
 
-                          SizedBox(height: 20),
+                          const SizedBox(height: 20),
 
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: [
                               ElevatedButton(
-                                child: Text("ยกเลิก",
-                                    style: TextStyle(fontSize: 16)),
                                 onPressed: () {
                                   Navigator.of(context).pop();
                                 },
-                                style: secondaryButtonStyle
+                                style: secondaryButtonStyle,
+                                child: const Text("ยกเลิก",
+                                    style: TextStyle(fontSize: 16))
                               ),
                               ElevatedButton(
-                                child: Text("ตกลง",
-                                    style: TextStyle(
-                                        fontSize: 16, color: Colors.white)),
                                 onPressed: () {
                                   //validate check
                                   if (_formKey.currentState!.validate()) {
@@ -251,7 +250,7 @@ class _AddAlarmInputState extends State<AddAlarmInput> {
                                                 label: 'ปิด',
                                                 textColor: Colors.black,
                                                 onPressed: () {}),
-                                            content: Text(
+                                            content: const Text(
                                                 'บันทึกการเเจ้งเตือนสำเร็จ')));
                                     if (widget.initAlarm == null) {
                                       addToDb();
@@ -263,6 +262,9 @@ class _AddAlarmInputState extends State<AddAlarmInput> {
                                   }
                                 },
                                 style: primaryButtonStyle,
+                                child: const Text("ตกลง",
+                                    style: TextStyle(
+                                        fontSize: 16, color: Colors.white)),
                               )
                             ],
                           )

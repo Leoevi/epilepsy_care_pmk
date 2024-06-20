@@ -1,5 +1,4 @@
 import 'package:epilepsy_care_pmk/custom_widgets/icon_label_detail_button.dart';
-import 'package:epilepsy_care_pmk/custom_widgets/medication_selection_form.dart';
 import 'package:epilepsy_care_pmk/screens/commons/screen_with_app_bar_and_list.dart';
 import 'package:epilepsy_care_pmk/screens/wiki/medication/medication.dart';
 import 'package:flutter/material.dart';

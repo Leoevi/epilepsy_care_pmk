@@ -155,7 +155,7 @@ class DosageGraph extends StatelessWidget {
                   // checkToShowHorizontalLine: (value) {
                   //   return value.toInt() == 0;
                   // },
-                  getDrawingHorizontalLine: (_) => FlLine(
+                  getDrawingHorizontalLine: (_) => const FlLine(
                     color: Colors.black,
                     dashArray: [8, 2],
                     strokeWidth: 0.8,
@@ -163,7 +163,7 @@ class DosageGraph extends StatelessWidget {
                   // checkToShowVerticalLine: (value) {
                   //   return value.toInt() == 0;
                   // },
-                  getDrawingVerticalLine: (_) => FlLine(
+                  getDrawingVerticalLine: (_) => const FlLine(
                     color: Colors.black,
                     dashArray: [8, 2],
                     strokeWidth: 0.8,

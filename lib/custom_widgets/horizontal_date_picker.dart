@@ -53,7 +53,7 @@ class _HorizontalDatePickerState extends State<HorizontalDatePicker> {
       height: 90,
       controller: _controller,
       initialSelectedDate: widget.selectedDate,
-      selectionColor: Color.fromARGB(255, 201, 128, 247),
+      selectionColor: const Color.fromARGB(255, 201, 128, 247),
       selectedTextColor: Colors.white,
       locale: locale,
       onDateChange: widget.onDateChange,

@@ -45,7 +45,7 @@ class MedicationSelectionForm extends StatelessWidget {
                         // https://docs.flutter.dev/cookbook/navigation/returning-data
                         final selectedMedication =
                         await Navigator.of(context).push(MaterialPageRoute(
-                            builder: (context) => MedicationList(
+                            builder: (context) => const MedicationList(
                               resultExpected: true,
                             )));
 
@@ -63,7 +63,7 @@ class MedicationSelectionForm extends StatelessWidget {
                       onTap: () async {
                         final selectedMedication =
                             await Navigator.of(context).push(MaterialPageRoute(
-                                builder: (context) => MedicationList(
+                                builder: (context) => const MedicationList(
                                       resultExpected: true,
                                     )));
 
@@ -84,7 +84,7 @@ class MedicationSelectionForm extends StatelessWidget {
                         style:
                             Theme.of(context).inputDecorationTheme.errorStyle ?? errorStyle,
                       )
-                    : SizedBox.shrink(),
+                    : const SizedBox.shrink(),
               )
             ],
           );

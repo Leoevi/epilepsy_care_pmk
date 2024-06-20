@@ -61,7 +61,7 @@ class AddSelect extends StatelessWidget {
                     children: [
                       IconLabelDetailButton(
                         label: 'บันทึกอาการลมชัก',
-                        icon: AssetImage('image/add_event/add_seizure.png'),
+                        icon: const AssetImage('image/add_event/add_seizure.png'),
                         onTap: () {
                           Navigator.of(context).push(MaterialPageRoute(
                               builder: (context) => const AddSeizureInput()));
@@ -69,7 +69,7 @@ class AddSelect extends StatelessWidget {
                       ),
                       IconLabelDetailButton(
                         label: 'บันทึกอาการเเพ้ยา',
-                        icon: AssetImage('image/add_event/add_med_allergy.png'),
+                        icon: const AssetImage('image/add_event/add_med_allergy.png'),
                         onTap: () {
                           Navigator.of(context).push(MaterialPageRoute(
                               builder: (context) => const AddMedAllergyInput()));
@@ -77,7 +77,7 @@ class AddSelect extends StatelessWidget {
                       ),
                       IconLabelDetailButton(
                         label: 'บันทึกการทานยา',
-                        icon: AssetImage('image/add_event/add_med.png'),
+                        icon: const AssetImage('image/add_event/add_med.png'),
                         onTap: () {
                           Navigator.of(context).push(MaterialPageRoute(
                               builder: (context) => const AddMedIntakeInput()));

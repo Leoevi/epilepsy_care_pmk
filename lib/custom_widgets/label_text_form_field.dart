@@ -40,8 +40,8 @@ class _LabelTextFormFieldState extends State<LabelTextFormField> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(widget.label, style: TextStyle(fontSize: 18)),
-        SizedBox(height: kSmallPadding),
+        Text(widget.label, style: const TextStyle(fontSize: 18)),
+        const SizedBox(height: kSmallPadding),
         //spacing between label and TextInput
         TextFormField(
           initialValue: widget.initialValue,
@@ -49,7 +49,7 @@ class _LabelTextFormFieldState extends State<LabelTextFormField> {
           validator: widget.validator,
           decoration: InputDecoration(
               hintText: widget.hintText,
-              border: OutlineInputBorder()
+              border: const OutlineInputBorder()
           ),
         ),
       ],

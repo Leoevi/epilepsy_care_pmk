@@ -98,9 +98,9 @@ class _AddSeizureInputState extends State<AddSeizureInput> {
                             },
                           ),
 
-                          Text("ประเภทอาการชัก", style: TextStyle(fontSize: 18)),
+                          const Text("ประเภทอาการชัก", style: TextStyle(fontSize: 18)),
 
-                          SizedBox(height: 10),
+                          const SizedBox(height: 10),
 
                           DropdownButtonFormField<String>(
                             validator: (val) {
@@ -112,7 +112,7 @@ class _AddSeizureInputState extends State<AddSeizureInput> {
                             value: _inputSeizureType,
                             icon: const Icon(Icons.keyboard_arrow_down),
                             decoration:
-                                InputDecoration(border: OutlineInputBorder()),
+                                const InputDecoration(border: OutlineInputBorder()),
                             onChanged: (String? val) {
                               setState(() {
                                 _inputSeizureType = val!;
@@ -127,11 +127,11 @@ class _AddSeizureInputState extends State<AddSeizureInput> {
                             }).toList(),
                           ),
 
-                          SizedBox(height: 20),
+                          const SizedBox(height: 20),
 
-                          Text("โปรดกรอกเวลา", style: TextStyle(fontSize: 18)),
+                          const Text("โปรดกรอกเวลา", style: TextStyle(fontSize: 18)),
 
-                          SizedBox(height: 10),
+                          const SizedBox(height: 10),
 
                           // Old time input, used flutter's TimePicker, but it seems to be a bit hard to use, so we changed it into normal dropdown button.
                           // Row(
@@ -176,12 +176,12 @@ class _AddSeizureInputState extends State<AddSeizureInput> {
                             },
                           ),
 
-                          SizedBox(height: 20),
+                          const SizedBox(height: 20),
 
                           //field ระบุอาการ
-                          Text("โปรดระบุอาการ", style: TextStyle(fontSize: 18)),
+                          const Text("โปรดระบุอาการ", style: TextStyle(fontSize: 18)),
 
-                          SizedBox(height: 10),
+                          const SizedBox(height: 10),
                           //spacing between label and TextInput
 
                           TextFormField(
@@ -192,18 +192,18 @@ class _AddSeizureInputState extends State<AddSeizureInput> {
                                 _inputSeizureSymptom = val;
                               });
                             },
-                            decoration: InputDecoration(
+                            decoration: const InputDecoration(
                                 hintText: "ระบุอาการ",
                                 border: OutlineInputBorder()),
                           ),
 
-                          SizedBox(height: 20),
+                          const SizedBox(height: 20),
                           //spacing between input
 
                           //field ระบุสถานที่
-                          Text("โปรดระบุสถานที่",
+                          const Text("โปรดระบุสถานที่",
                               style: TextStyle(fontSize: 18)),
-                          SizedBox(height: 10),
+                          const SizedBox(height: 10),
                           //spacing between label and TextInput
                           TextFormField(
                             //validate สถานที่
@@ -219,28 +219,25 @@ class _AddSeizureInputState extends State<AddSeizureInput> {
                                 _inputSeizurePlace = val;
                               });
                             },
-                            decoration: InputDecoration(
+                            decoration: const InputDecoration(
                                 hintText: "ระบุสถานที่",
                                 border: OutlineInputBorder()),
                           ),
 
-                          SizedBox(height: 20),
+                          const SizedBox(height: 20),
 
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
                             children: [
                               ElevatedButton(
-                                child: Text("ยกเลิก",
-                                    style: TextStyle(fontSize: 16)),
                                 onPressed: () {
                                   Navigator.of(context).pop();
                                 },
                                 style: secondaryButtonStyle,
+                                child: const Text("ยกเลิก",
+                                    style: TextStyle(fontSize: 16)),
                               ),
                               ElevatedButton(
-                                child: Text("ตกลง",
-                                    style: TextStyle(
-                                        fontSize: 16, color: Colors.white)),
                                 onPressed: () {
                                   //validate check
                                   if (_formKey.currentState!.validate()) {
@@ -253,7 +250,7 @@ class _AddSeizureInputState extends State<AddSeizureInput> {
                                                 textColor: Colors.black,
                                                 onPressed: () {}),
                                             content:
-                                                Text('บันทึกข้อมูลสำเร็จ')));
+                                                const Text('บันทึกข้อมูลสำเร็จ')));
                                     if (widget.initSeizureEvent == null) {
                                       _addToDb();
                                     } else {
@@ -264,6 +261,9 @@ class _AddSeizureInputState extends State<AddSeizureInput> {
                                   }
                                 },
                                 style: primaryButtonStyle,
+                                child: const Text("ตกลง",
+                                    style: TextStyle(
+                                        fontSize: 16, color: Colors.white)),
                               )
                             ],
                           )

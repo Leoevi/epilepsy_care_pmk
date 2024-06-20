@@ -38,11 +38,11 @@ class EventCard extends StatelessWidget {
                 flex: 1,
                 child: Center(
                     child: Text(
-                  '${formatter.format(time)}',
+                  formatter.format(time),
                   style: mediumLargeBoldText,
                 ))),
             //Vertical Line
-            Opacity(
+            const Opacity(
               opacity: 0.5,
               child: VerticalDivider(
                 thickness: 1,
@@ -68,19 +68,19 @@ class EventCard extends StatelessWidget {
                       IconButton(
                           visualDensity: VisualDensity.compact,
                           onPressed: onEdit,
-                          icon: Icon(Icons.edit_outlined)),
+                          icon: const Icon(Icons.edit_outlined)),
                       IconButton(
                           visualDensity: VisualDensity.compact,
                           onPressed: onDelete,
-                          icon: Icon(Icons.delete_outline))
+                          icon: const Icon(Icons.delete_outline))
                     ],
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: kSmallPadding,
                   ),
                   //Detail
                   Expanded(child: Text(detail ?? "")),
-                  SizedBox(
+                  const SizedBox(
                     height: kSmallPadding,
                   ),
                   //Icon Zone
@@ -90,15 +90,15 @@ class EventCard extends StatelessWidget {
                           ? Flexible(
                               child: Row(
                                 children: [
-                                  Icon(Icons.map_outlined),
+                                  const Icon(Icons.map_outlined),
                                   Flexible(child: Text(place!)),
-                                  SizedBox(
+                                  const SizedBox(
                                     width: kSmallPadding,
                                   ),
                                 ],
                               ),
                             )
-                          : SizedBox.shrink(),
+                          : const SizedBox.shrink(),
                       Flexible(
                           child: Row(
                         children: [

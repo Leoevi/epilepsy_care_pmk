@@ -53,6 +53,9 @@ dependencies:
   intl: ^0.18.1
   onboarding_overlay: ^3.2.2
 
+  pdf: any
+  path: any
+  timezone: any
 flutter_icons:
   ios: true
   android: true

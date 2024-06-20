@@ -54,7 +54,7 @@ class _HomeDrawerState extends State<HomeDrawer> {
             ),
           ),
           ListTile(
-            leading: Icon(Icons.person_2_outlined),
+            leading: const Icon(Icons.person_2_outlined),
             title: const Text('ข้อมูลส่วนตัว'),
             // visualDensity: VisualDensity(vertical: -3),  // Making the tile more compact
             onTap: () {
@@ -62,27 +62,27 @@ class _HomeDrawerState extends State<HomeDrawer> {
                   MaterialPageRoute(builder: (context) => const Profile()));
             },
           ),
-          Divider(),
+          const Divider(),
           ListTile(
-            leading: Icon(Icons.data_thresholding_outlined),
+            leading: const Icon(Icons.data_thresholding_outlined),
             title: const Text('ประวัติการชักเเละการรับประทานยา'),
             onTap: () {
               Navigator.of(context).push(MaterialPageRoute(
                   builder: (context) => const GraphHistoryWithTab()));
             },
           ),
-          Divider(),
+          const Divider(),
           ListTile(
-            leading: Icon(Icons.alarm),
+            leading: const Icon(Icons.alarm),
             title: const Text('ตั้งเวลาแจ้งเตือนทานยา'),
             onTap: () {
               Navigator.of(context).push(MaterialPageRoute(
                   builder: (context) => const AlarmMedIntake()));
             },
           ),
-          Divider(),
+          const Divider(),
           ListTile(
-            leading: Icon(Icons.perm_device_info),
+            leading: const Icon(Icons.perm_device_info),
             title: const Text('เข้าสู่การสอนใช้งานครั้งแรก'),
             onTap: () {
               Navigator.of(context).pop();
@@ -94,8 +94,8 @@ class _HomeDrawerState extends State<HomeDrawer> {
               }
             },
           ),
-          Divider(),
-          AboutListTile(
+          const Divider(),
+          const AboutListTile(
             // https://api.flutter.dev/flutter/material/AboutListTile-class.html
             icon: Icon(Icons.info_outline),
             // applicationIcon: ImageIcon(Image.asset("image/app_icon_android.png").image),

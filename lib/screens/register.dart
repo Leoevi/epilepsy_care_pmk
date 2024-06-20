@@ -21,16 +21,12 @@
 // SOFTWARE.
 
 import 'dart:io';
-import 'dart:ui';
 import 'package:epilepsy_care_pmk/constants/styling.dart';
 import 'package:epilepsy_care_pmk/custom_widgets/label_text_form_field.dart';
 import 'package:epilepsy_care_pmk/helpers/date_time_helpers.dart';
-import 'package:epilepsy_care_pmk/helpers/image_utility.dart';
-import 'package:epilepsy_care_pmk/main.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
-import 'package:onboarding_overlay/onboarding_overlay.dart';
 import 'package:provider/provider.dart';
 
 import '../services/user_profile_service.dart';
@@ -165,7 +161,7 @@ class _RegisterState extends State<Register> {
                           "ลงทะเบียนข้อมูล",
                           style: Theme.of(context).textTheme.titleLarge,
                         ),
-                        SizedBox(
+                        const SizedBox(
                           height: kLargePadding,
                         ),
                         Row(
@@ -193,13 +189,13 @@ class _RegisterState extends State<Register> {
                                   ),
                                 )
                               ),
-                              SizedBox(width: kSmallPadding,),
+                              const SizedBox(width: kSmallPadding,),
                               (selectedImage != null || imageFromPreferences != null)
-                                  ? ElevatedButton(onPressed: () => { _deleteImage() }, child: Text("ลบรูปภาพ"))
-                                  : SizedBox.shrink(),
+                                  ? ElevatedButton(onPressed: () => { _deleteImage() }, child: const Text("ลบรูปภาพ"))
+                                  : const SizedBox.shrink(),
                             ]
                         ),
-                        SizedBox(height: kSmallPadding),
+                        const SizedBox(height: kSmallPadding),
                         LabelTextFormField(
                           label: "HN",
                           initialValue: hn,
@@ -234,7 +230,7 @@ class _RegisterState extends State<Register> {
                                 });
                               },
                             )),
-                            SizedBox(
+                            const SizedBox(
                               width: kMediumPadding,
                             ),
                             Expanded(
@@ -257,8 +253,8 @@ class _RegisterState extends State<Register> {
                             )),
                           ],
                         ),
-                        Text("วันเกิด", style: TextStyle(fontSize: 18)),
-                        SizedBox(height: 10),
+                        const Text("วันเกิด", style: TextStyle(fontSize: 18)),
+                        const SizedBox(height: 10),
                         TextFormField(
                           validator: (val) {
                             if (val == null || val.isEmpty) {
@@ -268,7 +264,7 @@ class _RegisterState extends State<Register> {
                           },
                           readOnly: true,
                           controller: birthDateFieldController,
-                          decoration: InputDecoration(
+                          decoration: const InputDecoration(
                               border: OutlineInputBorder(),
                               suffixIcon: Icon(Icons.calendar_month_outlined)),
                           onTap: () async {
@@ -291,8 +287,8 @@ class _RegisterState extends State<Register> {
                             }
                           },
                         ),
-                        Text("เพศ", style: TextStyle(fontSize: 18),),
-                        SizedBox(height: kSmallPadding),
+                        const Text("เพศ", style: TextStyle(fontSize: 18),),
+                        const SizedBox(height: kSmallPadding),
                         DropdownButtonFormField<String>(
                           validator: (val) {
                             if (val == null || val.isEmpty) {
@@ -303,7 +299,7 @@ class _RegisterState extends State<Register> {
                           value: gender,
                           icon: const Icon(Icons.keyboard_arrow_down),
                           decoration:
-                          InputDecoration(border: OutlineInputBorder()),
+                          const InputDecoration(border: OutlineInputBorder()),
                           onChanged: (String? val) {
                             setState(() {
                               gender = val!;
@@ -317,14 +313,11 @@ class _RegisterState extends State<Register> {
                             );
                           }).toList(),
                         ),
-                        SizedBox(height: kMediumPadding),
+                        const SizedBox(height: kMediumPadding),
                         Align(
                           alignment: Alignment.centerRight,
                           child: Consumer<UserProfileService>(
                               builder: (context, model, child) => ElevatedButton(
-                                child: Text("ลงทะเบียน",
-                                    style: TextStyle(
-                                        fontSize: 16, color: Colors.white)),
                                 onPressed: () async {
                                   //validate check
                                   if (_formKey.currentState!.validate()) {
@@ -349,6 +342,9 @@ class _RegisterState extends State<Register> {
                                   }
                                 },
                                 style: primaryButtonStyle,
+                                child: const Text("ลงทะเบียน",
+                                    style: TextStyle(
+                                        fontSize: 16, color: Colors.white)),
                               ),
                           ),
                         ),

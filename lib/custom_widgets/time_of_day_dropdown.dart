@@ -43,9 +43,9 @@ class _TimeOfDayDropdownState extends State<TimeOfDayDropdown> {
   void timeChanged({int? newHour, int? newMinute}) {
     // Update the value that is changed
     if (newHour != null) {
-      this.hour = newHour;  // Update with new hour
+      hour = newHour;  // Update with new hour
     } else if (newMinute != null) {
-      this.minute = newMinute;  // Update with new minute
+      minute = newMinute;  // Update with new minute
     }
 
     // Change the time if both have been selected at least once. (or a startTime was given)
@@ -64,43 +64,45 @@ class _TimeOfDayDropdownState extends State<TimeOfDayDropdown> {
               if (val == null) {
                 return "กรุณาเลือกชั่วโมง";
               }
+              return null;
             },
             value: widget.startingTime?.hour,
             items: List.generate(TimeOfDay.hoursPerDay, (index) => DropdownMenuItem<int>(
               value: index,
               child: Text(formatter.format(index)),
             )),
-            decoration: InputDecoration(border: OutlineInputBorder()),
+            decoration: const InputDecoration(border: OutlineInputBorder()),
             // Update with new selected hour
             onChanged: (hour) {
               timeChanged(newHour: hour);
             },
           ),
         ),
-        SizedBox(width: kSmallPadding,),
-        Text("นาฬิกา"),
-        SizedBox(width: kSmallPadding,),
+        const SizedBox(width: kSmallPadding,),
+        const Text("นาฬิกา"),
+        const SizedBox(width: kSmallPadding,),
         Expanded(
           child: DropdownButtonFormField<int>(
             validator: (val) {
               if (val == null) {
                 return "กรุณาเลือกนาที";
               }
+              return null;
             },
             value: widget.startingTime?.minute,
             items: List.generate(TimeOfDay.minutesPerHour, (index) => DropdownMenuItem<int>(
               value: index,
               child: Text(formatter.format(index)),
             )),
-            decoration: InputDecoration(border: OutlineInputBorder()),
+            decoration: const InputDecoration(border: OutlineInputBorder()),
             // Update with new selected minute
             onChanged: (minute) {
               timeChanged(newMinute: minute);
             },
           ),
         ),
-        SizedBox(width: kSmallPadding,),
-        Text("นาที"),
+        const SizedBox(width: kSmallPadding,),
+        const Text("นาที"),
       ],
     );
   }

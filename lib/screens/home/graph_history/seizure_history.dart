@@ -54,7 +54,7 @@ class _SeizureHistoryState extends State<SeizureHistory> with AutomaticKeepAlive
           Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
             IconButton(
                 onPressed: () async => printSeizureHistory(await DatabaseService.getAllSeizurePerDayFrom(range)),
-                icon: Icon(Icons.local_print_shop_outlined)),
+                icon: const Icon(Icons.local_print_shop_outlined)),
             TimeRangeDropdownButton(
               initialChoice: timeRangeDropdownOption,
               onChanged: (selectedRange) {
@@ -64,7 +64,7 @@ class _SeizureHistoryState extends State<SeizureHistory> with AutomaticKeepAlive
               },
             ),
           ]),
-          SizedBox(
+          const SizedBox(
             height: kSmallPadding,
           ),
           Flexible(
@@ -109,59 +109,59 @@ class _SeizureHistoryState extends State<SeizureHistory> with AutomaticKeepAlive
                           children: [
                             Container(
                               decoration: BoxDecoration(
-                                  color: Color(0xFFF5F2FF),
+                                  color: const Color(0xFFF5F2FF),
                                   borderRadius: BorderRadius.circular(8)),
                               child: Padding(
-                                padding: EdgeInsets.all(kLargePadding),
+                                padding: const EdgeInsets.all(kLargePadding),
                                 child: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Row(children: [
+                                    const Row(children: [
                                       Text(
                                         "ข้อมูลของอาการชัก",
                                         style: mediumLargeBoldText,
                                       )
                                     ]),
-                                    SizedBox(
+                                    const SizedBox(
                                       height: kLargePadding,
                                     ),
                                     Row(children: [
-                                      Expanded(
+                                      const Expanded(
                                           child: Text(
                                               "จำนวนครั้งที่เกิดอาการทั้งหมด")),
                                       Text("$total ครั้ง"),
                                     ]),
-                                    SizedBox(
+                                    const SizedBox(
                                       height: kSmallPadding,
                                     ),
                                     Row(children: [
-                                      Expanded(
+                                      const Expanded(
                                         child: Text(
                                             "จำนวนครั้งที่เกิดอาการมากที่สุด"),
                                       ),
                                       Text("$max ครั้ง")
                                     ]),
-                                    SizedBox(
+                                    const SizedBox(
                                       height: kSmallPadding,
                                     ),
                                     Row(children: [
-                                      Expanded(
+                                      const Expanded(
                                         child: Text(
                                             "จำนวนครั้งที่เกิดอาการน้อยที่สุด"),
                                       ),
                                       Text("$min ครั้ง")
                                     ]),
-                                    SizedBox(
+                                    const SizedBox(
                                       height: kSmallPadding,
                                     ),
                                     Row(children: [
-                                      Expanded(
+                                      const Expanded(
                                         child: Text("ค่าเฉลี่ย"),
                                       ),
                                       Text(
                                           "${avg.toStringAsFixed(2)} ครั้ง/วัน")
                                     ]),
-                                    SizedBox(
+                                    const SizedBox(
                                       height: kSmallPadding,
                                     ),
                                   ],
@@ -174,7 +174,7 @@ class _SeizureHistoryState extends State<SeizureHistory> with AutomaticKeepAlive
                       } else {
                         return Column(
                           children: [
-                            Text("No data, but..."),
+                            const Text("No data, but..."),
                             Text("${snapshot.data}")
                           ],
                         );

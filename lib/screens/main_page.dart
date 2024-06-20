@@ -3,7 +3,6 @@ import 'package:epilepsy_care_pmk/screens/wiki/symptoms/symptom.dart';
 import 'package:epilepsy_care_pmk/screens/wiki/wiki.dart';
 import 'package:epilepsy_care_pmk/services/lifecycle_watcher_state.dart';
 import 'package:epilepsy_care_pmk/services/user_profile_service.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:onboarding_overlay/onboarding_overlay.dart';
 
@@ -302,7 +301,7 @@ class _ActualMainPageState extends LifecycleWatcherState<ActualMainPage> {
       // To have a gradient background, need to wrap with container
       decoration: baseBackgroundDecoration,
       child: Scaffold(
-        endDrawer: SafeArea(child: HomeDrawer()),
+        endDrawer: const SafeArea(child: HomeDrawer()),
         endDrawerEnableOpenDragGesture: false,
         bottomNavigationBar: Container(
           clipBehavior: Clip.antiAliasWithSaveLayer,
@@ -374,13 +373,13 @@ class _ActualMainPageState extends LifecycleWatcherState<ActualMainPage> {
                               builder: (context) => const AddSelect()));
                         },
                         elevation: 2.0,
-                        fillColor: Color(0xffD9ACF5),
+                        fillColor: const Color(0xffD9ACF5),
+                        padding: const EdgeInsets.all(15.0),
+                        shape: const CircleBorder(),
                         child: const Icon(
                           Icons.add,
                           size: 35.0,
                         ),
-                        padding: const EdgeInsets.all(15.0),
-                        shape: const CircleBorder(),
                       ),
                     )
                   ],

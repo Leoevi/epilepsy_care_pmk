@@ -88,7 +88,7 @@ class PillMedication implements MedicationIntakeMethod {
 
   @override
   String toString() {
-    return "${mgPerPill} mg/เม็ด";
+    return "$mgPerPill mg/เม็ด";
   }
 }
 /// A class that describes medication that is in liquid form, which must be
@@ -118,7 +118,7 @@ class LiquidMedication implements MedicationIntakeMethod {
 
   @override
   String toString() {
-    return "${mgPerMl} mg/ml";
+    return "$mgPerMl mg/ml";
   }
 }
 

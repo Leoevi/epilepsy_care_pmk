@@ -1,10 +1,8 @@
 import 'package:epilepsy_care_pmk/constants/styling.dart';
 import 'package:epilepsy_care_pmk/screens/home/alarm_med_intake/add_alarm_input.dart';
 import 'package:epilepsy_care_pmk/services/database_service.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:toggle_switch/toggle_switch.dart';
 
 import '../models/alarm.dart';
 
@@ -46,11 +44,11 @@ class _AlarmCardState extends State<AlarmCard> {
                 child: Center(
                     //alarm.time has only Hours/Mins Only so we need to fill a dummy parameter year/month/days to make it works.
                     child: Text(
-                  '${formatter.format(DateTime(1970, 1, 1, widget.alarm.time.hour, widget.alarm.time.minute))}',
+                  formatter.format(DateTime(1970, 1, 1, widget.alarm.time.hour, widget.alarm.time.minute)),
                   style: mediumLargeBoldText,
                 ))),
             //Vertical Line
-            Opacity(
+            const Opacity(
               opacity: 0.5,
               child: VerticalDivider(
                 thickness: 1,
@@ -68,7 +66,7 @@ class _AlarmCardState extends State<AlarmCard> {
                       //Title
                       Expanded(
                         child: Text(
-                          "${widget.alarm.med}",
+                          widget.alarm.med,
                           style: mediumLargeBoldText,
                         ),
                       ),
@@ -80,21 +78,21 @@ class _AlarmCardState extends State<AlarmCard> {
                                       isGranted: widget.isGranted,
                                     )));
                           },
-                          icon: Icon(Icons.edit_outlined)),
+                          icon: const Icon(Icons.edit_outlined)),
                       IconButton(
                           onPressed: () {
                             DatabaseService.deleteAlarm(widget.alarm);
                           },
-                          icon: Icon(Icons.delete_outline))
+                          icon: const Icon(Icons.delete_outline))
                     ],
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: kSmallPadding,
                   ),
                   //Detail
                   Text(
                       "ทานยา ${widget.alarm.med} ${widget.alarm.quantity} ${widget.alarm.unit}"),
-                  SizedBox(
+                  const SizedBox(
                     height: kSmallPadding,
                   ),
                   //Icon Zone

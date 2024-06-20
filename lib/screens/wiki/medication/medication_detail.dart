@@ -67,35 +67,35 @@ class MedicationDetail extends StatelessWidget {
                             onPressed: () {
                               // https://stackoverflow.com/questions/56725216/how-to-pop-two-screens-without-using-named-routing
                               Navigator.of(context)..pop()..pop(medicationEntry);
-                            }, child: Text("เลือกยานี้"))
-                        : SizedBox.shrink(),
+                            }, child: const Text("เลือกยานี้"))
+                        : const SizedBox.shrink(),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 2 * kMediumPadding,
                   ),
                   Text(
                     "ข้อมูลเบื้องต้น",
                     style: Theme.of(context).textTheme.titleLarge,
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 2 * kMediumPadding,
                   ),
                   Text("ชื่อยา: ${medicationEntry.name}"),
-                  SizedBox(
+                  const SizedBox(
                     height: kMediumPadding,
                   ),
                   Text(
                       "ขนาด: ${medicationEntry.medicationIntakeMethod ?? "-"}"),
-                  SizedBox(
+                  const SizedBox(
                     height: kMediumPadding,
                   ),
                   Text("ผลข้างเคียง: ${medicationEntry.sideEffects ?? "-"}"),
-                  SizedBox(
+                  const SizedBox(
                     height: kMediumPadding,
                   ),
                   Text(
                       "ผลข้างเคียงที่ต้องระวัง: ${medicationEntry.dangerSideEffects ?? "-"}"),
-                  SizedBox(
+                  const SizedBox(
                     height: kMediumPadding,
                   ),
                   Text("การแพ้ยา: ${medicationEntry.allergySymptoms ?? "-"}"),

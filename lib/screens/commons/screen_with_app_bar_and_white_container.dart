@@ -23,8 +23,8 @@ class ScreenWithAppbarAndWhiteContainer extends StatelessWidget {
         child: Container(
           decoration: BoxDecoration(
               color: Colors.white, borderRadius: BorderRadius.circular(20.0)),
-          child: Padding(
-            padding: const EdgeInsets.all(kLargePadding),
+          child: const Padding(
+            padding: EdgeInsets.all(kLargePadding),
             child: SingleChildScrollView(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,

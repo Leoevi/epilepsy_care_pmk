@@ -191,7 +191,7 @@ class DatabaseService {
     final List<Map<String, dynamic>> maps = await db.query(
         seizureEventTableName,
         where: "time BETWEEN ? and ?",  // TODO: use and clause to exclude midnight of next day
-        whereArgs: [dateTimeToUnixTime(dateTimeRange.start), dateTimeToUnixTime(dateTimeRange.end.add(Duration(days: 1)))]);
+        whereArgs: [dateTimeToUnixTime(dateTimeRange.start), dateTimeToUnixTime(dateTimeRange.end.add(const Duration(days: 1)))]);
 
     if (maps.isEmpty) {
       return List.empty();
@@ -298,7 +298,7 @@ SELECT d.dateRange AS date, COUNT(s.seizureId) AS seizureOccurrence
     final List<Map<String, dynamic>> maps = await db.query(
         medAllergyEventTableName,
         where: "time BETWEEN ? and ?",
-        whereArgs: [dateTimeToUnixTime(dateTimeRange.start), dateTimeToUnixTime(dateTimeRange.end.add(Duration(days: 1)))]);
+        whereArgs: [dateTimeToUnixTime(dateTimeRange.start), dateTimeToUnixTime(dateTimeRange.end.add(const Duration(days: 1)))]);
 
     if (maps.isEmpty) {
       return List.empty();
@@ -490,7 +490,7 @@ SELECT d.dateRange AS date, COALESCE(SUM(m.mgAmount), 0.0) AS totalDose
     final List<Map<String, dynamic>> maps = await db.query(
         medIntakeEventTableName,
         where: "time BETWEEN ? and ?",
-        whereArgs: [dateTimeToUnixTime(dateTimeRange.start), dateTimeToUnixTime(dateTimeRange.end.add(Duration(days: 1)))]);
+        whereArgs: [dateTimeToUnixTime(dateTimeRange.start), dateTimeToUnixTime(dateTimeRange.end.add(const Duration(days: 1)))]);
 
     if (maps.isEmpty) {
       return List.empty();

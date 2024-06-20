@@ -121,10 +121,11 @@ class _EventListState extends State<EventList> {
                               },
                             );
                           }
+                          return null;
                         },
                       );
                     } else {
-                      return Center(
+                      return const Center(
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
@@ -137,7 +138,7 @@ class _EventListState extends State<EventList> {
                   } else {
                     return Column(
                       children: [
-                        Text("No data, but..."),
+                        const Text("No data, but..."),
                         Text("${snapshot.data}")
                       ],
                     );

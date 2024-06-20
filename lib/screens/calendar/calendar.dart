@@ -23,7 +23,6 @@
 import 'package:epilepsy_care_pmk/constants/styling.dart';
 import 'package:epilepsy_care_pmk/custom_widgets/event_list.dart';
 import 'package:epilepsy_care_pmk/helpers/date_time_helpers.dart';
-import 'package:epilepsy_care_pmk/services/database_service.dart';
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
 
@@ -76,8 +75,8 @@ class _CalendarState extends State<Calendar> with AutomaticKeepAliveClientMixin 
             // padding: const EdgeInsets.all(kSmallPadding),
             // margin: const EdgeInsets.all(kLargePadding),
             child: TableCalendar(
-              calendarStyle: CalendarStyle(),
-              calendarBuilders: CalendarBuilders(),
+              calendarStyle: const CalendarStyle(),
+              calendarBuilders: const CalendarBuilders(),
               focusedDay: selectedDate,
               rowHeight: 40,
               headerStyle: const HeaderStyle(

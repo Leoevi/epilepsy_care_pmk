@@ -130,7 +130,7 @@ class _TimeRangeDropdownButtonState extends State<TimeRangeDropdownButton> {
   Widget build(BuildContext context) {
     return Container(
       height: 40,
-      padding: EdgeInsets.all(kSmallPadding),
+      padding: const EdgeInsets.all(kSmallPadding),
       decoration: BoxDecoration(
         border: Border.all(color: Colors.black, width: 1),
         borderRadius: BorderRadius.circular(20),
@@ -138,7 +138,7 @@ class _TimeRangeDropdownButtonState extends State<TimeRangeDropdownButton> {
       ),
       child: DropdownButtonHideUnderline(
         child: DropdownButton<TimeRangeDropdownOption>(
-          padding: EdgeInsetsDirectional.fromSTEB(5, 0, 0, 3),
+          padding: const EdgeInsetsDirectional.fromSTEB(5, 0, 0, 3),
           value: currentValue,
           onChanged: (TimeRangeDropdownOption? newValue) {
             _updateCurrentValue(newValue);

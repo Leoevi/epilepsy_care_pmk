@@ -18,16 +18,16 @@ const double kSmallRoundedCornerRadius = 8.0;
 const double kMediumRoundedCornerRadius = 12.0;
 
 ButtonStyle primaryButtonStyle = ElevatedButton.styleFrom(
-    backgroundColor: Color.fromARGB(255, 201, 128, 247), //Color(0x7FCA80F7)
+    backgroundColor: const Color.fromARGB(255, 201, 128, 247), //Color(0x7FCA80F7)
     // padding: EdgeInsets.all(0),
-    fixedSize: Size.fromWidth(140),
+    fixedSize: const Size.fromWidth(140),
     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)));
 
 ButtonStyle secondaryButtonStyle = ElevatedButton.styleFrom(
     backgroundColor: Colors.white,
-    side: BorderSide(color: Color.fromARGB(255, 201, 128, 247)),
+    side: const BorderSide(color: Color.fromARGB(255, 201, 128, 247)),
     // padding: EdgeInsets.all(20),
-    fixedSize: Size.fromWidth(140),
+    fixedSize: const Size.fromWidth(140),
     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)));
 
 /// A value that is used as indent in paragraph text, mainly in the wiki page

@@ -1,13 +1,8 @@
 // import 'dart:js_interop_unsafe';
 
 import 'package:epilepsy_care_pmk/constants/styling.dart';
-import 'package:epilepsy_care_pmk/custom_widgets/seizure_occurrence_graph.dart';
 import 'package:epilepsy_care_pmk/models/med_intake_per_day.dart';
-import 'package:epilepsy_care_pmk/models/seizure_per_day.dart';
-import 'package:epilepsy_care_pmk/screens/home/graph_history/med_intake_history.dart';
 import 'package:epilepsy_care_pmk/screens/wiki/medication/medication.dart';
-import 'package:fl_chart/fl_chart.dart';
-import 'package:flutter/material.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:collection/collection.dart';
@@ -45,7 +40,7 @@ buildPrintableMedIntakeHistory(Medication m,
     List<int> scaleToDisplay = List.generate(scaleCount + 1, (index) => index*interval);
 
     return pw.Padding(
-      padding: pw.EdgeInsets.all(kSmallPadding),
+      padding: const pw.EdgeInsets.all(kSmallPadding),
       child: pw.Flexible(
         child: pw.Column(children: [
           pw.Container(
@@ -53,7 +48,7 @@ buildPrintableMedIntakeHistory(Medication m,
                 color: PdfColor.fromHex('F5F2FF'),
                 borderRadius: pw.BorderRadius.circular(8)),
             child: pw.Padding(
-              padding: pw.EdgeInsets.all(kLargePadding),
+              padding: const pw.EdgeInsets.all(kLargePadding),
               child: pw.Column(
                 crossAxisAlignment: pw.CrossAxisAlignment.start,
                 children: [

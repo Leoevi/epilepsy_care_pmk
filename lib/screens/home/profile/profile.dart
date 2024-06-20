@@ -52,7 +52,7 @@ class _ProfileState extends State<Profile> {
         body: Consumer<UserProfileService>(
             builder: (context, model, child) => Column(
               children: [
-                SizedBox(
+                const SizedBox(
                   height: 30,
                 ),
                 Center(
@@ -60,63 +60,63 @@ class _ProfileState extends State<Profile> {
                     child: CircleAvatar(
                         radius: 2 * kCircleRadius,
                         backgroundImage: model.image?.image ?? profilePlaceholder, //image from register
-                        child: Material(
-                          shape: const CircleBorder(),
+                        child: const Material(
+                          shape: CircleBorder(),
                           clipBehavior: Clip.hardEdge,
                           color: Colors.transparent,
                         ))),
-                SizedBox(
+                const SizedBox(
                   height: 40,
                 ),
                 Expanded(
                   child: Container(
                     width: double.infinity, //make width container has full length
                     height: 50,
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.only(
                             topLeft: Radius.circular(20),
                             topRight: Radius.circular(20))),
                     child: Padding(
-                      padding: EdgeInsets.all(kLargePadding),
+                      padding: const EdgeInsets.all(kLargePadding),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Row(
                             children: [
-                              Text("ข้อมูลเบื้องต้น"),
-                              SizedBox(
+                              const Text("ข้อมูลเบื้องต้น"),
+                              const SizedBox(
                                 width: 5,
                               ),
-                              Icon(
+                              const Icon(
                                 Icons.info,
                                 color: Color(0xff1C7D9C),
                               ),
-                              Spacer(),
+                              const Spacer(),
                               IconButton(
                                   visualDensity: VisualDensity.compact,
                                   onPressed: () {
                                     Navigator.of(context).push(MaterialPageRoute(
                                         builder: (context) => const Register()));
                                   },
-                                  icon: Icon(Icons.edit_outlined)),
+                                  icon: const Icon(Icons.edit_outlined)),
                             ],
                           ),
-                          SizedBox(
+                          const SizedBox(
                             height: 15,
                           ),
                           Text("HN : ${model.hn} "), //int? hn;
-                          SizedBox(
+                          const SizedBox(
                             height: 10,
                           ),
                           Text(
                               "ชื่อ-นามสกุล : ${model.firstName} ${model.lastName}"), //String? firstName; String? lastName;
-                          SizedBox(
+                          const SizedBox(
                             height: 10,
                           ),
                           // TODO: replace with model
                           Text("วันเกิด : $birthDateString"), //DateTime? birthDate;
-                          SizedBox(
+                          const SizedBox(
                             height: 10,
                           ),
                           Text("เพศ : ${model.gender}"), //var gender;

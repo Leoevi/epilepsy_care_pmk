@@ -1,11 +1,9 @@
 import 'package:epilepsy_care_pmk/constants/styling.dart';
 import 'package:epilepsy_care_pmk/custom_widgets/horizontal_date_picker.dart';
-import 'package:epilepsy_care_pmk/custom_widgets/icon_label_detail_button.dart';
 import 'package:epilepsy_care_pmk/custom_widgets/medication_selection_form.dart';
 import 'package:epilepsy_care_pmk/models/med_intake_event.dart';
 import 'package:epilepsy_care_pmk/screens/commons/screen_with_app_bar.dart';
 import 'package:epilepsy_care_pmk/screens/wiki/medication/medication.dart';
-import 'package:epilepsy_care_pmk/screens/wiki/medication/medication_list.dart';
 import 'package:epilepsy_care_pmk/services/database_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -137,9 +135,9 @@ class _AddMedIntakeInputState extends State<AddMedIntakeInput> {
                       },
                     ),
 
-                    Text("ชนิดของยาที่บันทึก", style: TextStyle(fontSize: 18)),
+                    const Text("ชนิดของยาที่บันทึก", style: TextStyle(fontSize: 18)),
 
-                    SizedBox(height: 10),
+                    const SizedBox(height: 10),
 
                     // We change from dropdown to a new custom menu, so this will be unused.
                     // DropdownButtonFormField(
@@ -173,6 +171,7 @@ class _AddMedIntakeInputState extends State<AddMedIntakeInput> {
                         if (selectedMed == null) {
                           return "กรุณาเลือกยาที่จะบันทึก";
                         }
+                        return null;
                       },
                         medication: _inputMedication,
                         onChanged: (newMed) {
@@ -189,11 +188,11 @@ class _AddMedIntakeInputState extends State<AddMedIntakeInput> {
                         }),
 
 
-                    SizedBox(height: 20),
+                    const SizedBox(height: 20),
                     //Time
-                    Text("โปรดกรอกเวลา", style: TextStyle(fontSize: 18)),
+                    const Text("โปรดกรอกเวลา", style: TextStyle(fontSize: 18)),
 
-                    SizedBox(height: 10),
+                    const SizedBox(height: 10),
 
                     TimeOfDayDropdown(
                       startingTime: _inputTime,
@@ -202,11 +201,11 @@ class _AddMedIntakeInputState extends State<AddMedIntakeInput> {
                       },
                     ),
 
-                    SizedBox(height: 20),
+                    const SizedBox(height: 20),
 
-                    Text("โปรดระบุปริมาณยา", style: TextStyle(fontSize: 18)),
+                    const Text("โปรดระบุปริมาณยา", style: TextStyle(fontSize: 18)),
 
-                    SizedBox(height: 10),
+                    const SizedBox(height: 10),
                     //spacing between label and TextInput
 
                     Row(
@@ -236,12 +235,12 @@ class _AddMedIntakeInputState extends State<AddMedIntakeInput> {
                                 _inputMedicationQuantity = val;
                               });
                             },
-                            decoration: InputDecoration(
+                            decoration: const InputDecoration(
                                 hintText: "ระบุปริมาณยา",
                                 border: OutlineInputBorder()),
                           ),
                         ),
-                        SizedBox(width: kSmallPadding,),
+                        const SizedBox(width: kSmallPadding,),
                         Expanded(child: DropdownButtonFormField(
                           isExpanded: true,
                           value: _inputMeasureUnit,
@@ -262,27 +261,25 @@ class _AddMedIntakeInputState extends State<AddMedIntakeInput> {
                             if (val == null) {
                               return "กรุณาเลือกหน่วยของปริมาณยา";
                             }
+                            return null;
                           },
                         ),)
                       ],
                     ),
 
-                    SizedBox(height: 80),
+                    const SizedBox(height: 80),
 
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
                         ElevatedButton(
-                          child: Text("ยกเลิก", style: TextStyle(fontSize: 16)),
                           onPressed: () {
                             Navigator.of(context).pop();
                           },
                           style: secondaryButtonStyle,
+                          child: const Text("ยกเลิก", style: TextStyle(fontSize: 16)),
                         ),
                         ElevatedButton(
-                          child: Text("ตกลง",
-                              style:
-                                  TextStyle(fontSize: 16, color: Colors.white)),
                           onPressed: () {
                             if (_formKey.currentState!.validate()) {
                               ScaffoldMessenger.of(context).showSnackBar(
@@ -293,7 +290,7 @@ class _AddMedIntakeInputState extends State<AddMedIntakeInput> {
                                           label: 'ปิด',
                                           textColor: Colors.black,
                                           onPressed: () {}),
-                                      content: Text('บันทึกข้อมูลสำเร็จ')));
+                                      content: const Text('บันทึกข้อมูลสำเร็จ')));
                               if (widget.initMedIntakeEvent == null) {
                                 _addToDb();
                               } else {
@@ -303,7 +300,10 @@ class _AddMedIntakeInputState extends State<AddMedIntakeInput> {
                                   .popUntil((route) => route.isFirst);
                             }
                           },
-                          style: primaryButtonStyle
+                          style: primaryButtonStyle,
+                          child: const Text("ตกลง",
+                              style:
+                                  TextStyle(fontSize: 16, color: Colors.white))
                         )
                       ],
                     )

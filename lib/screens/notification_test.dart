@@ -16,39 +16,39 @@ class NotificationTest extends StatelessWidget {
             onPressed: () {
               NotificationService.showNotification(title: "title", body: "body", payload: "payload test");
             },
-            child: Text("Test now"),
+            child: const Text("Test now"),
           ),
           ElevatedButton(
             onPressed: () {
               NotificationService.scheduleNotification(
                 title: "scheduled noti",
                 body: "scheduled noti body",
-                scheduledDate: DateTime.now().add(Duration(seconds: 10)),
+                scheduledDate: DateTime.now().add(const Duration(seconds: 10)),
               );
             },
-            child: Text("Test Schedule"),
+            child: const Text("Test Schedule"),
           ),
           ElevatedButton(
             onPressed: () {
               NotificationService.scheduleNotification(
                 title: "scheduled noti xxx",
                 body: "scheduled noti body xxx",
-                scheduledDate: DateTime.now().add(Duration(seconds: 20)),
+                scheduledDate: DateTime.now().add(const Duration(seconds: 20)),
               );
             },
-            child: Text("Test Schedule 2"),
+            child: const Text("Test Schedule 2"),
           ),
           ElevatedButton(
             onPressed: () {
-              NotificationService.scheduleDailyNotification(title: "daily noti", body: "daily noti body", timeOfDay: TimeOfDay(hour: 8, minute: 0));
+              NotificationService.scheduleDailyNotification(title: "daily noti", body: "daily noti body", timeOfDay: const TimeOfDay(hour: 8, minute: 0));
             },
-            child: Text("Test Daily 8 AM"),
+            child: const Text("Test Daily 8 AM"),
           ),
           ElevatedButton(
             onPressed: () {
               NotificationService.cancelAll();
             },
-            child: Text("Cancel All"),
+            child: const Text("Cancel All"),
           ),
         ]
       ),

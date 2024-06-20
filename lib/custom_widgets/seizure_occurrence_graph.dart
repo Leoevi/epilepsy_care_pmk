@@ -146,12 +146,12 @@ class SeizureOccurrenceGraph extends StatelessWidget {
                   show: true,
                   drawHorizontalLine: true,
                   drawVerticalLine: true,
-                  getDrawingHorizontalLine: (_) => FlLine(
+                  getDrawingHorizontalLine: (_) => const FlLine(
                     color: Colors.black,
                     dashArray: [8, 2],
                     strokeWidth: 0.8,
                   ),
-                  getDrawingVerticalLine: (_) => FlLine(
+                  getDrawingVerticalLine: (_) => const FlLine(
                     color: Colors.black,
                     dashArray: [8, 2],
                     strokeWidth: 0.8,

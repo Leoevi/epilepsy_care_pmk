@@ -72,7 +72,7 @@ class _MedIntakeHistoryState extends State<MedIntakeHistory> with AutomaticKeepA
                 // This can be optimized to not re-fetch the data from DB, but it requires using change notifier which I'm not going to bother right now.
                 onPressed: () async => printMedIntakeHistory(
                     await DatabaseService.getAllMedIntakePerDayFrom(range)),
-                icon: Icon(Icons.local_print_shop_outlined)),
+                icon: const Icon(Icons.local_print_shop_outlined)),
             TimeRangeDropdownButton(
               initialChoice: timeRangeDropdownOption,
               onChanged: (selectedRange) {
@@ -82,7 +82,7 @@ class _MedIntakeHistoryState extends State<MedIntakeHistory> with AutomaticKeepA
               },
             ),
           ]),
-          SizedBox(
+          const SizedBox(
             height: kSmallPadding,
           ),
           Flexible(
@@ -176,7 +176,7 @@ class _MedIntakeHistoryState extends State<MedIntakeHistory> with AutomaticKeepA
                                     ),
 
                                     Container(
-                                      decoration: BoxDecoration(
+                                      decoration: const BoxDecoration(
                                           color: Color(0xFFF5F2FF), borderRadius: BorderRadius.vertical(bottom: Radius.circular(kSmallRoundedCornerRadius))),
                                       child: Row(
                                         children: [
@@ -227,13 +227,13 @@ class _MedIntakeHistoryState extends State<MedIntakeHistory> with AutomaticKeepA
                                 );
                               });
                         } else {
-                          return Text(
+                          return const Text(
                               "ไม่มีการบันทึกประวัติการทานยาในช่วงที่เลือก");
                         }
                       } else {
                         return Column(
                           children: [
-                            Text("No data, but..."),
+                            const Text("No data, but..."),
                             Text("${snapshot.data}")
                           ],
                         );
@@ -263,14 +263,14 @@ class MedIntakePerDayPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
           color: Color(0xFFF5F2FF), borderRadius: BorderRadius.vertical(top: Radius.circular(kSmallRoundedCornerRadius))),
       child: Padding(
-        padding: EdgeInsets.all(kLargePadding),
+        padding: const EdgeInsets.all(kLargePadding),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(children: [
+            const Row(children: [
               Expanded(
                 child: Text(
                   "ข้อมูลบันทึกกินยา",
@@ -278,45 +278,45 @@ class MedIntakePerDayPage extends StatelessWidget {
                 ),
               )
             ]),
-            SizedBox(
+            const SizedBox(
               height: kLargePadding,
             ),
             Row(children: [
               Expanded(child: Text("ชื่อยา: ${medication.name}"))
             ]),
-            SizedBox(
+            const SizedBox(
               height: kSmallPadding,
             ),
             Row(children: [
               Expanded(
                   child: Text("ขนาด: ${medication.medicationIntakeMethod}"))
             ]),
-            SizedBox(
+            const SizedBox(
               height: kSmallPadding,
             ),
             Row(children: [
-              Expanded(child: Text("ปริมาณยาที่ทานไปทั้งหมด")),
+              const Expanded(child: Text("ปริมาณยาที่ทานไปทั้งหมด")),
               Text("${total.toStringAsFixed(2)} มก."),
             ]),
-            SizedBox(
+            const SizedBox(
               height: kSmallPadding,
             ),
             Row(children: [
-              Expanded(child: Text("ปริมาณยาที่ทานมากที่สุดในหนึ่งวัน")),
+              const Expanded(child: Text("ปริมาณยาที่ทานมากที่สุดในหนึ่งวัน")),
               Text("${max.toStringAsFixed(2)} มก."),
             ]),
-            SizedBox(
+            const SizedBox(
               height: kSmallPadding,
             ),
             Row(children: [
-              Expanded(child: Text("ปริมาณยาที่ทานน้อยที่สุดในหนึ่งวัน")),
+              const Expanded(child: Text("ปริมาณยาที่ทานน้อยที่สุดในหนึ่งวัน")),
               Text("${min.toStringAsFixed(2)} มก."),
             ]),
-            SizedBox(
+            const SizedBox(
               height: kSmallPadding,
             ),
             Row(children: [
-              Expanded(child: Text("ปริมาณยาที่ทานโดยเฉลี่ย")),
+              const Expanded(child: Text("ปริมาณยาที่ทานโดยเฉลี่ย")),
               Text("${avg.toStringAsFixed(2)} มก./วัน"),
             ]),
           ],

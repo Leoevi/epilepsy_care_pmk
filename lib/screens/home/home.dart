@@ -78,13 +78,13 @@ class _HomeState extends State<Home> with AutomaticKeepAliveClientMixin {
                     builder: (context, model, child) => Expanded(
                       flex: 3,
                       child: Card(
-                        shape: RoundedRectangleBorder(
+                        shape: const RoundedRectangleBorder(
                           side: BorderSide(
                               color: Color.fromARGB(255, 142, 15, 184), width: 3),
                           borderRadius: BorderRadius.all(Radius.circular(50)),
                         ),
                         child: Padding(
-                          padding: EdgeInsets.all(kSmallPadding),
+                          padding: const EdgeInsets.all(kSmallPadding),
                           child: Row(
                             children: [
                               //Image
@@ -92,13 +92,13 @@ class _HomeState extends State<Home> with AutomaticKeepAliveClientMixin {
                                 radius: 28,
                                 backgroundImage: model.image?.image ?? profilePlaceholder,
                               ),
-                              SizedBox(
+                              const SizedBox(
                                 width: kSmallPadding,
                               ),
                               //Name
                               Expanded(
                                   child: Text(
-                                    "${model.firstName}",
+                                    model.firstName,
                                     textAlign: TextAlign.justify,
                                   )),
                               //Button
@@ -108,7 +108,7 @@ class _HomeState extends State<Home> with AutomaticKeepAliveClientMixin {
                                 child: IconButton(
                                     onPressed: () =>
                                         Scaffold.of(context).openEndDrawer(),
-                                    icon: Icon(Icons.menu)),
+                                    icon: const Icon(Icons.menu)),
                               )
                             ],
                           ),
@@ -119,21 +119,21 @@ class _HomeState extends State<Home> with AutomaticKeepAliveClientMixin {
               ],
             ),
           ),
-          SizedBox(height: kSmallPadding,),
+          const SizedBox(height: kSmallPadding,),
           Row(children: [
-            Icon(
+            const Icon(
               Icons.info_rounded,
               color: Color.fromARGB(255, 0, 195, 0),
             ),
-            SizedBox(
+            const SizedBox(
               width: kSmallPadding,
             ),
-            Expanded(
+            const Expanded(
                 child: Text(
               "เหตุการณ์ที่เกิดขึ้น",
               style: mediumLargeBoldText,
             )),
-            SizedBox(
+            const SizedBox(
               width: kLargePadding,
             ),
             TimeRangeDropdownButton(
@@ -145,7 +145,7 @@ class _HomeState extends State<Home> with AutomaticKeepAliveClientMixin {
               },
             )
           ]),
-          SizedBox(height: kSmallPadding,),
+          const SizedBox(height: kSmallPadding,),
           Flexible(
             flex: 6,
             child: EventList(

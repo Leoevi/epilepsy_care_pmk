@@ -93,16 +93,17 @@ class _AddMedAllergyInputState extends State<AddMedAllergyInput> {
                       },
                     ),
 
-                    Text("ชนิดของยาที่เกิดอาการเเพ้ยา",
+                    const Text("ชนิดของยาที่เกิดอาการเเพ้ยา",
                         style: TextStyle(fontSize: 18)),
 
-                    SizedBox(height: 10),
+                    const SizedBox(height: 10),
 
                     MedicationSelectionForm(
                         validator: (selectedMed) {
                           if (selectedMed == null) {
                             return "กรุณาเลือกยาที่จะบันทึก";
                           }
+                          return null;
                         },
                         medication: _inputMedication,
                         onChanged: (newMed) {
@@ -111,11 +112,11 @@ class _AddMedAllergyInputState extends State<AddMedAllergyInput> {
                           });
                         }),
 
-                    SizedBox(height: 20),
+                    const SizedBox(height: 20),
                     //Time
-                    Text("โปรดกรอกเวลา", style: TextStyle(fontSize: 18)),
+                    const Text("โปรดกรอกเวลา", style: TextStyle(fontSize: 18)),
 
-                    SizedBox(height: 10),
+                    const SizedBox(height: 10),
 
                     TimeOfDayDropdown(
                       startingTime: _inputTime,
@@ -124,11 +125,11 @@ class _AddMedAllergyInputState extends State<AddMedAllergyInput> {
                       },
                     ),
 
-                    SizedBox(height: 20),
+                    const SizedBox(height: 20),
 
-                    Text("โปรดระบุอาการ", style: TextStyle(fontSize: 18)),
+                    const Text("โปรดระบุอาการ", style: TextStyle(fontSize: 18)),
 
-                    SizedBox(height: 10),
+                    const SizedBox(height: 10),
                     //spacing between label and TextInput
 
                     TextFormField(
@@ -145,26 +146,23 @@ class _AddMedAllergyInputState extends State<AddMedAllergyInput> {
                           _inputMedAllergySymptom = val;
                         });
                       },
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                           hintText: "ระบุอาการ", border: OutlineInputBorder()),
                     ),
 
-                    SizedBox(height: 80),
+                    const SizedBox(height: 80),
 
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
                         ElevatedButton(
-                          child: Text("ยกเลิก", style: TextStyle(fontSize: 16)),
                           onPressed: () {
                             Navigator.of(context).pop();
                           },
                           style: secondaryButtonStyle,
+                          child: const Text("ยกเลิก", style: TextStyle(fontSize: 16)),
                         ),
                         ElevatedButton(
-                          child: Text("ตกลง",
-                              style:
-                                  TextStyle(fontSize: 16, color: Colors.white)),
                           onPressed: () {
                             if (_formKey.currentState!.validate()) {
                               ScaffoldMessenger.of(context).showSnackBar(
@@ -175,7 +173,7 @@ class _AddMedAllergyInputState extends State<AddMedAllergyInput> {
                                           label: 'ปิด',
                                           textColor: Colors.black,
                                           onPressed: () {}),
-                                      content: Text('บันทึกข้อมูลสำเร็จ')));
+                                      content: const Text('บันทึกข้อมูลสำเร็จ')));
                               if (widget.initMedAllergyEvent == null) {
                                 _addToDb();
                               } else {
@@ -186,6 +184,9 @@ class _AddMedAllergyInputState extends State<AddMedAllergyInput> {
                             }
                           },
                           style: primaryButtonStyle,
+                          child: const Text("ตกลง",
+                              style:
+                                  TextStyle(fontSize: 16, color: Colors.white)),
                         )
                       ],
                     )

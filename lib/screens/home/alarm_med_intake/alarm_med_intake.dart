@@ -5,7 +5,6 @@ import 'package:epilepsy_care_pmk/screens/commons/screen_with_app_bar.dart';
 import 'package:epilepsy_care_pmk/screens/home/alarm_med_intake/add_alarm_input.dart';
 import 'package:epilepsy_care_pmk/services/database_service.dart';
 import 'package:epilepsy_care_pmk/services/notification_service.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 /// A page that is used to manage Alarms that sent out notifications at the
@@ -36,15 +35,15 @@ class _AlarmMedIntakeState extends State<AlarmMedIntake> {
               context: context,
               builder: (context) {
                 return AlertDialog(
-                  title: Text("ไม่มีสิทธิแสดงการแจ้งเตือน"),
-                  content: Text(
+                  title: const Text("ไม่มีสิทธิแสดงการแจ้งเตือน"),
+                  content: const Text(
                       "คุณไม่ได้ให้สิทธิแสดงการแจ้งเตือนกับแอปพลิเคชัน ทำให้การตั้งเวลาแจ้งเตือนทานยานั้นไม่สามารถทำงานได้ กรุณาให้สิทธิกับแอปพลิเคชันเพื่อให้สามารถแสดงการแจ้งเตือนได้จากการตั้งค่าอุปกรณ์ของคุณ"),
                   actions: [
                     TextButton(
                         onPressed: () {
                           Navigator.pop(context);
                         },
-                        child: Text("รับทราบ"))
+                        child: const Text("รับทราบ"))
                   ],
                 );
               });
@@ -63,9 +62,9 @@ class _AlarmMedIntakeState extends State<AlarmMedIntake> {
             builder: (context, snapshot) {
               switch (snapshot.connectionState) {
                 case ConnectionState.waiting:
-                  return IconButton(
+                  return const IconButton(
                       onPressed: null,
-                      icon: const Icon(Icons.add));
+                      icon: Icon(Icons.add));
                 case ConnectionState.done:
                 default:
                   return IconButton(
@@ -141,7 +140,7 @@ class _AlarmListState extends State<AlarmList> {
                             );
                           });
                     } else {
-                      return Center(
+                      return const Center(
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
@@ -161,7 +160,7 @@ class _AlarmListState extends State<AlarmList> {
                   } else {
                     return Column(
                       children: [
-                        Text("No data, but..."),
+                        const Text("No data, but..."),
                         Text("${snapshot.data}")
                       ],
                     );

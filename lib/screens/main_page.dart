@@ -288,10 +288,12 @@ class _ActualMainPageState extends LifecycleWatcherState<ActualMainPage> {
   void onClickedNotification(String? payload) {
     if (payload != null) {
       Alarm alarmFromNotification = Alarm.fromSerializedString(payload);
-      Navigator.of(context).push(MaterialPageRoute(
-          builder: (context) => AddMedIntakeInput(
-            initNotification: alarmFromNotification,
-          )));
+      if (mounted) {
+        Navigator.of(context).push(MaterialPageRoute(
+            builder: (context) => AddMedIntakeInput(
+              initNotification: alarmFromNotification,
+            )));
+      }
     }
   }
 

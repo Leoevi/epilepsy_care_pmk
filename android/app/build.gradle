@@ -26,8 +26,7 @@ if (flutterVersionName == null) {
 
 android {
     namespace "com.example.epilepsy_care_pmk"
-//    compileSdkVersion flutter.compileSdkVersion
-    compileSdkVersion 34  // TODO: once we upgrade the flutter SDK from 3.16.9 version, we can change this to use flutter's default SDK version above
+    compileSdkVersion flutter.compileSdkVersion
     ndkVersion flutter.ndkVersion
 
     compileOptions {

@@ -80,7 +80,7 @@ class SeizureOccurrenceGraph extends StatelessWidget {
                   touchTooltipData: LineTouchTooltipData(
                     fitInsideHorizontally: true,
                     maxContentWidth: 100,
-                    tooltipBgColor: Colors.black,
+                    getTooltipColor: (LineBarSpot touchedSpot) => Colors.black,
                     getTooltipItems: (touchedSpots) {
                       return touchedSpots.map((LineBarSpot touchedSpot) {
                         final textStyle = TextStyle(

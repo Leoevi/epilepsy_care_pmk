@@ -86,7 +86,7 @@ class DosageGraph extends StatelessWidget {
                   touchTooltipData: LineTouchTooltipData(
                     fitInsideHorizontally: true,  // The last point won't fall off the screen
                     maxContentWidth: 100,
-                    tooltipBgColor: Colors.black,
+                    getTooltipColor: (LineBarSpot touchedSpot) => Colors.black,
                     getTooltipItems: (touchedSpots) {
                       return touchedSpots.map((LineBarSpot touchedSpot) {
                         final textStyle = TextStyle(

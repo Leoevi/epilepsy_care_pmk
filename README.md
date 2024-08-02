@@ -14,7 +14,7 @@ An epilepsy diary app written in Flutter for Phramongkutklao Hospital's Pediatri
 
 ## Get the App
 Currently, there is no pre-compiled binary for the app, and you have to build the app yourself with the following steps.
-1. Install the Flutter SDK version 3.19.4
+1. Install the Flutter SDK version 3.22.3
 2. Clone this repository to your machine
 3. Run the following commands in the folder that you've just cloned this repository to
 ```
